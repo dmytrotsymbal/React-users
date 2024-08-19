@@ -1,0 +1,242 @@
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { Car } from "../types/carTypes";
+
+export interface CarState {
+  cars: Car[];
+  loading: boolean;
+  error: string | null;
+}
+``;
+
+const initialState: CarState = {
+  cars: [],
+  loading: false,
+  error: null,
+};
+
+export const getAllCars = createAsyncThunk("car/getAllCars", async () => {
+  try {
+    const response = await fetch(`/api/Car/GetAllCars`);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching cars:", error);
+  }
+});
+
+export const getCarById = createAsyncThunk(
+  "car/getCarById",
+  async (carID: number) => {
+    try {
+      const response = await fetch(`/api/Car/GetCarById/${carID}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching car:", error);
+    }
+  }
+);
+
+export const getAllUsersCars = createAsyncThunk(
+  "car/getAllUsersCars",
+  async (userID: string) => {
+    try {
+      const response = await fetch(`/api/Car/GetAllUsersCars/${userID}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    }
+  }
+);
+
+export const updateCar = createAsyncThunk(
+  "car/updateCar",
+  async ({ carID, car }: { carID: number; car: Car }) => {
+    try {
+      const response = await fetch(`/api/Car/UpdateCar/${carID}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(car),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return { carID, car };
+    } catch (error) {
+      console.error("Error updating car:", error);
+    }
+  }
+);
+
+export const addCarToUser = createAsyncThunk(
+  "car/addCarToUser",
+  async ({ userID, car }: { userID: string; car: Car }) => {
+    try {
+      const response = await fetch(`/api/Car/AddCarToUser/${userID}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(car),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return { userID, car };
+    } catch (error) {
+      console.error("Error adding car to user:", error);
+    }
+  }
+);
+
+export const deleteCar = createAsyncThunk(
+  "car/deleteCar",
+  async (carID: number) => {
+    try {
+      const response = await fetch(`/api/Car/DeleteCar/${carID}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return carID;
+    } catch (error) {
+      console.error("Error deleting car:", error);
+    }
+  }
+);
+
+const carSlice = createSlice({
+  name: "photo",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllCars.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllCars.fulfilled, (state, action: PayloadAction<Car[]>) => {
+        state.loading = false;
+        state.error = null;
+        state.cars = action.payload;
+      })
+      .addCase(getAllCars.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Failed to fetch cars";
+      })
+
+      //|=|=|=|=|=|=|=|=|=|=|=|
+      .addCase(getCarById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCarById.fulfilled, (state, action: PayloadAction<Car>) => {
+        state.loading = false;
+        state.error = null;
+        state.cars = [action.payload];
+      })
+      .addCase(getCarById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Failed to fetch car";
+      })
+
+      //|=|=|=|=|=|=|=|=|=|=|=|
+      .addCase(getAllUsersCars.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getAllUsersCars.fulfilled,
+        (state, action: PayloadAction<Car[]>) => {
+          state.loading = false;
+          state.error = null;
+          state.cars = action.payload;
+        }
+      )
+      .addCase(getAllUsersCars.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Failed to fetch cars";
+      })
+
+      //|=|=|=|=|=|=|=|=|=|=|=|
+      .addCase(updateCar.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        updateCar.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ carID: number; car: Car } | undefined>
+        ) => {
+          state.loading = false;
+          if (action.payload) {
+            const { carID, car } = action.payload;
+            const index = state.cars.findIndex(
+              (existingCar) => existingCar.carID === carID
+            );
+            if (index !== -1) {
+              state.cars[index] = car; // Оновлюємо автомобіль в списку
+            }
+          }
+        }
+      )
+      .addCase(updateCar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Failed to update car";
+      })
+
+      //|=|=|=|=|=|=|=|=|=|=|=|
+      .addCase(addCarToUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        addCarToUser.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ userID: string; car: Car } | undefined>
+        ) => {
+          state.loading = false;
+          if (action.payload) {
+            const { car } = action.payload;
+            state.cars.push(car); // Додаємо автомобіль до списку
+          }
+        }
+      )
+      .addCase(addCarToUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Failed to add car to user";
+      })
+
+      //|=|=|=|=|=|=|=|=|=|=|=|
+      .addCase(deleteCar.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteCar.fulfilled,
+        (state, action: PayloadAction<number | undefined>) => {
+          state.loading = false;
+          state.error = null;
+          state.cars = state.cars.filter((car) => car.carID !== action.payload); // Видаляємо користувача зі списку
+        }
+      )
+      .addCase(deleteCar.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Failed to delete car";
+      });
+  },
+});
+
+export default carSlice.reducer;
