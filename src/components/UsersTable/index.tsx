@@ -51,7 +51,7 @@ const UsersTable = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const pageSize = 10;
+  const pageSize = 15;
   const totalPages = Math.ceil(usersCount / pageSize); // клво страниц
 
   useEffect(() => {

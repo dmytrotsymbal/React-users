@@ -4,25 +4,13 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUserById, deleteUser } from "../../redux/userSlice";
 import { getAllUsersCars } from "../../redux/carSlice";
 import { RootState } from "../../redux/store";
-import {
-  Paper,
-  Typography,
-  Avatar,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Table,
-  TableBody,
-  TableContainer,
-  Grid,
-  Button,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Paper, Typography, Avatar, Grid, Button } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import CustomLoader from "../../components/ui/CustomLoader";
 import ConfirmDeleteModal from "../../components/ui/modals/ConfirmDeleteUserModal";
 import CarAccordion from "../../components/CarAccordion";
+import AddressAccordion from "../../components/AddressAccordion";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
@@ -32,6 +20,8 @@ const UserDetailsPage = () => {
   const navigate = useNavigate(); // навгігатор для переходу на сторінку редагування
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false); // модалка для видалення
+
+  const [isAddressVisible, setIsAddressVisible] = useState<boolean>(false);
 
   const { cars, loading } = useAppSelector((state: RootState) => state.car);
 
@@ -68,6 +58,10 @@ const UserDetailsPage = () => {
   const showAllUsersCars = () => {
     dispatch(getAllUsersCars(user.userID));
     console.log("СРАБОТАЛА ФУНКЦИЯ showAllUsersCars");
+  };
+
+  const showAllUsersAdresses = () => {
+    setIsAddressVisible(!isAddressVisible);
   };
 
   return (
@@ -159,37 +153,10 @@ const UserDetailsPage = () => {
         />
 
         <br />
-        <Accordion>
-          <AccordionSummary
-            sx={{ backgroundColor: "#7FA1C3", color: "white !important" }}
-            expandIcon={
-              <ExpandMoreIcon
-                sx={{
-                  color: "white !important",
-                }}
-              />
-            }
-          >
-            <Typography>Нерухомість</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableBody>
-                  {/* {user.cars.map((car) => (
-                  <TableRow key={car.carID}>
-                    <TableCell>{car.make}</TableCell>
-                    <TableCell>{car.model}</TableCell>
-                    <TableCell>{car.year}</TableCell>
-                    <TableCell>{car.licensePlate}</TableCell>
-                    <TableCell><Avatar alt={car.carPhotoURL} src={car.carPhotoURL} /></TableCell>
-                  </TableRow>
-                ))} */}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </AccordionDetails>
-        </Accordion>
+        <AddressAccordion
+          isAddressVisible={isAddressVisible}
+          showAllUsersAdresses={showAllUsersAdresses}
+        />
       </Paper>
 
       {openDeleteModal && (
