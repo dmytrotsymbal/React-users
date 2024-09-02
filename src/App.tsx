@@ -1,6 +1,7 @@
 import { Container } from "@mui/material";
 import Header from "./components/Header";
 import "./styles/App.css";
+import "./styles/font.css";
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import CustomLoader from "./components/ui/CustomLoader";

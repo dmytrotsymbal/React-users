@@ -14,8 +14,9 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import { RootState } from "../../redux/store";
 import { getAllCars } from "../../redux/carSlice";
-import { useEffect } from "react";
-import UserTableSkeletonRow from "../UsersTable/UserTableSkeletonRow";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import CarTableSkeletonRow from "./CarTableSkeletonRow";
 
 const CarsTable = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +28,8 @@ const CarsTable = () => {
   useEffect(() => {
     dispatch(getAllCars());
   }, [dispatch]);
+
+  const [isFullSkeleton] = useState<boolean>(true);
 
   return (
     <>
@@ -56,7 +59,10 @@ const CarsTable = () => {
             {loading ? (
               <>
                 {Array.from({ length: 15 }).map((_, i) => (
-                  <UserTableSkeletonRow key={`skeleton-${i}`} />
+                  <CarTableSkeletonRow
+                    key={`skeleton-${i}`}
+                    isFullSkeleton={isFullSkeleton}
+                  />
                 ))}
               </>
             ) : error ? (
@@ -65,19 +71,12 @@ const CarsTable = () => {
               </TableRow>
             ) : (
               cars.map((car) => (
-                <TableRow
-                  key={car.carID}
-                  sx={{
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                    },
-                  }}
-                >
+                <TableRow key={car.carID}>
                   <TableCell sx={{ maxWidth: "100px" }}>{car.carID}</TableCell>
 
-                  <TableCell>{car.userID}</TableCell>
+                  <TableCell>
+                    <Link to={`/user/${car.userID}`}> {car.userID} </Link>{" "}
+                  </TableCell>
                   <TableCell>{car.firm}</TableCell>
                   <TableCell>{car.model}</TableCell>
                   <TableCell>{car.color}</TableCell>

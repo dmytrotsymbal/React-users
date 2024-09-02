@@ -1,11 +1,21 @@
 import { TableCell, TableRow, Skeleton } from "@mui/material";
 
-const CarTableSkeletonRow = () => {
+type Props = {
+  isFullSkeleton: boolean;
+};
+
+const CarTableSkeletonRow = ({ isFullSkeleton }: Props) => {
   return (
     <TableRow>
       <TableCell>
         <Skeleton animation="wave" height={35} variant="text" />
       </TableCell>
+
+      {isFullSkeleton === true ? (
+        <TableCell>
+          <Skeleton animation="wave" width={307} height={35} variant="text" />
+        </TableCell>
+      ) : null}
       <TableCell>
         <Skeleton animation="wave" height={35} variant="text" />
       </TableCell>

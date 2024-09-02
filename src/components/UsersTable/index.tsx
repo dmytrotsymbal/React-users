@@ -135,7 +135,7 @@ const UsersTable = () => {
         <Box
           sx={{
             width: "220px",
-            fontSize: "1.2rem",
+            fontSize: "14px",
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-around",
@@ -175,7 +175,7 @@ const UsersTable = () => {
               <TableCell>Прізвище</TableCell>
               <TableCell>Імейл</TableCell>
               <TableCell>Дата народження</TableCell>
-              <TableCell>Створено</TableCell>
+              <TableCell>Запис створено</TableCell>
               <TableCell>Дії</TableCell>
             </TableRow>
           </TableHead>
@@ -207,7 +207,7 @@ const UsersTable = () => {
                     },
                   }}
                 >
-                  <TableCell sx={{ maxWidth: "100px" }}>
+                  <TableCell sx={{ maxWidth: "150px" }}>
                     {user.userID}
                   </TableCell>
                   <TableCell>

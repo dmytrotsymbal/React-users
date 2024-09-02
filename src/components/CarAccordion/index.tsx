@@ -67,6 +67,8 @@ const CarAccordion = ({ cars, loading, showAllUsersCars }: Props) => {
     }
   };
 
+  const [isFullSkeleton] = useState<boolean>(false);
+
   return (
     <>
       <Accordion
@@ -139,7 +141,10 @@ const CarAccordion = ({ cars, loading, showAllUsersCars }: Props) => {
                   <>
                     {isLoading
                       ? Array.from({ length: cars.length }).map((_, i) => (
-                          <CarTableSkeletonRow key={`skeleton-${i}`} />
+                          <CarTableSkeletonRow
+                            key={`skeleton-${i}`}
+                            isFullSkeleton={isFullSkeleton}
+                          />
                         ))
                       : cars.map((car) => (
                           <TableRow key={car.carID}>
