@@ -69,8 +69,7 @@ const EditUserPage = () => {
     ) => state.user.users.find((u) => u.userID === userId)
   );
 
-  const loading = useAppSelector((state: RootState) => state.user.loading);
-  const error = useAppSelector((state: RootState) => state.user.error);
+  const { loading, error } = useAppSelector((state: RootState) => state.user); // Отримуємо статус загрузки та помилку
 
   // Використовуємо useMemo для запам'ятовування даних користувача, щоб уникнути зайвих рендерів
   const memoizedUser = useMemo(() => user, [user]);

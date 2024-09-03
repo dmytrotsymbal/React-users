@@ -5,26 +5,38 @@ export interface CarState {
   cars: Car[];
   loading: boolean;
   error: string | null;
+  carsCount?: number;
 }
-``;
 
 const initialState: CarState = {
   cars: [],
-  loading: false,
+  loading: true,
   error: null,
+  carsCount: 0,
 };
 
-export const getAllCars = createAsyncThunk("car/getAllCars", async () => {
-  try {
-    const response = await fetch(`/api/Car/GetAllCars`);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+export const getAllCars = createAsyncThunk(
+  "car/getAllCars",
+  async ({
+    pageNumber,
+    pageSize,
+  }: {
+    pageNumber: number;
+    pageSize: number;
+  }) => {
+    try {
+      const response = await fetch(
+        `/api/Car/GetAllCars?pageNumber=${pageNumber}&pageSize=${pageSize}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching cars:", error);
     }
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching cars:", error);
   }
-});
+);
 
 export const getCarById = createAsyncThunk(
   "car/getCarById",
@@ -114,6 +126,20 @@ export const deleteCar = createAsyncThunk(
     }
   }
 );
+
+// HALPERS
+
+export const getCarsCount = createAsyncThunk("car/getCarsCount", async () => {
+  try {
+    const response = await fetch("/api/Car/quantity");
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching cars count:", error);
+  }
+});
 
 const carSlice = createSlice({
   name: "photo",
@@ -235,6 +261,24 @@ const carSlice = createSlice({
       .addCase(deleteCar.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Failed to delete car";
+      })
+
+      // HALPERS |=|=|=|=|=|=|=|=|=|=|=|
+      .addCase(getCarsCount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getCarsCount.fulfilled,
+        (state, action: PayloadAction<number>) => {
+          state.loading = false;
+          state.carsCount = action.payload;
+          state.error = null;
+        }
+      )
+      .addCase(getCarsCount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to get users count";
       });
   },
 });

@@ -1,7 +1,10 @@
 import {
   Avatar,
+  Box,
   IconButton,
+  Pagination,
   Paper,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +16,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import { RootState } from "../../redux/store";
-import { getAllCars } from "../../redux/carSlice";
+import { getAllCars, getCarsCount } from "../../redux/carSlice";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CarTableSkeletonRow from "./CarTableSkeletonRow";
@@ -21,13 +24,28 @@ import CarTableSkeletonRow from "./CarTableSkeletonRow";
 const CarsTable = () => {
   const dispatch = useAppDispatch();
 
-  const { cars, loading, error } = useAppSelector(
+  const { cars, loading, error, carsCount } = useAppSelector(
     (state: RootState) => state.car
   );
 
   useEffect(() => {
-    dispatch(getAllCars());
+    dispatch(getCarsCount());
   }, [dispatch]);
+
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 15;
+  const totalPages = Math.ceil(carsCount / pageSize);
+
+  useEffect(() => {
+    dispatch(getAllCars({ pageNumber: currentPage, pageSize }));
+  }, [dispatch, currentPage]);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setCurrentPage(value);
+  };
 
   const [isFullSkeleton] = useState<boolean>(true);
 
@@ -35,6 +53,44 @@ const CarsTable = () => {
     <>
       <br />
 
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "right",
+          alignItems: "center",
+          width: "100%",
+          height: "50px",
+          marginBottom: "16px",
+        }}
+      >
+        <Box
+          sx={{
+            width: "220px",
+            fontSize: "14px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          Кількість записів :{" "}
+          {loading ? (
+            <Skeleton
+              animation="wave"
+              height={35}
+              variant="text"
+              width={30}
+              sx={{
+                display: "inline-block",
+                alignItems: "center",
+              }}
+            />
+          ) : (
+            carsCount
+          )}
+        </Box>
+      </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead
@@ -95,13 +151,7 @@ const CarsTable = () => {
                   </TableCell>
 
                   <TableCell>
-                    <IconButton
-                    // onClick={(e) => {
-                    //   e.stopPropagation();
-                    //   setSelectedUser(user);
-                    //   setOpenDeleteModal(true);
-                    // }}
-                    >
+                    <IconButton>
                       <DeleteForeverIcon sx={{ color: "red" }} />
                     </IconButton>
                   </TableCell>
@@ -111,6 +161,17 @@ const CarsTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Box
+        sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
+      >
+        <Pagination
+          count={totalPages} // Общее количество страниц
+          page={currentPage} // Текущая страница
+          onChange={handlePageChange} // Обработчик смены страницы
+          color="primary"
+        />
+      </Box>
     </>
   );
 };
