@@ -68,6 +68,23 @@ export const getAllUsersCars = createAsyncThunk(
   }
 );
 
+export const searchCars = createAsyncThunk(
+  "car/searchCars",
+  async (searchQuery: string) => {
+    try {
+      const response = await fetch(
+        `/api/Car/SearchCars?searchQuery=${searchQuery}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    }
+  }
+);
+
 export const updateCar = createAsyncThunk(
   "car/updateCar",
   async ({ carID, car }: { carID: number; car: Car }) => {
@@ -128,7 +145,6 @@ export const deleteCar = createAsyncThunk(
 );
 
 // HALPERS
-
 export const getCarsCount = createAsyncThunk("car/getCarsCount", async () => {
   try {
     const response = await fetch("/api/Car/quantity");
@@ -192,6 +208,21 @@ const carSlice = createSlice({
       .addCase(getAllUsersCars.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Failed to fetch cars";
+      })
+
+      //|=|=|=|=|=|=|=|=|=|=|=|
+      .addCase(searchCars.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchCars.fulfilled, (state, action: PayloadAction<Car[]>) => {
+        state.loading = false;
+        state.cars = action.payload;
+        state.error = null;
+      })
+      .addCase(searchCars.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Failed to search cars";
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|

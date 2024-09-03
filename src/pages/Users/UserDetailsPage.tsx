@@ -23,7 +23,9 @@ const UserDetailsPage = () => {
 
   const [isAddressVisible, setIsAddressVisible] = useState<boolean>(false);
 
-  const { cars, loading } = useAppSelector((state: RootState) => state.car);
+  const { cars, loading, error } = useAppSelector(
+    (state: RootState) => state.car
+  );
 
   const user = useAppSelector(
     (
@@ -149,6 +151,7 @@ const UserDetailsPage = () => {
         <CarAccordion
           cars={cars}
           loading={loading}
+          error={error}
           showAllUsersCars={showAllUsersCars}
         />
 

@@ -9,7 +9,7 @@ export interface PhotoState {
 
 const initialState: PhotoState = {
   photos: [],
-  loading: false,
+  loading: true,
   error: null,
 };
 

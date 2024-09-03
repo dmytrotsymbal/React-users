@@ -29,13 +29,11 @@ import { useNavigate, useParams } from "react-router-dom";
 type Props = {
   cars: Car[];
   loading: boolean;
+  error: string | null;
   showAllUsersCars: () => void;
 };
 
-// Функция для имитации задержки
-// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const CarAccordion = ({ cars, loading, showAllUsersCars }: Props) => {
+const CarAccordion = ({ cars, loading, error, showAllUsersCars }: Props) => {
   const { userId } = useParams<{ userId: string }>();
 
   const dispatch = useAppDispatch();
@@ -131,57 +129,55 @@ const CarAccordion = ({ cars, loading, showAllUsersCars }: Props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cars.length === 0 ? (
+                {isLoading ? (
+                  // Показуємо скелетони під час завантаження
+                  Array.from({ length: 2 }).map((_, i) => (
+                    <CarTableSkeletonRow
+                      key={`skeleton-${i}`}
+                      isFullSkeleton={isFullSkeleton}
+                    />
+                  ))
+                ) : error ? (
+                  // Показуємо повідомлення про помилку
                   <TableRow>
                     <TableCell colSpan={8} align="center">
-                      <Typography variant="h6">Немає автомобілів</Typography>
+                      <Typography variant="h6" color="error">
+                        Помилка завантаження: {error}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
-                  <>
-                    {isLoading
-                      ? Array.from({ length: cars.length }).map((_, i) => (
-                          <CarTableSkeletonRow
-                            key={`skeleton-${i}`}
-                            isFullSkeleton={isFullSkeleton}
-                          />
-                        ))
-                      : cars.map((car) => (
-                          <TableRow key={car.carID}>
-                            <TableCell>{car.carID}</TableCell>
-                            <TableCell>{car.firm}</TableCell>
-                            <TableCell>{car.model}</TableCell>
-                            <TableCell>{car.color}</TableCell>
-                            <TableCell>{car.year}</TableCell>
-                            <TableCell>{car.licensePlate}</TableCell>
-                            <TableCell>
-                              <Avatar
-                                alt={car.carPhotoURL}
-                                src={car.carPhotoURL}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <IconButton
-                                onClick={() =>
-                                  navigate(`/car/edit/${car.carID}`)
-                                }
-                              >
-                                <EditIcon />
-                              </IconButton>
+                  cars.map((car) => (
+                    <TableRow key={car.carID}>
+                      <TableCell>{car.carID}</TableCell>
+                      <TableCell>{car.firm}</TableCell>
+                      <TableCell>{car.model}</TableCell>
+                      <TableCell>{car.color}</TableCell>
+                      <TableCell>{car.year}</TableCell>
+                      <TableCell>{car.licensePlate}</TableCell>
+                      <TableCell>
+                        <Avatar alt={car.carPhotoURL} src={car.carPhotoURL} />
+                      </TableCell>
 
-                              <IconButton
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedCar(car);
-                                  setOpenDeleteModal(true);
-                                }}
-                              >
-                                <DeleteForeverIcon sx={{ color: "red" }} />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                  </>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => navigate(`/car/edit/${car.carID}`)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCar(car);
+                            setOpenDeleteModal(true);
+                          }}
+                        >
+                          <DeleteForeverIcon sx={{ color: "red" }} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
                 )}
               </TableBody>
             </Table>
