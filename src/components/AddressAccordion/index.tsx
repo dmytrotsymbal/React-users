@@ -11,14 +11,16 @@ import {
   TableHead,
   TableCell,
   IconButton,
+  Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { useState } from "react";
 import { getAllUsersAddresses } from "../../redux/addressSlice";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressTableSkeletonRow from "./AddressTableSkeletonRow";
 
@@ -34,17 +36,20 @@ const AddressAccordion = ({
   const { userId = "" } = useParams<{ userId: string | undefined }>(); // Отримуємо параметр userId з URL
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const { addresses, loading, error } = useAppSelector(
     (state: RootState) => state.address
   );
 
-  const [isExpanded, setIsExpanded] = useState(false); // Додаємо стан для відстеження відкриття аккордеону
+  const [isAddressAccordionExpanded, setIsAddressAccordionExpanded] =
+    useState<boolean>(false); // Додаємо стан для відстеження відкриття аккордеону
 
   const handleAccordionChange = (
     event: React.SyntheticEvent,
     isExpanded: boolean
   ) => {
-    setIsExpanded(isExpanded);
+    setIsAddressAccordionExpanded(isExpanded);
 
     if (isExpanded && !isAddressVisible) {
       // Затримка для завершення анімації
@@ -58,7 +63,10 @@ const AddressAccordion = ({
 
   return (
     <>
-      <Accordion expanded={isExpanded} onChange={handleAccordionChange}>
+      <Accordion
+        expanded={isAddressAccordionExpanded}
+        onChange={handleAccordionChange}
+      >
         <AccordionSummary
           sx={{ backgroundColor: "#7FA1C3", color: "white !important" }}
           expandIcon={
@@ -69,7 +77,29 @@ const AddressAccordion = ({
             />
           }
         >
-          <Typography>Нерухомість</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <Typography>Нерухомість</Typography>
+
+            {isAddressAccordionExpanded ? (
+              <IconButton
+                sx={{ marginRight: "1rem" }}
+                onClick={() => navigate(`/car/add/${userId}`)}
+              >
+                <AddIcon
+                  sx={{
+                    color: "white !important",
+                  }}
+                />
+              </IconButton>
+            ) : null}
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <TableContainer component={Paper}>

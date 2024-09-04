@@ -19,10 +19,6 @@ const UserPaperSlider = ({ user }: Props) => {
           width: "auto",
           maxWidth: "300px",
           height: "250px",
-          position: "absolute",
-          top: "16px",
-          left: "16px",
-          borderRadius: "4px",
         }}
         slidesPerView={1}
         scrollbar={{ draggable: true }}

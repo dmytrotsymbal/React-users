@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUserById, deleteUser } from "../../redux/userSlice";
 import { getAllUsersCars } from "../../redux/carSlice";
 import { RootState } from "../../redux/store";
-import { Paper, Typography, Avatar, Grid, Button } from "@mui/material";
+import { Paper, Avatar, Grid, Button } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import CustomLoader from "../../components/ui/CustomLoader";
@@ -69,18 +69,9 @@ const UserDetailsPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16 }}>
-        <Grid container spacing={2} sx={{ height: "300px" }}>
-          <Grid
-            item
-            xs={12}
-            sm={3}
-            md={3}
-            lg={3}
-            sx={{
-              position: "relative",
-            }}
-          >
+      <Paper sx={{ padding: "16px !important" }}>
+        <Grid container spacing={2} sx={{ height: "300px", width: "100%" }}>
+          <Grid item xs={12} sm={3} md={3} lg={3}>
             {!user.photos?.length ? (
               <Avatar
                 sx={{ width: 200, height: 200 }}
@@ -92,16 +83,22 @@ const UserDetailsPage = () => {
             )}
           </Grid>
 
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-            <Typography variant="h6">
-              Ім'я: {user.firstName} {user.lastName}
-            </Typography>
-            <Typography variant="h6">Імейл: {user.email}</Typography>
-            <Typography variant="h6">
+          <Grid item xs={12} sm={6} md={6} lg={6}>
+            <p>
+              Ім'я:{" "}
+              <b>
+                {user.firstName} {user.lastName}
+              </b>
+            </p>
+
+            <p>
+              Імейл: <a href={`mailto:${user.email}`}>{user.email}</a>
+            </p>
+            <p>
               Дата народження:{" "}
               {new Date(user.dateOfBirth).toLocaleDateString("uk-UA")}
-            </Typography>
-            <Typography variant="h6">
+            </p>
+            <p>
               Запис створено:{" "}
               {new Date(user.createdAt).toLocaleString("uk-UA", {
                 year: "numeric",
@@ -111,15 +108,15 @@ const UserDetailsPage = () => {
                 minute: "2-digit",
                 second: "2-digit",
               })}
-            </Typography>
+            </p>
           </Grid>
 
           <Grid
             item
             xs={12}
-            sm={5}
-            md={5}
-            lg={5}
+            sm={3}
+            md={3}
+            lg={3}
             sx={{
               display: "flex",
               flexDirection: "column",

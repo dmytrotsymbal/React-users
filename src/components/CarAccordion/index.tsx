@@ -13,9 +13,9 @@ import {
   TableHead,
   IconButton,
   Box,
-  Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { Car } from "../../types/carTypes";
 import { deleteCar } from "../../redux/carSlice";
@@ -98,13 +98,16 @@ const CarAccordion = ({ cars, loading, error, showAllUsersCars }: Props) => {
             <Typography>Автомобілі</Typography>
 
             {isAccordionOpen ? (
-              <Button
-                variant="contained"
-                color="secondary"
+              <IconButton
+                sx={{ marginRight: "1rem" }}
                 onClick={() => navigate(`/car/add/${userId}`)}
               >
-                Додати автомобіль
-              </Button>
+                <AddIcon
+                  sx={{
+                    color: "white !important",
+                  }}
+                />
+              </IconButton>
             ) : null}
           </Box>
         </AccordionSummary>
