@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUserById, deleteUser } from "../../redux/userSlice";
-import { getAllUsersCars } from "../../redux/carSlice";
 import { RootState } from "../../redux/store";
 import { Paper, Avatar, Grid, Button } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
@@ -16,16 +15,12 @@ const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // навгігатор для переходу на сторінку редагування
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false); // модалка для підтвердження видалення
 
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false); // модалка для видалення
-
+  const [isCarVisible, setIsCarVisible] = useState<boolean>(false);
   const [isAddressVisible, setIsAddressVisible] = useState<boolean>(false);
-
-  const { cars, loading, error } = useAppSelector(
-    (state: RootState) => state.car
-  );
 
   const user = useAppSelector(
     (
@@ -58,8 +53,7 @@ const UserDetailsPage = () => {
   }
 
   const showAllUsersCars = () => {
-    dispatch(getAllUsersCars(user.userID));
-    console.log("СРАБОТАЛА ФУНКЦИЯ showAllUsersCars");
+    setIsCarVisible(!isCarVisible);
   };
 
   const showAllUsersAdresses = () => {
@@ -146,9 +140,7 @@ const UserDetailsPage = () => {
 
         <br />
         <CarAccordion
-          cars={cars}
-          loading={loading}
-          error={error}
+          isCarVisible={isCarVisible}
           showAllUsersCars={showAllUsersCars}
         />
 

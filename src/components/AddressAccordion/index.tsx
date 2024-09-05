@@ -33,7 +33,7 @@ const AddressAccordion = ({
   isAddressVisible,
   showAllUsersAdresses,
 }: Props) => {
-  const { userId = "" } = useParams<{ userId: string | undefined }>(); // Отримуємо параметр userId з URL
+  const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ const AddressAccordion = ({
     if (isExpanded && !isAddressVisible) {
       // Затримка для завершення анімації
       setTimeout(() => {
-        dispatch(getAllUsersAddresses(userId));
+        dispatch(getAllUsersAddresses(String(userId)));
         console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersAddresses");
         showAllUsersAdresses();
       }, 300); // Затримка в мілісекундах (300 мс)

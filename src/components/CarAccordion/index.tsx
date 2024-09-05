@@ -18,31 +18,51 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { Car } from "../../types/carTypes";
-import { deleteCar } from "../../redux/carSlice";
+import { deleteCar, getAllUsersCars } from "../../redux/carSlice";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useState } from "react";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import ConfirmDeleteCarModal from "../ui/modals/ConfirmDeleteCarModal";
 import CarTableSkeletonRow from "../CarsTable/CarTableSkeletonRow";
 import { useNavigate, useParams } from "react-router-dom";
+import { RootState } from "../../redux/store";
 
 type Props = {
-  cars: Car[];
-  loading: boolean;
-  error: string | null;
+  isCarVisible: boolean;
   showAllUsersCars: () => void;
 };
 
-const CarAccordion = ({ cars, loading, error, showAllUsersCars }: Props) => {
-  const { userId } = useParams<{ userId: string }>();
+const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
+  const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
 
   const dispatch = useAppDispatch();
-
   const navigate = useNavigate();
+
+  const { cars, loading, error } = useAppSelector(
+    (state: RootState) => state.car
+  );
+
+  const [isCarAccordionExpanded, setIsCarAccordionExpanded] =
+    useState<boolean>(false);
+
+  const handleAccordionChange = (
+    event: React.SyntheticEvent,
+    isExpanded: boolean
+  ) => {
+    setIsCarAccordionExpanded(isExpanded);
+
+    if (isExpanded && !isCarVisible) {
+      // Затримка для завершення анімації
+      setTimeout(() => {
+        dispatch(getAllUsersCars(String(userId)));
+        console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersCars");
+        showAllUsersCars();
+      }, 300); // Затримка в мілісекундах (300 мс)
+    }
+  };
+
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
-  const [isAccordionOpen, setIsAccordionOpen] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(loading);
 
   const handleDeleteCar = () => {
     if (selectedCar) {
@@ -51,28 +71,13 @@ const CarAccordion = ({ cars, loading, error, showAllUsersCars }: Props) => {
     }
   };
 
-  const handleAccordionChange = async (
-    event: React.SyntheticEvent,
-    isExpanded: boolean
-  ) => {
-    setIsAccordionOpen(isExpanded);
-    if (isExpanded) {
-      event.stopPropagation(); // Отмена действия по умолчанию
-      setIsLoading(true);
-      // await delay(2000);  Задержка на 2 секунды
-      showAllUsersCars();
-      setIsLoading(false);
-    }
-  };
-
   const [isFullSkeleton] = useState<boolean>(false);
 
   return (
     <>
       <Accordion
-        onChange={(event, isExpanded) =>
-          handleAccordionChange(event, isExpanded)
-        }
+        expanded={isCarAccordionExpanded}
+        onChange={handleAccordionChange}
       >
         <AccordionSummary
           sx={{
@@ -97,7 +102,7 @@ const CarAccordion = ({ cars, loading, error, showAllUsersCars }: Props) => {
           >
             <Typography>Автомобілі</Typography>
 
-            {isAccordionOpen ? (
+            {isCarAccordionExpanded ? (
               <IconButton
                 sx={{ marginRight: "1rem" }}
                 onClick={() => navigate(`/car/add/${userId}`)}
@@ -132,7 +137,7 @@ const CarAccordion = ({ cars, loading, error, showAllUsersCars }: Props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {isLoading ? (
+                {loading ? (
                   // Показуємо скелетони під час завантаження
                   Array.from({ length: 2 }).map((_, i) => (
                     <CarTableSkeletonRow
