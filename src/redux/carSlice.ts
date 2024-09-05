@@ -174,7 +174,8 @@ const carSlice = createSlice({
       })
       .addCase(getAllCars.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to fetch cars";
+        state.error =
+          action.error.message ?? "Не вдалося завантажити автомобілі";
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|
@@ -189,7 +190,8 @@ const carSlice = createSlice({
       })
       .addCase(getCarById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to fetch car";
+        state.error =
+          action.error.message ?? "Не вдалося завантажити автомобіль";
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|
@@ -207,7 +209,9 @@ const carSlice = createSlice({
       )
       .addCase(getAllUsersCars.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to fetch cars";
+        state.error =
+          action.error.message ??
+          "Не вдалося завантажити автомобілі цього користувача";
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|
@@ -222,7 +226,7 @@ const carSlice = createSlice({
       })
       .addCase(searchCars.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to search cars";
+        state.error = action.error.message ?? "Не вдалось знайти автомобілі";
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|
@@ -286,7 +290,7 @@ const carSlice = createSlice({
         (state, action: PayloadAction<number | undefined>) => {
           state.loading = false;
           state.error = null;
-          state.cars = state.cars.filter((car) => car.carID !== action.payload); // Видаляємо користувача зі списку
+          state.cars = state.cars.filter((car) => car.carID !== action.payload); // Видаляємо автомобіль зі списку
         }
       )
       .addCase(deleteCar.rejected, (state, action) => {

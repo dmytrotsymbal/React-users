@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   IconButton,
   Pagination,
   Paper,
@@ -12,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -23,6 +21,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CarTableSkeletonRow from "./CarTableSkeletonRow";
 import useDebounce from "../../hooks/useDebounce";
+import CustomSearchInput from "../ui/CustomSearchInput";
 
 const CarsTable = () => {
   const dispatch = useAppDispatch();
@@ -49,6 +48,7 @@ const CarsTable = () => {
       setIsTyping(false);
       dispatch(searchCars(debouncedSearchQuery));
     } else {
+      setIsTyping(false);
       dispatch(getAllCars({ pageNumber: currentPage, pageSize }));
     }
   }, [dispatch, debouncedSearchQuery, currentPage]);
@@ -93,26 +93,12 @@ const CarsTable = () => {
           marginBottom: "16px",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TextField
-            sx={{
-              width: "400px",
-            }}
-            label="Пошук машини по номеру або фірмі"
-            variant="outlined"
-            value={searchQuery}
-            onChange={handleSearchInputChange} // Обновляем строку поиска
-          />
-
-          <Button onClick={handleClearSearch}>Скасувати</Button>
-        </Box>
+        <CustomSearchInput
+          searchQuery={searchQuery}
+          handleSearchInputChange={handleSearchInputChange}
+          handleClearSearch={handleClearSearch}
+          placeholder="Пошук машини по номеру або марці"
+        />
 
         <Box
           sx={{

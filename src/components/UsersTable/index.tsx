@@ -21,7 +21,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Pagination,
 } from "@mui/material";
 import { RootState } from "../../redux/store";
@@ -30,6 +29,7 @@ import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import ConfirmDeleteModal from "../ui/modals/ConfirmDeleteUserModal";
 import { User } from "../../types/userTypes";
 import useDebounce from "../../hooks/useDebounce";
+import CustomSearchInput from "../ui/CustomSearchInput";
 
 const UsersTable = () => {
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const UsersTable = () => {
       setIsTyping(false);
       dispatch(searchUsersByName(debouncedSearchQuery)); // Поиск по имени
     } else {
-      // Если строка поиска пустая
+      setIsTyping(false);
       dispatch(getAllUsers({ pageNumber: currentPage, pageSize })); // Загрузка всех пользователей с пагинацией
     }
   }, [debouncedSearchQuery, currentPage, dispatch]);
@@ -114,23 +114,12 @@ const UsersTable = () => {
       >
         <Button onClick={() => navigate("user/add")}>Додати користувача</Button>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <TextField
-            label="Пошук користувачів"
-            variant="outlined"
-            value={searchQuery}
-            onChange={handleSearchInputChange} // Обновляем строку поиска
-          />
-
-          <Button onClick={handleClearSearch}>Скасувати</Button>
-        </Box>
+        <CustomSearchInput
+          searchQuery={searchQuery}
+          handleSearchInputChange={handleSearchInputChange}
+          handleClearSearch={handleClearSearch}
+          placeholder="Пошук користувачів"
+        />
 
         <Box
           sx={{

@@ -147,7 +147,11 @@ const AddressAccordion = ({
                       <TableCell>{address.country}</TableCell>
 
                       <TableCell>
-                        <IconButton>
+                        <IconButton
+                          onClick={() =>
+                            navigate(`/address/edit/${address.addressID}`)
+                          }
+                        >
                           <EditIcon />
                         </IconButton>
 
