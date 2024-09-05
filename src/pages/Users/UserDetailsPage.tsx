@@ -8,8 +8,8 @@ import UserPaperSlider from "../../components/ui/UserPaperSlider";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import CustomLoader from "../../components/ui/CustomLoader";
 import ConfirmDeleteModal from "../../components/ui/modals/ConfirmDeleteUserModal";
-import CarAccordion from "../../components/CarAccordion";
-import AddressAccordion from "../../components/AddressAccordion";
+import CarAccordion from "../../components/Accardions/CarAccordion";
+import AddressAccordion from "../../components/Accardions/AddressAccordion";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL

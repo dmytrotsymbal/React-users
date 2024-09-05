@@ -15,14 +15,19 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { RootState } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { RootState } from "../../../redux/store";
 import { useState } from "react";
-import { getAllUsersAddresses } from "../../redux/addressSlice";
+import {
+  deleteAddress,
+  getAllUsersAddresses,
+} from "../../../redux/addressSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressTableSkeletonRow from "./AddressTableSkeletonRow";
+import { Address } from "../../../types/addressTypes";
+import ConfirmDeleteAddressModal from "../../ui/modals/ConfirmDeleteAddressModal";
 
 type Props = {
   isAddressVisible: boolean;
@@ -58,6 +63,18 @@ const AddressAccordion = ({
         console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersAddresses");
         showAllUsersAdresses();
       }, 300); // Затримка в мілісекундах (300 мс)
+    }
+  };
+
+  // delete address
+
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+
+  const handleDeleteAddress = () => {
+    if (selectedAddress) {
+      dispatch(deleteAddress(selectedAddress.addressID));
+      setOpenDeleteModal(true);
     }
   };
 
@@ -155,7 +172,13 @@ const AddressAccordion = ({
                           <EditIcon />
                         </IconButton>
 
-                        <IconButton>
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedAddress(address);
+                            setOpenDeleteModal(true);
+                          }}
+                        >
                           <DeleteForeverIcon sx={{ color: "red" }} />
                         </IconButton>
                       </TableCell>
@@ -167,6 +190,15 @@ const AddressAccordion = ({
           </TableContainer>
         </AccordionDetails>
       </Accordion>
+
+      {openDeleteModal && (
+        <ConfirmDeleteAddressModal
+          open={openDeleteModal}
+          handleClose={() => setOpenDeleteModal(false)}
+          handleDelete={handleDeleteAddress}
+          address={selectedAddress}
+        />
+      )}
     </>
   );
 };
