@@ -3,16 +3,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { useEffect, useMemo } from "react";
 import { getUserAddressByID, updateAddress } from "../../redux/addressSlice";
-import {
-  Button,
-  TextField,
-  Paper,
-  Grid,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Button, TextField, Paper, Grid, Typography } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import CustomLoader from "../../components/ui/CustomLoader";
 
 // Валидация формы с помощью Yup
 const validationSchema = Yup.object({
@@ -90,7 +84,7 @@ const EditAddressPage = () => {
           height: "100vh",
         }}
       >
-        <CircularProgress />
+        <CustomLoader />
       </div>
     );
   }

@@ -65,7 +65,8 @@ const photoSlice = createSlice({
       })
       .addCase(addPhoto.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to add photo";
+        state.error =
+          action.error.message || "Не вдалося додати фото до користувача";
       })
 
       .addCase(deletePhoto.pending, (state) => {
@@ -83,7 +84,8 @@ const photoSlice = createSlice({
       )
       .addCase(deletePhoto.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to delete photo";
+        state.error =
+          action.error.message || "Не вдалось видалити фото користувача";
       });
   },
 });

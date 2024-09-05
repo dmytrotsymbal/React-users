@@ -107,7 +107,7 @@ const AddressAccordion = ({
             {isAddressAccordionExpanded ? (
               <IconButton
                 sx={{ marginRight: "1rem" }}
-                onClick={() => navigate(`/car/add/${userId}`)}
+                onClick={() => navigate(`/address/add/${userId}`)}
               >
                 <AddIcon
                   sx={{

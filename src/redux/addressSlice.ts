@@ -68,6 +68,27 @@ export const updateAddress = createAsyncThunk(
   }
 );
 
+export const addAddressToUser = createAsyncThunk(
+  "address/addAddressToUser",
+  async ({ userID, address }: { userID: string; address: Address }) => {
+    try {
+      const response = await fetch(`/api/Address/AddAddressToUser/${userID}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(address),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return { userID, address };
+    } catch (error) {
+      console.error("Error adding address to user:", error);
+    }
+  }
+);
+
 export const deleteAddress = createAsyncThunk(
   "address/deleteAddress",
   async (addressID: number) => {
@@ -154,6 +175,30 @@ export const addressSlice = createSlice({
       .addCase(updateAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Failed to update car";
+      })
+
+      .addCase(addAddressToUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        addAddressToUser.fulfilled,
+        (
+          state,
+          action: PayloadAction<
+            { userID: string; address: Address } | undefined
+          >
+        ) => {
+          state.loading = false;
+          if (action.payload) {
+            const { address } = action.payload;
+            state.addresses.push(address); // Додаємо створену адресу до списку
+          }
+        }
+      )
+      .addCase(addAddressToUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Не вдалося додати адресу";
       })
 
       .addCase(deleteAddress.pending, (state) => {

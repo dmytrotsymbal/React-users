@@ -254,7 +254,8 @@ const carSlice = createSlice({
       )
       .addCase(updateCar.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to update car";
+        state.error =
+          action.error.message ?? "Не вдалося оновити данні про автомобіль";
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|
@@ -277,7 +278,7 @@ const carSlice = createSlice({
       )
       .addCase(addCarToUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to add car to user";
+        state.error = action.error.message ?? "Не вдалося додати автомобіль";
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|
@@ -295,7 +296,7 @@ const carSlice = createSlice({
       )
       .addCase(deleteCar.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to delete car";
+        state.error = action.error.message ?? "Не вдалося видалити автомобіль";
       })
 
       // HALPERS |=|=|=|=|=|=|=|=|=|=|=|
@@ -313,7 +314,9 @@ const carSlice = createSlice({
       )
       .addCase(getCarsCount.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to get users count";
+        state.error =
+          action.error.message ||
+          "Не вдалося отримати загальну кількість автомобілів";
       });
   },
 });

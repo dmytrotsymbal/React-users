@@ -12,7 +12,6 @@ import {
   TextField,
   Paper,
   Grid,
-  CircularProgress,
   Typography,
   Box,
   IconButton,
@@ -20,6 +19,7 @@ import {
 import ConfirmDeletePhotoModal from "../../components/ui/modals/ConfirmDeletePhotoModal";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import CustomLoader from "../../components/ui/CustomLoader";
 
 // Валідація форми за допомогою Yup
 const validationSchema = Yup.object({
@@ -123,7 +123,7 @@ const EditUserPage = () => {
           height: "100vh",
         }}
       >
-        <CircularProgress />
+        <CustomLoader />
       </div>
     );
   }
