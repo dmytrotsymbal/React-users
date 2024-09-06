@@ -27,7 +27,6 @@ const CustomSearchInput = ({
         sx={{
           width: "400px",
           position: "relative",
-          zIndex: 100,
         }}
         label={placeholder}
         variant="outlined"

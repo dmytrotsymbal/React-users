@@ -81,7 +81,7 @@ const UserDetailsPage = () => {
 
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <p>
-              Ім'я:
+              Ім'я:{" "}
               {loading ? (
                 <Skeleton
                   animation="wave"

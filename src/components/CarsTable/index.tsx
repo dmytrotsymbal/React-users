@@ -214,6 +214,9 @@ const CarsTable = () => {
           />
         </Box>
       )}
+
+      <br />
+      <br />
     </>
   );
 };
