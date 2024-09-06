@@ -13,17 +13,24 @@ const validationSchema = Yup.object({
   streetAddress: Yup.string()
     .max(100, "Street address must be at most 100 characters")
     .required("Street address is required"),
+
   city: Yup.string()
     .max(50, "City must be at most 50 characters")
+    .matches(/^[^\d]*$/, "City cannot contain numbers")
     .required("City is required"),
+
   state: Yup.string()
     .max(2, "State must be a valid 2-letter code")
+    .matches(/^[^\d]*$/, "State cannot contain numbers")
     .required("State is required"),
+
   postalCode: Yup.string()
     .matches(/^\d{5}(-\d{4})?$/, "Invalid postal code")
     .required("Postal code is required"),
+
   country: Yup.string()
     .max(50, "Country must be at most 50 characters")
+    .matches(/^[^\d]*$/, "Country cannot contain numbers")
     .required("Country is required"),
 });
 

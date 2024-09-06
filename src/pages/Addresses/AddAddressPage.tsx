@@ -9,32 +9,30 @@ import { Address } from "../../types/addressTypes";
 // Валидация формы с помощью Yup
 const validationSchema = Yup.object({
   streetAddress: Yup.string()
-    .max(40, "streetAddress must be at most 40 characters")
-    .min(2, "streetAddress must be at least 2 characters")
-    .typeError("streetAddress must be a string")
-    .required("streetAddress is required"),
+    .max(100, "Street address must be at most 100 characters")
+    .required("Street address is required"),
+
   city: Yup.string()
-    .max(40, "city must be at most 40 characters")
-    .min(2, "city must be at least 2 characters")
-    .typeError("city must be a string")
-    .required("city is required"),
+    .max(50, "City must be at most 50 characters")
+    .matches(/^[^\d]*$/, "City cannot contain numbers")
+    .required("City is required"),
+
   state: Yup.string()
-    .max(20, "state must be at most 20 characters")
-    .min(2, "state must be at least 2 characters")
-    .typeError("state must be a string")
-    .required("state is required"),
-  postalCode: Yup.number()
-    .max(6, "Поштовий індекс має бути не більше 6-ти символів")
-    .typeError("postalCode must be a number")
-    .required("postalCode is required"),
+    .max(2, "State must be a valid 2-letter code")
+    .matches(/^[^\d]*$/, "State cannot contain numbers")
+    .required("State is required"),
+
+  postalCode: Yup.string()
+    .matches(/^\d{5}(-\d{4})?$/, "Invalid postal code")
+    .required("Postal code is required"),
+
   country: Yup.string()
-    .max(20, "country must be at most 20 characters")
-    .min(2, "country must be at least 2 characters")
-    .typeError("country must be a string")
-    .required("country is required"),
+    .max(50, "Country must be at most 50 characters")
+    .matches(/^[^\d]*$/, "Country cannot contain numbers")
+    .required("Country is required"),
 });
 
-const AddCarPage = () => {
+const AddAddressPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Получаем параметр userId из URL
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -156,4 +154,4 @@ const AddCarPage = () => {
   );
 };
 
-export default AddCarPage;
+export default AddAddressPage;
