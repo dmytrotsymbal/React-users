@@ -57,7 +57,7 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
         dispatch(getAllUsersCars(String(userId)));
         console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersCars");
         showAllUsersCars();
-      }, 300); // Затримка в мілісекундах (300 мс)
+      }, 1000); // Затримка в мілісекундах (300 мс)
     }
   };
 

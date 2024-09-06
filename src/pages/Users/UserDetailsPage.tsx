@@ -3,13 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUserById, deleteUser } from "../../redux/userSlice";
 import { RootState } from "../../redux/store";
-import { Paper, Avatar, Grid, Button } from "@mui/material";
+import { Paper, Avatar, Grid, Button, Box } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
-import CustomLoader from "../../components/ui/CustomLoader";
+import { Skeleton } from "@mui/material";
 import ConfirmDeleteModal from "../../components/ui/modals/ConfirmDeleteUserModal";
 import CarAccordion from "../../components/Accardions/CarAccordion";
 import AddressAccordion from "../../components/Accardions/AddressAccordion";
+import { getAllUsersPhones } from "../../redux/phoneSlice";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
@@ -22,13 +23,20 @@ const UserDetailsPage = () => {
   const [isCarVisible, setIsCarVisible] = useState<boolean>(false);
   const [isAddressVisible, setIsAddressVisible] = useState<boolean>(false);
 
-  const user = useAppSelector(
-    (
-      state: RootState // отримуємо користувача зі стейту
-    ) => state.user.users.find((u) => u.userID === userId)
+  const user = useAppSelector((state: RootState) =>
+    state.user.users.find((u) => u.userID === userId)
   );
 
-  // викликаємло метод для отримання користувача по айді і передаємо в параметр userId який отримали з URL
+  const { loading, error } = useAppSelector((state: RootState) => state.user);
+
+  const { phones } = useAppSelector((state: RootState) => state.phone);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(getAllUsersPhones(userId));
+    }
+  }, [dispatch, userId]);
+
   useEffect(() => {
     if (userId) {
       dispatch(getUserById(userId));
@@ -36,20 +44,12 @@ const UserDetailsPage = () => {
     }
   }, [dispatch, userId]);
 
-  // на статус лоадінг
   if (!user) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CustomLoader />
-      </div>
-    );
+    return <div>User not found</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   const showAllUsersCars = () => {
@@ -59,6 +59,8 @@ const UserDetailsPage = () => {
   const showAllUsersAdresses = () => {
     setIsAddressVisible(!isAddressVisible);
   };
+
+  //======================
 
   return (
     <>
@@ -79,10 +81,19 @@ const UserDetailsPage = () => {
 
           <Grid item xs={12} sm={6} md={6} lg={6}>
             <p>
-              Ім'я:{" "}
-              <b>
-                {user.firstName} {user.lastName}
-              </b>
+              Ім'я:
+              {loading ? (
+                <Skeleton
+                  animation="wave"
+                  width={50}
+                  height={35}
+                  variant="text"
+                />
+              ) : (
+                <b>
+                  {user.firstName} {user.lastName}
+                </b>
+              )}
             </p>
 
             <p>
@@ -103,6 +114,26 @@ const UserDetailsPage = () => {
                 second: "2-digit",
               })}
             </p>
+
+            <br />
+
+            {phones.length > 0 ? (
+              <Box>
+                <b>Телефони:</b>
+
+                <ul>
+                  {phones.map((phone) => (
+                    <li key={phone.phoneID}>
+                      <a href={`tel:${phone.phoneNumber}`}>
+                        {phone.phoneNumber}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </Box>
+            ) : (
+              <p>Телефонів немає</p>
+            )}
           </Grid>
 
           <Grid
@@ -151,7 +182,7 @@ const UserDetailsPage = () => {
         />
       </Paper>
 
-      {openDeleteModal && (
+      {openDeleteModal && user && (
         <ConfirmDeleteModal
           open={openDeleteModal}
           handleClose={() => setOpenDeleteModal(false)}
