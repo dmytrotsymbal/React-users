@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks";
 import { addCarToUser } from "../../redux/carSlice";
-import { Button, TextField, Paper, Grid, Typography } from "@mui/material";
+import { Button, TextField, Paper, Grid, Typography, Box } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Car } from "../../types/carTypes";
+import CustomIconButton from "../../components/ui/CustomIconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // Валидация формы с помощью Yup
 const validationSchema = Yup.object({
@@ -65,7 +67,7 @@ const AddCarPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16 }}>
+      <Paper style={{ padding: 16, position: "relative" }}>
         <Typography variant="h6">Додати автомобіль</Typography>
         <br />
         <Formik
@@ -142,22 +144,20 @@ const AddCarPage = () => {
               </Grid>
 
               <br />
-              <Grid
-                container
-                spacing={2}
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
+              <Box style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button variant="contained" color="success" type="submit">
-                  Save
+                  Зберегти
                 </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => navigate(-1)} // Переход на предыдущую страницу
-                >
-                  Cancel
+
+                <Button type="reset" variant="contained" color="inherit">
+                  Скинути
                 </Button>
-              </Grid>
+
+                <CustomIconButton
+                  icon={<ArrowBackIcon />}
+                  onClick={() => navigate(-1)}
+                />
+              </Box>
             </Form>
           )}
         </Formik>

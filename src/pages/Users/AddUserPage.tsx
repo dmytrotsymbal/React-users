@@ -5,6 +5,8 @@ import { useAppDispatch } from "../../redux/hooks";
 import { createUser } from "../../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import CustomIconButton from "../../components/ui/CustomIconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -63,7 +65,7 @@ const AddUserPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16 }}>
+      <Paper style={{ padding: 16, position: "relative" }}>
         <Typography variant="h6" gutterBottom>
           Додати користувача в базу даних
         </Typography>
@@ -117,15 +119,26 @@ const AddUserPage = () => {
                 helperText={<ErrorMessage name="dateOfBirth" />}
                 error={Boolean(<ErrorMessage name="dateOfBirth" />)}
               />
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
-              >
-                <Button type="reset" color="secondary">
+
+              <br />
+              <Box style={{ display: "flex", justifyContent: "space-between" }}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  Зберегти
+                </Button>
+
+                <Button type="reset" variant="contained" color="inherit">
                   Скинути
                 </Button>
-                <Button type="submit" color="primary" disabled={isSubmitting}>
-                  Додати
-                </Button>
+
+                <CustomIconButton
+                  icon={<ArrowBackIcon />}
+                  onClick={() => navigate(-1)}
+                />
               </Box>
             </Form>
           )}

@@ -3,10 +3,13 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { useEffect, useMemo } from "react";
 import { getCarById, updateCar } from "../../redux/carSlice";
-import { Button, TextField, Paper, Grid, Typography } from "@mui/material";
+import { Button, TextField, Paper, Grid, Typography, Box } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CustomLoader from "../../components/ui/CustomLoader";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Car } from "../../types/carTypes";
+import CustomIconButton from "../../components/ui/CustomIconButton";
 
 // Валідація форми за допомогою Yup
 const validationSchema = Yup.object({
@@ -41,11 +44,10 @@ const EditCarPage = () => {
   const dispatch = useAppDispatch();
 
   const car = useAppSelector((state: RootState) =>
-    state.car.cars.find((c) => c.carID === Number(carId))
+    state.car.cars.find((car: Car) => car.carID === Number(carId))
   );
 
-  const loading = useAppSelector((state: RootState) => state.car.loading);
-  const error = useAppSelector((state: RootState) => state.car.error);
+  const { loading, error } = useAppSelector((state: RootState) => state.car);
 
   // Використовуємо useMemo для запам'ятовування даних автомобіля, щоб уникнути зайвих рендерів
   const memoizedCar = useMemo(() => car, [car]);
@@ -132,7 +134,7 @@ const EditCarPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16 }}>
+      <Paper style={{ padding: 16, position: "relative" }}>
         <Typography variant="h6">Редагувати автомобіль</Typography>
         <br />
         <Formik
@@ -211,22 +213,20 @@ const EditCarPage = () => {
               </Grid>
 
               <br />
-              <Grid
-                container
-                spacing={2}
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
+              <Box style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button variant="contained" color="success" type="submit">
-                  Save
+                  Зберегти
                 </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => navigate(-1)} // Переход на предыдущую страницу
-                >
-                  Cancel
+
+                <Button type="reset" variant="contained" color="inherit">
+                  Скинути
                 </Button>
-              </Grid>
+
+                <CustomIconButton
+                  icon={<ArrowBackIcon />}
+                  onClick={() => navigate(-1)}
+                />
+              </Box>
             </Form>
           )}
         </Formik>
