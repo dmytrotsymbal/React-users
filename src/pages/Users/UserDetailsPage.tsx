@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUserById, deleteUser } from "../../redux/userSlice";
 import { RootState } from "../../redux/store";
-import { Paper, Avatar, Grid, Button, Box, Typography } from "@mui/material";
+import { Paper, Avatar, Grid, Button, Box } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import { Skeleton } from "@mui/material";
@@ -45,14 +45,6 @@ const UserDetailsPage = () => {
     }
   }, [dispatch, userId]);
 
-  // if (!user) {
-  //   return <div>User not found</div>;
-  // }
-
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
-
   const showAllUsersCars = () => {
     setIsCarVisible(!isCarVisible);
   };
@@ -67,125 +59,168 @@ const UserDetailsPage = () => {
     <>
       <br />
 
-      {!user ? (
+      {error ? (
         <CustomErrorBlock />
       ) : (
-        <Paper sx={{ padding: "16px !important" }}>
-          <Grid container spacing={2} sx={{ height: "300px", width: "100%" }}>
-            <Grid item xs={12} sm={3} md={3} lg={3}>
-              {!user.photos?.length ? (
-                <Avatar
-                  sx={{ width: 200, height: 200 }}
-                  alt="No profile image"
-                  src={NoProfilePicture}
-                />
-              ) : (
-                <UserPaperSlider user={user} />
-              )}
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={6} lg={6}>
-              <p>
-                Ім'я:{" "}
-                {loading ? (
-                  <Skeleton
-                    animation="wave"
-                    width={50}
-                    height={35}
-                    variant="text"
+        user && (
+          <Paper sx={{ padding: "16px !important" }}>
+            <Grid container spacing={2} sx={{ height: "300px", width: "100%" }}>
+              <Grid item xs={12} sm={3} md={3} lg={3}>
+                {!user.photos?.length ? (
+                  <Avatar
+                    sx={{ width: 250, height: 250 }}
+                    alt="No profile image"
+                    src={NoProfilePicture}
                   />
                 ) : (
-                  <b>
-                    {user.firstName} {user.lastName}
-                  </b>
+                  <UserPaperSlider user={user} loading={loading} />
                 )}
-              </p>
+              </Grid>
 
-              <p>
-                Імейл: <a href={`mailto:${user.email}`}>{user.email}</a>
-              </p>
-              <p>
-                Дата народження:{" "}
-                {new Date(user.dateOfBirth).toLocaleDateString("uk-UA")}
-              </p>
-              <p>
-                Запис створено:{" "}
-                {new Date(user.createdAt).toLocaleString("uk-UA", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                })}
-              </p>
+              <Grid item xs={12} sm={6} md={6} lg={6}>
+                {loading ? (
+                  <Skeleton
+                    variant="text"
+                    width="200px"
+                    height="35px"
+                    animation="wave"
+                  />
+                ) : (
+                  <p>
+                    Ім'я:
+                    <b>
+                      {" "}
+                      {user.firstName} {user.lastName}
+                    </b>
+                  </p>
+                )}
 
-              <br />
+                {loading ? (
+                  <Skeleton
+                    variant="text"
+                    width="350px"
+                    height="35px"
+                    animation="wave"
+                  />
+                ) : (
+                  <p>
+                    Імейл: <a href={`mailto:${user.email}`}>{user.email}</a>
+                  </p>
+                )}
 
-              {phones.length > 0 ? (
-                <Box>
-                  <b>Телефони:</b>
+                {loading ? (
+                  <Skeleton
+                    variant="text"
+                    width="250px"
+                    height="35px"
+                    animation="wave"
+                  />
+                ) : (
+                  <p>
+                    Дата народження:{" "}
+                    {new Date(user.dateOfBirth).toLocaleDateString("uk-UA")}
+                  </p>
+                )}
 
-                  <ul>
-                    {phones.map((phone) => (
-                      <li key={phone.phoneID}>
-                        <a href={`tel:${phone.phoneNumber}`}>
-                          {phone.phoneNumber}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </Box>
-              ) : (
-                <p>Телефонів немає</p>
-              )}
+                {loading ? (
+                  <Skeleton
+                    variant="text"
+                    width="400px"
+                    height="35px"
+                    animation="wave"
+                  />
+                ) : (
+                  <p>
+                    Запис створено:{" "}
+                    {new Date(user.createdAt).toLocaleString("uk-UA", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })}
+                  </p>
+                )}
+
+                <br />
+
+                {phones.length > 0 ? (
+                  <Box>
+                    <b>Телефони:</b>
+
+                    <ul>
+                      {phones.map((phone) => (
+                        <>
+                          {loading ? (
+                            <Skeleton
+                              variant="text"
+                              width="200px"
+                              height="35px"
+                              animation="wave"
+                            />
+                          ) : (
+                            <li key={phone.phoneID}>
+                              <a href={`tel:${phone.phoneNumber}`}>
+                                {phone.phoneNumber}
+                              </a>
+                            </li>
+                          )}
+                        </>
+                      ))}
+                    </ul>
+                  </Box>
+                ) : (
+                  <p>Телефонів немає</p>
+                )}
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                md={3}
+                lg={3}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1,
+                  alignItems: "flex-end",
+                }}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: "200px" }}
+                  onClick={() => navigate(`/user/edit/${user.userID}`)}
+                >
+                  Редагувати профіль
+                </Button>
+
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{ width: "200px" }}
+                  onClick={() => setOpenDeleteModal(true)}
+                >
+                  Видалити профіль
+                </Button>
+              </Grid>
             </Grid>
 
-            <Grid
-              item
-              xs={12}
-              sm={3}
-              md={3}
-              lg={3}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                alignItems: "flex-end",
-              }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: "200px" }}
-                onClick={() => navigate(`/user/edit/${user.userID}`)}
-              >
-                Редагувати профіль
-              </Button>
+            <br />
+            <CarAccordion
+              isCarVisible={isCarVisible}
+              showAllUsersCars={showAllUsersCars}
+            />
 
-              <Button
-                variant="contained"
-                color="error"
-                sx={{ width: "200px" }}
-                onClick={() => setOpenDeleteModal(true)}
-              >
-                Видалити профіль
-              </Button>
-            </Grid>
-          </Grid>
-
-          <br />
-          <CarAccordion
-            isCarVisible={isCarVisible}
-            showAllUsersCars={showAllUsersCars}
-          />
-
-          <br />
-          <AddressAccordion
-            isAddressVisible={isAddressVisible}
-            showAllUsersAdresses={showAllUsersAdresses}
-          />
-        </Paper>
+            <br />
+            <AddressAccordion
+              isAddressVisible={isAddressVisible}
+              showAllUsersAdresses={showAllUsersAdresses}
+            />
+          </Paper>
+        )
       )}
 
       {openDeleteModal && user && (
