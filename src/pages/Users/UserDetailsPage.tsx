@@ -12,6 +12,8 @@ import CarAccordion from "../../components/Accardions/CarAccordion";
 import AddressAccordion from "../../components/Accardions/AddressAccordion";
 import { getAllUsersPhones } from "../../redux/phoneSlice";
 import CustomErrorBlock from "../../components/ui/CustomErrorBlock";
+import CustomIconButton from "../../components/ui/CustomIconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
@@ -63,7 +65,7 @@ const UserDetailsPage = () => {
         <CustomErrorBlock />
       ) : (
         user && (
-          <Paper sx={{ padding: "16px !important" }}>
+          <Paper sx={{ padding: "16px !important", position: "relative" }}>
             <Grid container spacing={2} sx={{ height: "300px", width: "100%" }}>
               <Grid item xs={12} sm={3} md={3} lg={3}>
                 {!user.photos?.length ? (
@@ -149,26 +151,32 @@ const UserDetailsPage = () => {
                   <Box>
                     <b>Телефони:</b>
 
-                    <ul>
-                      {phones.map((phone) => (
-                        <>
-                          {loading ? (
-                            <Skeleton
-                              variant="text"
-                              width="200px"
-                              height="35px"
-                              animation="wave"
-                            />
-                          ) : (
-                            <li key={phone.phoneID}>
-                              <a href={`tel:${phone.phoneNumber}`}>
-                                {phone.phoneNumber}
-                              </a>
-                            </li>
-                          )}
-                        </>
-                      ))}
-                    </ul>
+                    {loading ? (
+                      <>
+                        {Array.from({ length: 3 }).map((_, i) => (
+                          <Skeleton
+                            key={i}
+                            variant="text"
+                            width="150px"
+                            height="35px"
+                            animation="wave"
+                            sx={{
+                              ml: "40px",
+                            }}
+                          />
+                        ))}
+                      </>
+                    ) : (
+                      <ul>
+                        {phones.map((phone) => (
+                          <li key={phone.phoneID}>
+                            <a href={`tel:${phone.phoneNumber}`}>
+                              {phone.phoneNumber}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </Box>
                 ) : (
                   <p>Телефонів немає</p>
@@ -205,6 +213,11 @@ const UserDetailsPage = () => {
                 >
                   Видалити профіль
                 </Button>
+
+                <CustomIconButton
+                  icon={<ArrowBackIcon />}
+                  onClick={() => navigate(-1)}
+                />
               </Grid>
             </Grid>
 

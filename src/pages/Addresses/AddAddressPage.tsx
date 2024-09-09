@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks";
 import { addAddressToUser } from "../../redux/addressSlice";
-import { Button, TextField, Paper, Grid, Typography } from "@mui/material";
+import { Button, TextField, Paper, Grid, Typography, Box } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Address } from "../../types/addressTypes";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CustomIconButton from "../../components/ui/CustomIconButton";
 
 // Валидация формы с помощью Yup
 const validationSchema = Yup.object({
@@ -62,7 +64,7 @@ const AddAddressPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16 }}>
+      <Paper style={{ padding: 16, position: "relative" }}>
         <Typography variant="h6">Додати адресу</Typography>
         <br />
         <Formik
@@ -130,22 +132,20 @@ const AddAddressPage = () => {
               </Grid>
 
               <br />
-              <Grid
-                container
-                spacing={2}
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
+              <Box style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button variant="contained" color="success" type="submit">
-                  Save
+                  Зберегти
                 </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
+
+                <Button type="reset" variant="contained" color="inherit">
+                  Скинути
+                </Button>
+
+                <CustomIconButton
+                  icon={<ArrowBackIcon />}
                   onClick={() => navigate(-1)}
-                >
-                  Cancel
-                </Button>
-              </Grid>
+                />
+              </Box>
             </Form>
           )}
         </Formik>

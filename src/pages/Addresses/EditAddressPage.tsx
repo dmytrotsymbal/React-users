@@ -3,10 +3,12 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { useEffect, useMemo } from "react";
 import { getUserAddressByID, updateAddress } from "../../redux/addressSlice";
-import { Button, TextField, Paper, Grid, Typography } from "@mui/material";
+import { Button, TextField, Paper, Grid, Typography, Box } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CustomLoader from "../../components/ui/CustomLoader";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CustomIconButton from "../../components/ui/CustomIconButton";
 
 // Валидация формы с помощью Yup
 const validationSchema = Yup.object({
@@ -135,7 +137,7 @@ const EditAddressPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16 }}>
+      <Paper style={{ padding: 16, position: "relative" }}>
         <Typography variant="h6">Редагувати адресу</Typography>
         <br />
         <Formik
@@ -204,22 +206,20 @@ const EditAddressPage = () => {
               </Grid>
 
               <br />
-              <Grid
-                container
-                spacing={2}
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
+              <Box style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button variant="contained" color="success" type="submit">
-                  Save
+                  Зберегти
                 </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => navigate(-1)} // Переход на предыдущую страницу
-                >
-                  Cancel
+
+                <Button type="reset" variant="contained" color="inherit">
+                  Скинути
                 </Button>
-              </Grid>
+
+                <CustomIconButton
+                  icon={<ArrowBackIcon />}
+                  onClick={() => navigate(-1)}
+                />
+              </Box>
             </Form>
           )}
         </Formik>
