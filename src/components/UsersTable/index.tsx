@@ -30,6 +30,7 @@ import ConfirmDeleteModal from "../ui/modals/ConfirmDeleteUserModal";
 import { User } from "../../types/userTypes";
 import useDebounce from "../../hooks/useDebounce";
 import CustomSearchInput from "../ui/CustomSearchInput";
+import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 
 const UsersTable = () => {
   const navigate = useNavigate();
@@ -92,10 +93,6 @@ const UsersTable = () => {
   ) => {
     setCurrentPage(value); // Обновляем текущую страницу
   };
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <>
@@ -177,7 +174,9 @@ const UsersTable = () => {
               </>
             ) : error ? (
               <TableRow>
-                <TableCell colSpan={8}>Error: {error}</TableCell>
+                <TableCell colSpan={8}>
+                  <CustomNotFoundPaper errorMessage={error} />
+                </TableCell>
               </TableRow>
             ) : users.length === 0 && searchQuery ? (
               <TableRow>
