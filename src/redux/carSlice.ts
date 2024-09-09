@@ -31,9 +31,11 @@ export const getAllCars = createAsyncThunk(
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return await response.json();
+      const data = await response.json();
+      return data;
     } catch (error) {
       console.error("Error fetching cars:", error);
+      throw error;
     }
   }
 );
@@ -168,14 +170,13 @@ const carSlice = createSlice({
         state.error = null;
       })
       .addCase(getAllCars.fulfilled, (state, action: PayloadAction<Car[]>) => {
-        state.loading = false;
-        state.error = null;
-        state.cars = action.payload;
+        state.loading = false; // Знімаємо стан лоадінгу
+        state.cars = action.payload; // Зберігаємо отриманих користувачів
       })
       .addCase(getAllCars.rejected, (state, action) => {
-        state.loading = false;
+        state.loading = false; // Знімаємо стан лоадінгу
         state.error =
-          action.error.message ?? "Не вдалося завантажити автомобілі";
+          action.error.message || "Не вдалося завантажити автомобілі"; // Встановлюємо помилку
       })
 
       //|=|=|=|=|=|=|=|=|=|=|=|

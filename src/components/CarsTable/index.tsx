@@ -22,6 +22,8 @@ import { Link } from "react-router-dom";
 import CarTableSkeletonRow from "./CarTableSkeletonRow";
 import useDebounce from "../../hooks/useDebounce";
 import CustomSearchInput from "../ui/CustomSearchInput";
+import CustomErrorBlock from "../ui/CustomErrorBlock";
+import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 
 const CarsTable = () => {
   const dispatch = useAppDispatch();
@@ -159,11 +161,17 @@ const CarsTable = () => {
               </>
             ) : error ? (
               <TableRow>
-                <TableCell colSpan={8}>Error: {error}</TableCell>
+                <TableCell colSpan={9}>
+                  <CustomErrorBlock />
+                </TableCell>
               </TableRow>
             ) : cars.length === 0 && searchQuery ? (
               <TableRow>
-                <TableCell colSpan={8}>No users found</TableCell>
+                <TableCell colSpan={9}>
+                  <CustomNotFoundPaper
+                    errorMessage={`Машини з назвою ${searchQuery} не знайдено`}
+                  />
+                </TableCell>
               </TableRow>
             ) : (
               cars.map((car) => (

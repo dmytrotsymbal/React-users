@@ -31,9 +31,7 @@ export const getAllUsers = createAsyncThunk(
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
-      console.log("Data received:", data);
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Error fetching users:", error);
       throw error;
@@ -49,9 +47,10 @@ export const getUserById = createAsyncThunk(
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return await response.json(); // Повертаємо користувача
+      return await response.json();
     } catch (error) {
       console.error("Error fetching user:", error);
+      throw error;
     }
   }
 );
@@ -69,6 +68,7 @@ export const searchUsersByName = createAsyncThunk(
       return await response.json(); // Повертаємо масив користувачів
     } catch (error) {
       console.error("Error fetching users:", error);
+      throw error;
     }
   }
 );
@@ -164,7 +164,8 @@ const userSlice = createSlice({
       )
       .addCase(getAllUsers.rejected, (state, action) => {
         state.loading = false; // Знімаємо стан лоадінгу
-        state.error = action.error.message || "Failed to fetch users"; // Встановлюємо помилку
+        state.error =
+          action.error.message || "Не вдалося отримати користувачів"; // Встановлюємо помилку
       })
 
       //========================================================================================
@@ -181,7 +182,7 @@ const userSlice = createSlice({
 
       .addCase(getUserById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch user";
+        state.error = action.error.message || "Не вдалося отримати користувача";
       })
 
       //========================================================================================

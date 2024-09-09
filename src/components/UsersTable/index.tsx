@@ -30,6 +30,7 @@ import ConfirmDeleteModal from "../ui/modals/ConfirmDeleteUserModal";
 import { User } from "../../types/userTypes";
 import useDebounce from "../../hooks/useDebounce";
 import CustomSearchInput from "../ui/CustomSearchInput";
+import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 
 const UsersTable = () => {
@@ -165,6 +166,7 @@ const UsersTable = () => {
               <TableCell>Дії</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {loading || isTyping ? (
               <>
@@ -175,12 +177,16 @@ const UsersTable = () => {
             ) : error ? (
               <TableRow>
                 <TableCell colSpan={8}>
-                  <CustomNotFoundPaper errorMessage={error} />
+                  <CustomErrorBlock />
                 </TableCell>
               </TableRow>
             ) : users.length === 0 && searchQuery ? (
               <TableRow>
-                <TableCell colSpan={8}>No users found</TableCell>
+                <TableCell colSpan={8}>
+                  <CustomNotFoundPaper
+                    errorMessage={`Користувача з іменем ${searchQuery} не знайдено`}
+                  />
+                </TableCell>
               </TableRow>
             ) : (
               users.map((user) => (

@@ -22,6 +22,10 @@ const AddCarPage = lazy(() => import("./pages/Cars/AddCarPage"));
 const EditAddressPage = lazy(() => import("./pages/Addresses/EditAddressPage"));
 const AddAddressPage = lazy(() => import("./pages/Addresses/AddAddressPage"));
 
+//===================
+
+const ErrorPage = lazy(() => import("./pages/ErrorPage"));
+
 function App() {
   return (
     <>
@@ -59,6 +63,8 @@ function App() {
                 element={<EditAddressPage />}
               />
               <Route path="address/add/:userId" element={<AddAddressPage />} />
+
+              <Route path="*" element={<ErrorPage />} />
             </Routes>
           </Suspense>
         </Container>

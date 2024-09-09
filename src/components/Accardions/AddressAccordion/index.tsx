@@ -28,6 +28,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddressTableSkeletonRow from "./AddressTableSkeletonRow";
 import { Address } from "../../../types/addressTypes";
 import ConfirmDeleteAddressModal from "../../ui/modals/ConfirmDeleteAddressModal";
+import CustomNotFoundPaper from "../../ui/CustomNotFoundPaper";
 
 type Props = {
   isAddressVisible: boolean;
@@ -148,8 +149,14 @@ const AddressAccordion = ({
                   <TableRow>
                     <TableCell colSpan={8} align="center">
                       <Typography variant="h6" color="error">
-                        Помилка завантаження: {error}
+                        <CustomNotFoundPaper errorMessage={error} />
                       </Typography>
+                    </TableCell>
+                  </TableRow>
+                ) : !addresses || addresses.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} align="center">
+                      <Typography variant="h6">У вас ще немає адрес</Typography>
                     </TableCell>
                   </TableRow>
                 ) : (

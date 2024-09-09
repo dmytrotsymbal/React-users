@@ -20,7 +20,7 @@ const CustomNotFoundPaper = ({ errorMessage }: Props) => {
         {errorMessage}
       </Typography>
       <Typography sx={{ color: "grey.700", mt: 3 }}>
-        Можливо слід запустити сервер :)
+        Можливо ви ввели неправильні дані
       </Typography>
     </Paper>
   );
