@@ -1,4 +1,11 @@
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  DialogTitle,
+  DialogActions,
+  Dialog,
+} from "@mui/material";
 import { Photo } from "../../../types/photoTypes";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -32,20 +39,24 @@ const AddPhotoModal = ({ open, onClose, onAdd, userId }: Props) => {
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
       <Box
         sx={{
-          width: 400,
-          bgcolor: "background.paper",
-          p: 4,
-          margin: "auto",
-          mt: "20vh",
-          borderRadius: 2,
+          backgroundColor: "#7FA1C3",
+          color: "white !important",
+          width: "100%",
+          height: "50px",
         }}
       >
-        <Typography variant="h6" gutterBottom>
-          Add Photo
-        </Typography>
+        <DialogTitle id="alert-dialog-title">Додати фото</DialogTitle>
+      </Box>
+
+      <DialogActions>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -71,26 +82,34 @@ const AddPhotoModal = ({ open, onClose, onAdd, userId }: Props) => {
                 helperText={<ErrorMessage name="altText" />}
                 error={Boolean(<ErrorMessage name="altText" />)}
               />
+
+              <br />
+              <br />
               <Box
-                sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
               >
-                <Button onClick={onClose} color="error" variant="contained">
-                  Cancel
-                </Button>
                 <Button
-                  type="submit"
-                  color="success"
-                  disabled={isSubmitting}
                   variant="contained"
+                  color="success"
+                  type="submit"
+                  disabled={isSubmitting}
                 >
-                  Add Photo
+                  Зберегти
+                </Button>
+
+                <Button onClick={onClose} variant="contained" color="inherit">
+                  Скасувати
                 </Button>
               </Box>
             </Form>
           )}
         </Formik>
-      </Box>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   );
 };
 

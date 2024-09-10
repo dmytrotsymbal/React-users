@@ -20,6 +20,8 @@ import ConfirmDeletePhotoModal from "../../components/ui/modals/ConfirmDeletePho
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CustomLoader from "../../components/ui/CustomLoader";
+import CustomIconButton from "../../components/ui/CustomIconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // Валідація форми за допомогою Yup
 const validationSchema = Yup.object({
@@ -165,7 +167,7 @@ const EditUserPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16 }}>
+      <Paper style={{ padding: 16, position: "relative" }}>
         <Typography variant="h6">Редагувати користувача</Typography>
         <br />
         <Formik
@@ -245,7 +247,7 @@ const EditUserPage = () => {
                   color="primary"
                   onClick={() => setOpenAddPhotoModal(true)}
                 >
-                  Add Photo
+                  Додати фото
                 </Button>
               </Box>
               <Grid container spacing={2}>
@@ -299,24 +301,29 @@ const EditUserPage = () => {
                     ))}
                   </Grid>
                 )}
-
-                <Grid
-                  item
-                  xs={12}
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Button variant="contained" color="success" type="submit">
-                    Save
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => navigate(`/user/${userId}`)}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
               </Grid>
+
+              <br />
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <Button variant="contained" color="success" type="submit">
+                  Зберегти
+                </Button>
+
+                <Button type="reset" variant="contained" color="inherit">
+                  Скинути
+                </Button>
+
+                <CustomIconButton
+                  icon={<ArrowBackIcon />}
+                  onClick={() => navigate(-1)}
+                />
+              </Box>
             </Form>
           )}
         </Formik>
