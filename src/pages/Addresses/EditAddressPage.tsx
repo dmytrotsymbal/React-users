@@ -16,6 +16,18 @@ const validationSchema = Yup.object({
     .max(100, "Street address must be at most 100 characters")
     .required("Street address is required"),
 
+  houseNumber: Yup.number()
+    .min(11, "House number must be at most 11 characters")
+    .typeError("House number must be a number")
+    .integer("House number must be an integer")
+    .required("House number is required"),
+
+  apartmentNumber: Yup.number()
+    .min(11, "House number must be at most 11 characters")
+    .typeError("House number must be a number")
+    .integer("House number must be an integer")
+    .required("House number is required"),
+
   city: Yup.string()
     .max(50, "City must be at most 50 characters")
     .matches(/^[^\d]*$/, "City cannot contain numbers")
@@ -34,6 +46,14 @@ const validationSchema = Yup.object({
     .max(50, "Country must be at most 50 characters")
     .matches(/^[^\d]*$/, "Country cannot contain numbers")
     .required("Country is required"),
+
+  latitude: Yup.number()
+    .typeError("Latitude must be a number")
+    .required("Latitude is required"),
+
+  longitude: Yup.number()
+    .typeError("Longitude must be a number")
+    .required("Longitude is required"),
 });
 
 const EditAddressPage = () => {
@@ -62,10 +82,14 @@ const EditAddressPage = () => {
   const initialValues = {
     addressID: memoizedAddress?.addressID || 0,
     streetAddress: memoizedAddress?.streetAddress || "",
+    houseNumber: memoizedAddress?.houseNumber || 0,
+    apartmentNumber: memoizedAddress?.apartmentNumber || 0,
     city: memoizedAddress?.city || "",
     state: memoizedAddress?.state || "",
     postalCode: memoizedAddress?.postalCode || "",
     country: memoizedAddress?.country || "",
+    latitude: memoizedAddress?.latitude || 0,
+    longitude: memoizedAddress?.longitude || 0,
   };
 
   // Функция обработки отправки формы
@@ -167,6 +191,26 @@ const EditAddressPage = () => {
                     helperText={<ErrorMessage name="streetAddress" />}
                   />
                 </Grid>
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="House Number"
+                    name="houseNumber"
+                    helperText={<ErrorMessage name="houseNumber" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Apartment Number"
+                    name="apartmentNumber"
+                    helperText={<ErrorMessage name="apartmentNumber" />}
+                  />
+                </Grid>
+
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
@@ -201,6 +245,26 @@ const EditAddressPage = () => {
                     label="Country"
                     name="country"
                     helperText={<ErrorMessage name="country" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Latitude"
+                    name="latitude"
+                    helperText={<ErrorMessage name="latitude" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Longitude"
+                    name="longitude"
+                    helperText={<ErrorMessage name="longitude" />}
                   />
                 </Grid>
               </Grid>
