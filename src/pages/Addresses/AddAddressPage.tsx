@@ -14,6 +14,18 @@ const validationSchema = Yup.object({
     .max(100, "Street address must be at most 100 characters")
     .required("Street address is required"),
 
+  houseNumber: Yup.number()
+    .min(11, "House number must be at most 11 characters")
+    .typeError("House number must be a number")
+    .integer("House number must be an integer")
+    .required("House number is required"),
+
+  apartmentNumber: Yup.number()
+    .min(11, "House number must be at most 11 characters")
+    .typeError("House number must be a number")
+    .integer("House number must be an integer")
+    .required("House number is required"),
+
   city: Yup.string()
     .max(50, "City must be at most 50 characters")
     .matches(/^[^\d]*$/, "City cannot contain numbers")
@@ -32,6 +44,14 @@ const validationSchema = Yup.object({
     .max(50, "Country must be at most 50 characters")
     .matches(/^[^\d]*$/, "Country cannot contain numbers")
     .required("Country is required"),
+
+  latitude: Yup.number()
+    .typeError("Latitude must be a number")
+    .required("Latitude is required"),
+
+  longitude: Yup.number()
+    .typeError("Longitude must be a number")
+    .required("Longitude is required"),
 });
 
 const AddAddressPage = () => {
@@ -42,10 +62,14 @@ const AddAddressPage = () => {
   // Начальные значения формы
   const initialValues = {
     streetAddress: "",
+    houseNumber: 0,
+    apartmentNumber: 0,
     city: "",
     state: "",
     postalCode: "",
     country: "",
+    latitude: 0,
+    longitude: 0,
   };
 
   // Функция для обработки отправки формы
@@ -92,6 +116,27 @@ const AddAddressPage = () => {
                     helperText={<ErrorMessage name="streetAddress" />}
                   />
                 </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="House number"
+                    name="houseNumber"
+                    helperText={<ErrorMessage name="houseNumber" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Apartment number"
+                    name="apartmentNumber"
+                    helperText={<ErrorMessage name="apartmentNumber" />}
+                  />
+                </Grid>
+
                 <Grid item xs={12}>
                   <Field
                     as={TextField}
@@ -127,6 +172,26 @@ const AddAddressPage = () => {
                     label="country"
                     name="country"
                     helperText={<ErrorMessage name="country" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Latitude"
+                    name="latitude"
+                    helperText={<ErrorMessage name="latitude" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Longitude"
+                    name="longitude"
+                    helperText={<ErrorMessage name="longitude" />}
                   />
                 </Grid>
               </Grid>
