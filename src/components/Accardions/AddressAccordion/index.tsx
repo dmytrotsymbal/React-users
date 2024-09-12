@@ -14,7 +14,7 @@ import {
   Box,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { RootState } from "../../../redux/store";
 import { useState } from "react";
@@ -129,12 +129,15 @@ const AddressAccordion = ({
                 }}
               >
                 <TableRow>
-                  <TableCell>ID Адреси</TableCell>
+                  {/* <TableCell>ID Адреси</TableCell> */}
                   <TableCell>Вулиця</TableCell>
+                  <TableCell>№ будинку</TableCell>
+                  <TableCell>№ квартири</TableCell>
                   <TableCell>Місто</TableCell>
                   <TableCell>Область</TableCell>
-                  <TableCell>Поштовий індекс</TableCell>
+                  <TableCell>ПІ</TableCell>
                   <TableCell>Країна</TableCell>
+                  <TableCell>Координати</TableCell>
                   <TableCell>Дії</TableCell>
                 </TableRow>
               </TableHead>
@@ -163,12 +166,32 @@ const AddressAccordion = ({
                   // Відображаємо адреси, якщо вони є
                   addresses.map((address) => (
                     <TableRow key={address.addressID}>
-                      <TableCell>{address.addressID}</TableCell>
+                      {/* <TableCell align="center">{address.addressID}</TableCell> */}
                       <TableCell>{address.streetAddress}</TableCell>
+                      <TableCell>{address.houseNumber}</TableCell>
+                      <TableCell>{address.apartmentNumber}</TableCell>
                       <TableCell>{address.city}</TableCell>
                       <TableCell>{address.state}</TableCell>
                       <TableCell>{address.postalCode}</TableCell>
                       <TableCell>{address.country}</TableCell>
+                      <TableCell>
+                        {address.latitude && address.longitude ? (
+                          <Link
+                            to="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              window.open(
+                                `https://www.google.com/maps?q=${address.latitude},${address.longitude}`,
+                                "_blank"
+                              );
+                            }}
+                          >
+                            {address.latitude} {address.longitude}
+                          </Link>
+                        ) : (
+                          "Координаты не заданы"
+                        )}
+                      </TableCell>
 
                       <TableCell>
                         <IconButton
@@ -211,3 +234,17 @@ const AddressAccordion = ({
 };
 
 export default AddressAccordion;
+
+// export const StyledTableCell = styled(TableCell)(() => ({
+//   color: "black",
+//   fontSize: "1rem",
+//   borderLeft: "2px solid #229799",
+//   borderRight: "2px solid #229799",
+
+//   "&:first-child": {
+//     borderLeft: "none",
+//   },
+//   "&:last-child": {
+//     borderRight: "none",
+//   },
+// }));
