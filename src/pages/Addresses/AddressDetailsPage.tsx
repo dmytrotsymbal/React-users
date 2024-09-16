@@ -50,7 +50,7 @@ const AddressDetailsPage = () => {
           >
             <Grid container spacing={2}>
               <Grid item xs={9}>
-                {!loading ? (
+                {loading ? (
                   <Skeleton
                     animation="wave"
                     variant="text"
@@ -63,15 +63,16 @@ const AddressDetailsPage = () => {
                   </p>
                 )}
 
-                <br />
-
-                <p>Номер квартири: {address.apartmentNumber}</p>
-
-                <br />
-
-                <p>Місто: {address.city}</p>
-
-                <br />
+                {loading ? (
+                  <Skeleton
+                    animation="wave"
+                    variant="text"
+                    width="270px"
+                    height="35px"
+                  />
+                ) : (
+                  <p>Номер квартири: {address.apartmentNumber}</p>
+                )}
               </Grid>
 
               <Grid
@@ -93,7 +94,7 @@ const AddressDetailsPage = () => {
                   sx={{ width: "200px" }}
                   // onClick={() => navigate(`/user/edit/${user.userID}`)}
                 >
-                  Редагувати профіль
+                  Редагувати запис
                 </Button>
 
                 <Button
@@ -102,7 +103,7 @@ const AddressDetailsPage = () => {
                   sx={{ width: "200px" }}
                   // onClick={() => setOpenDeleteModal(true)}
                 >
-                  Видалити профіль
+                  Видалити запис
                 </Button>
 
                 <CustomIconButton
@@ -112,16 +113,70 @@ const AddressDetailsPage = () => {
               </Grid>
             </Grid>
 
+            <br />
             <Box
               sx={{
                 width: "100%",
-                height: "600px",
+                height: "650px",
                 display: "flex",
+                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <InteractiveMap position={position} />
+              <Box
+                sx={{
+                  width: "1200px",
+                  height: "50px",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {loading ? (
+                  <Skeleton
+                    animation="wave"
+                    variant="text"
+                    width="370px"
+                    height="35px"
+                  />
+                ) : (
+                  <p>
+                    Місто: {address.postalCode} {address.country}{" "}
+                    {address.state} {address.city}
+                  </p>
+                )}
+
+                {loading ? (
+                  <Skeleton
+                    animation="wave"
+                    variant="text"
+                    width="300px"
+                    height="35px"
+                  />
+                ) : (
+                  <p>
+                    Координати: {address.latitude} {address.longitude}
+                  </p>
+                )}
+              </Box>
+
+              <br />
+
+              {loading ? (
+                <Skeleton
+                  animation="wave"
+                  variant="rectangular"
+                  width="1000px"
+                  height="1200px"
+                  sx={{
+                    borderRadius: "4px",
+                  }}
+                />
+              ) : (
+                <InteractiveMap position={position} />
+              )}
             </Box>
           </Paper>
         )

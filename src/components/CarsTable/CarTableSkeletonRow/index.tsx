@@ -34,7 +34,14 @@ const CarTableSkeletonRow = ({ isFullSkeleton }: Props) => {
       <TableCell>
         <Skeleton variant="circular" animation="wave" width={40} height={40} />
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "1rem",
+        }}
+      >
+        <Skeleton variant="circular" animation="wave" width={40} height={40} />
         <Skeleton variant="circular" animation="wave" width={40} height={40} />
       </TableCell>
     </TableRow>

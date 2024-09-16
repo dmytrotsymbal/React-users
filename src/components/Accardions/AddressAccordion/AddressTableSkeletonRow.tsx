@@ -27,6 +27,9 @@ const AddressTableSkeletonRow = () => {
       <TableCell>
         <Skeleton animation="wave" height={35} variant="text" />
       </TableCell>
+      <TableCell>
+        <Skeleton animation="wave" height={35} variant="text" />
+      </TableCell>
       <TableCell
         sx={{
           display: "flex",
