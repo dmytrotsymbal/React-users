@@ -1,16 +1,27 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Address } from "../types/addressTypes";
+import { Resident } from "../types/helpers/residentTypes";
 
 export interface AddressState {
   addresses: Address[];
   loading: boolean;
   error: string | null;
+
+  // жильці
+  livingHistory: Resident[];
+  livingLoading: boolean;
+  livingError: string | null;
 }
 
 const initialState: AddressState = {
   addresses: [],
   loading: true,
   error: null,
+
+  // жильці
+  livingHistory: [],
+  livingLoading: true,
+  livingError: null,
 };
 
 export const getAllUsersAddresses = createAsyncThunk(
@@ -33,6 +44,23 @@ export const getUserAddressByID = createAsyncThunk(
   async (addressID: number) => {
     try {
       const response = await fetch(`/api/Address/get-by-id/${addressID}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  }
+);
+
+export const getAddressLivingHistory = createAsyncThunk(
+  "address/getAddressLivingHistory",
+  async (addressID: number) => {
+    try {
+      const response = await fetch(
+        `/api/Address/get-living-history/${addressID}`
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -126,6 +154,8 @@ export const addressSlice = createSlice({
         state.addresses = []; // Встановлюємо пустий масив при помилці
       })
 
+      //================================================
+
       .addCase(getUserAddressByID.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -143,6 +173,30 @@ export const addressSlice = createSlice({
         state.error = action.error.message ?? "Не вдалося отримати адреси";
         state.addresses = []; // Встановлюємо пустий масив при помилці
       })
+
+      //================================================
+
+      .addCase(getAddressLivingHistory.pending, (state) => {
+        state.livingLoading = true;
+        state.livingError = null;
+        state.livingHistory = []; // Очищаємо попередні дані про мешканців
+      })
+      .addCase(
+        getAddressLivingHistory.fulfilled,
+        (state, action: PayloadAction<Resident[]>) => {
+          state.livingLoading = false;
+          state.livingError = null;
+          state.livingHistory = action.payload; // Оновлюємо livingHistory масивом мешканців
+        }
+      )
+      .addCase(getAddressLivingHistory.rejected, (state, action) => {
+        state.livingLoading = false;
+        state.livingError =
+          action.error.message ?? "Не вдалося отримати мешканців за адресою";
+        state.livingHistory = []; // Очищаємо при помилці
+      })
+
+      //================================================
 
       .addCase(updateAddress.pending, (state) => {
         state.loading = true;

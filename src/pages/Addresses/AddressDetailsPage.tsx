@@ -1,13 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getUserAddressByID } from "../../redux/addressSlice";
 import { Grid, Paper, Button, Box, Skeleton } from "@mui/material";
 import CustomErrorBlock from "../../components/ui/CustomErrorBlock";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InteractiveMap from "../../components/InteractiveMap";
+import ResidentAccordion from "../../components/Accardions/ResidentAccordion";
 
 const AddressDetailsPage = () => {
   const { addressId } = useParams<{ addressId: string }>();
@@ -23,6 +24,9 @@ const AddressDetailsPage = () => {
     (state: RootState) => state.address
   );
 
+  const [isLivingHistoryVisible, setIsLivingHistoryVisible] =
+    useState<boolean>(false); // стейт для аккардіону жильців
+
   useEffect(() => {
     if (addressId) {
       dispatch(getUserAddressByID(Number(addressId)));
@@ -35,6 +39,17 @@ const AddressDetailsPage = () => {
     address && address.latitude && address.longitude
       ? [address.latitude, address.longitude]
       : new Error("Немає координат");
+
+  //   useEffect(() => {
+  //     if (addressId) {
+  //       dispatch(getAddressLivingHistory(Number(addressId)));
+  //       console.log("СРАБОТАЛА ФУНКЦИЯ getAddressLivingHistory");
+  //     }
+  //   }, [dispatch, addressId]);
+
+  const showAllLivingHistory = () => {
+    setIsLivingHistoryVisible(!isLivingHistoryVisible);
+  };
 
   return (
     <>
@@ -92,7 +107,7 @@ const AddressDetailsPage = () => {
                   variant="contained"
                   color="primary"
                   sx={{ width: "200px" }}
-                  // onClick={() => navigate(`/user/edit/${user.userID}`)}
+                  onClick={() => navigate(`/address/edit/${address.addressID}`)}
                 >
                   Редагувати запис
                 </Button>
@@ -178,6 +193,12 @@ const AddressDetailsPage = () => {
                 <InteractiveMap position={position} />
               )}
             </Box>
+
+            <br />
+            <ResidentAccordion
+              isLivingHistoryVisible={isLivingHistoryVisible}
+              showAllLivingHistory={showAllLivingHistory}
+            />
           </Paper>
         )
       )}

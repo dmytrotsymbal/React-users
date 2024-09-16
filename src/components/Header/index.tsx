@@ -10,7 +10,7 @@ const Header = () => {
         backgroundColor: "#6482AD",
         position: "sticky",
         top: 0,
-        zIndex: 100,
+        zIndex: 1000,
       }}
     >
       <Container maxWidth="xl">
