@@ -17,9 +17,7 @@ export const getAllUsersAddresses = createAsyncThunk(
   "address/getAllUsersAddresses",
   async (userID: string) => {
     try {
-      const response = await fetch(
-        `/api/Address/GetAllUsersAddresses/${userID}`
-      );
+      const response = await fetch(`/api/Address/get-all/${userID}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -34,9 +32,7 @@ export const getUserAddressByID = createAsyncThunk(
   "address/getUserAddressByID",
   async (addressID: number) => {
     try {
-      const response = await fetch(
-        `/api/Address/GetUserAddressById/${addressID}`
-      );
+      const response = await fetch(`/api/Address/get-by-id/${addressID}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }

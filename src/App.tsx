@@ -19,6 +19,9 @@ const AddCarPage = lazy(() => import("./pages/Cars/AddCarPage"));
 
 //===================
 
+const AddressDetailsPage = lazy(
+  () => import("./pages/Addresses/AddressDetailsPage")
+);
 const EditAddressPage = lazy(() => import("./pages/Addresses/EditAddressPage"));
 const AddAddressPage = lazy(() => import("./pages/Addresses/AddAddressPage"));
 
@@ -58,6 +61,10 @@ function App() {
               <Route path="car/edit/:carId" element={<EditCarPage />} />
               <Route path="car/add/:userId" element={<AddCarPage />} />
 
+              <Route
+                path="address/:addressId"
+                element={<AddressDetailsPage />}
+              />
               <Route
                 path="address/edit/:addressId"
                 element={<EditAddressPage />}

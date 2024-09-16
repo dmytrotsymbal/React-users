@@ -10,4 +10,6 @@ export type Address = {
   country: string;
   latitude?: number;
   longitude?: number;
+  moveInDate: string;
+  moveOutDate: string;
 };

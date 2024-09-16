@@ -195,7 +195,7 @@ const UsersTable = () => {
                   onClick={() => navigate(`/user/${user.userID}`)}
                   sx={{
                     cursor: "pointer",
-                    transition: "all 0.3s ease",
+                    transition: "all 0.3s ease-in-out",
                     "&:hover": {
                       backgroundColor: "#f5f5f5",
                     },

@@ -129,7 +129,7 @@ const AddressAccordion = ({
                 }}
               >
                 <TableRow>
-                  {/* <TableCell>ID Адреси</TableCell> */}
+                  <TableCell>Дата проживання</TableCell>
                   <TableCell>Вулиця</TableCell>
                   <TableCell>№ будинку</TableCell>
                   <TableCell>№ квартири</TableCell>
@@ -165,8 +165,33 @@ const AddressAccordion = ({
                 ) : (
                   // Відображаємо адреси, якщо вони є
                   addresses.map((address) => (
-                    <TableRow key={address.addressID}>
-                      {/* <TableCell align="center">{address.addressID}</TableCell> */}
+                    <TableRow
+                      key={address.addressID}
+                      onClick={() => navigate(`/address/${address.addressID}`)}
+                      sx={{
+                        cursor: "pointer",
+                        transition: "all 0.3s ease-in-out",
+                        "&:hover": {
+                          backgroundColor: "#f5f5f5",
+                        },
+                      }}
+                    >
+                      <TableCell>
+                        {new Date(address.moveInDate).toLocaleDateString(
+                          "uk-UA"
+                        )}{" "}
+                        -{" "}
+                        {!address.moveOutDate ? (
+                          "До тепер"
+                        ) : (
+                          <>
+                            {new Date(address.moveOutDate).toLocaleDateString(
+                              "uk-UA"
+                            )}
+                          </>
+                        )}
+                      </TableCell>
+
                       <TableCell>{address.streetAddress}</TableCell>
                       <TableCell>{address.houseNumber}</TableCell>
                       <TableCell>{address.apartmentNumber}</TableCell>
@@ -195,9 +220,10 @@ const AddressAccordion = ({
 
                       <TableCell>
                         <IconButton
-                          onClick={() =>
-                            navigate(`/address/edit/${address.addressID}`)
-                          }
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/address/edit/${address.addressID}`);
+                          }}
                         >
                           <EditIcon />
                         </IconButton>
