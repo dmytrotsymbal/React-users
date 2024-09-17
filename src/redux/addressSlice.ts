@@ -75,7 +75,7 @@ export const updateAddress = createAsyncThunk(
   "address/updateAddress",
   async ({ addressID, address }: { addressID: number; address: Address }) => {
     try {
-      const response = await fetch(`/api/Address/UpdateAddress/${addressID}`, {
+      const response = await fetch(`/api/Address/update/${addressID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export const addAddressToUser = createAsyncThunk(
   "address/addAddressToUser",
   async ({ userID, address }: { userID: string; address: Address }) => {
     try {
-      const response = await fetch(`/api/Address/AddAddressToUser/${userID}`, {
+      const response = await fetch(`/api/Address/add/${userID}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -179,21 +179,21 @@ export const addressSlice = createSlice({
       .addCase(getAddressLivingHistory.pending, (state) => {
         state.livingLoading = true;
         state.livingError = null;
-        state.livingHistory = []; // Очищаємо попередні дані про мешканців
+        state.livingHistory = [];
       })
       .addCase(
         getAddressLivingHistory.fulfilled,
         (state, action: PayloadAction<Resident[]>) => {
           state.livingLoading = false;
           state.livingError = null;
-          state.livingHistory = action.payload; // Оновлюємо livingHistory масивом мешканців
+          state.livingHistory = action.payload;
         }
       )
       .addCase(getAddressLivingHistory.rejected, (state, action) => {
         state.livingLoading = false;
         state.livingError =
           action.error.message ?? "Не вдалося отримати мешканців за адресою";
-        state.livingHistory = []; // Очищаємо при помилці
+        state.livingHistory = [];
       })
 
       //================================================
@@ -217,7 +217,7 @@ export const addressSlice = createSlice({
               (existingAddress) => existingAddress.addressID === addressID
             );
             if (index !== -1) {
-              state.addresses[index] = address; // Оновлюємо автомобіль в списку
+              state.addresses[index] = address;
             }
           }
         }
@@ -226,6 +226,8 @@ export const addressSlice = createSlice({
         state.loading = false;
         state.error = action.error.message ?? "Failed to update car";
       })
+
+      //================================================
 
       .addCase(addAddressToUser.pending, (state) => {
         state.loading = true;
@@ -242,7 +244,7 @@ export const addressSlice = createSlice({
           state.loading = false;
           if (action.payload) {
             const { address } = action.payload;
-            state.addresses.push(address); // Додаємо створену адресу до списку
+            state.addresses.push(address);
           }
         }
       )
@@ -250,6 +252,8 @@ export const addressSlice = createSlice({
         state.loading = false;
         state.error = action.error.message ?? "Не вдалося додати адресу";
       })
+
+      //================================================
 
       .addCase(deleteAddress.pending, (state) => {
         state.loading = true;

@@ -13,45 +13,41 @@ const validationSchema = Yup.object({
   streetAddress: Yup.string()
     .max(100, "Street address must be at most 100 characters")
     .required("Street address is required"),
-
   houseNumber: Yup.number()
     .min(11, "House number must be at most 11 characters")
     .typeError("House number must be a number")
     .integer("House number must be an integer")
     .required("House number is required"),
-
   apartmentNumber: Yup.number()
     .min(11, "House number must be at most 11 characters")
     .typeError("House number must be a number")
     .integer("House number must be an integer")
     .required("House number is required"),
-
   city: Yup.string()
     .max(50, "City must be at most 50 characters")
     .matches(/^[^\d]*$/, "City cannot contain numbers")
     .required("City is required"),
-
   state: Yup.string()
     .max(2, "State must be a valid 2-letter code")
     .matches(/^[^\d]*$/, "State cannot contain numbers")
     .required("State is required"),
-
   postalCode: Yup.string()
     .matches(/^\d{5}(-\d{4})?$/, "Invalid postal code")
     .required("Postal code is required"),
-
   country: Yup.string()
     .max(50, "Country must be at most 50 characters")
     .matches(/^[^\d]*$/, "Country cannot contain numbers")
     .required("Country is required"),
-
   latitude: Yup.number()
     .typeError("Latitude must be a number")
     .required("Latitude is required"),
-
   longitude: Yup.number()
     .typeError("Longitude must be a number")
     .required("Longitude is required"),
+  moveInDate: Yup.string().required("Move in date is required"),
+  moveOutDate: Yup.date()
+    .nullable()
+    .typeError("Move out date must be a valid date"),
 });
 
 const AddAddressPage = () => {
@@ -70,6 +66,8 @@ const AddAddressPage = () => {
     country: "",
     latitude: 0,
     longitude: 0,
+    moveInDate: "",
+    moveOutDate: "" as string | null,
   };
 
   // Функция для обработки отправки формы
@@ -77,11 +75,12 @@ const AddAddressPage = () => {
     if (userId) {
       const address: Address = {
         ...values,
-        addressID: 0, // Add carID property with the correct type
-        userID: userId, // Add userID property
+        addressID: 0,
+        userID: userId,
+        moveOutDate: values.moveOutDate || null,
       };
       await dispatch(addAddressToUser({ userID: userId, address }));
-      navigate(-1); // Переход на предыдущую страницу
+      navigate(-1);
     }
   };
 
@@ -192,6 +191,28 @@ const AddAddressPage = () => {
                     label="Longitude"
                     name="longitude"
                     helperText={<ErrorMessage name="longitude" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Move In Date"
+                    name="moveInDate"
+                    type="date"
+                    helperText={<ErrorMessage name="moveInDate" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Move Out Date"
+                    name="moveOutDate"
+                    type="date"
+                    helperText={<ErrorMessage name="moveOutDate" />}
                   />
                 </Grid>
               </Grid>

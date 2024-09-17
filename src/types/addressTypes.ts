@@ -11,5 +11,5 @@ export type Address = {
   latitude?: number;
   longitude?: number;
   moveInDate: string;
-  moveOutDate: string;
+  moveOutDate: string | null;
 };

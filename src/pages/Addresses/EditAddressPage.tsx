@@ -15,45 +15,42 @@ const validationSchema = Yup.object({
   streetAddress: Yup.string()
     .max(100, "Street address must be at most 100 characters")
     .required("Street address is required"),
-
   houseNumber: Yup.number()
     .min(11, "House number must be at most 11 characters")
     .typeError("House number must be a number")
     .integer("House number must be an integer")
     .required("House number is required"),
-
   apartmentNumber: Yup.number()
     .min(11, "House number must be at most 11 characters")
     .typeError("House number must be a number")
     .integer("House number must be an integer")
     .required("House number is required"),
-
   city: Yup.string()
     .max(50, "City must be at most 50 characters")
     .matches(/^[^\d]*$/, "City cannot contain numbers")
     .required("City is required"),
-
   state: Yup.string()
     .max(2, "State must be a valid 2-letter code")
     .matches(/^[^\d]*$/, "State cannot contain numbers")
     .required("State is required"),
-
   postalCode: Yup.string()
     .matches(/^\d{5}(-\d{4})?$/, "Invalid postal code")
     .required("Postal code is required"),
-
   country: Yup.string()
     .max(50, "Country must be at most 50 characters")
     .matches(/^[^\d]*$/, "Country cannot contain numbers")
     .required("Country is required"),
-
   latitude: Yup.number()
     .typeError("Latitude must be a number")
     .required("Latitude is required"),
-
   longitude: Yup.number()
     .typeError("Longitude must be a number")
     .required("Longitude is required"),
+
+  moveInDate: Yup.date().required("Move in date is required"),
+  moveOutDate: Yup.date()
+    .nullable()
+    .typeError("Move out date must be a valid date"),
 });
 
 const EditAddressPage = () => {
@@ -90,6 +87,12 @@ const EditAddressPage = () => {
     country: memoizedAddress?.country || "",
     latitude: memoizedAddress?.latitude || 0,
     longitude: memoizedAddress?.longitude || 0,
+    moveInDate: memoizedAddress
+      ? new Date(memoizedAddress.moveInDate).toISOString().substring(0, 10)
+      : "",
+    moveOutDate: memoizedAddress?.moveOutDate
+      ? new Date(memoizedAddress.moveOutDate).toISOString().substring(0, 10)
+      : "", // Якщо moveOutDate є null, ми встановлюємо порожній рядок
   };
 
   // Функция обработки отправки формы
@@ -98,6 +101,7 @@ const EditAddressPage = () => {
       const updatedAddress = {
         ...memoizedAddress,
         ...values,
+        // moveOutDate: values.moveOutDate || null,
       };
       await dispatch(
         updateAddress({ addressID: Number(addressId), address: updatedAddress })
@@ -265,6 +269,29 @@ const EditAddressPage = () => {
                     label="Longitude"
                     name="longitude"
                     helperText={<ErrorMessage name="longitude" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    label="Move In Date"
+                    name="moveInDate"
+                    type="date"
+                    helperText={<ErrorMessage name="moveInDate" />}
+                  />
+                </Grid>
+
+                <Grid item xs={6}>
+                  <Field
+                    as={TextField}
+                    fullWidth
+                    value={values.moveOutDate || ""} // Якщо null, то порожній рядок
+                    label="Move Out Date"
+                    name="moveOutDate"
+                    type="date"
+                    helperText={<ErrorMessage name="moveOutDate" />}
                   />
                 </Grid>
               </Grid>
