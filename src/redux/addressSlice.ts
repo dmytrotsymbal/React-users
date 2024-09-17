@@ -113,13 +113,16 @@ export const addAddressToUser = createAsyncThunk(
   }
 );
 
-export const deleteAddress = createAsyncThunk(
-  "address/deleteAddress",
-  async (addressID: number) => {
+export const removeAddressFromUser = createAsyncThunk(
+  "address/removeAddressFromUser",
+  async ({ userID, addressID }: { userID: string; addressID: number }) => {
     try {
-      const response = await fetch(`/api/Address/DeleteAddress/${addressID}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/Address/remove/${addressID}/from-user/${userID}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -255,21 +258,21 @@ export const addressSlice = createSlice({
 
       //================================================
 
-      .addCase(deleteAddress.pending, (state) => {
+      .addCase(removeAddressFromUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(
-        deleteAddress.fulfilled,
+        removeAddressFromUser.fulfilled,
         (state, action: PayloadAction<number | undefined>) => {
           state.loading = false;
           state.error = null;
           state.addresses = state.addresses.filter(
             (address) => address.addressID !== action.payload
-          ); // Видаляємо адресу зі списку
+          );
         }
       )
-      .addCase(deleteAddress.rejected, (state, action) => {
+      .addCase(removeAddressFromUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Не вдалося видалити адресу";
       });

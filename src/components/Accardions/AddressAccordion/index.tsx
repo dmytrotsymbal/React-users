@@ -19,7 +19,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { RootState } from "../../../redux/store";
 import { useState } from "react";
 import {
-  deleteAddress,
+  removeAddressFromUser,
   getAllUsersAddresses,
 } from "../../../redux/addressSlice";
 import EditIcon from "@mui/icons-material/Edit";
@@ -74,7 +74,12 @@ const AddressAccordion = ({
 
   const handleDeleteAddress = () => {
     if (selectedAddress) {
-      dispatch(deleteAddress(selectedAddress.addressID));
+      dispatch(
+        removeAddressFromUser({
+          userID: String(userId),
+          addressID: selectedAddress.addressID,
+        })
+      );
       setOpenDeleteModal(true);
     }
   };
