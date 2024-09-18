@@ -21,10 +21,10 @@ const validationSchema = Yup.object({
     .integer("House number must be an integer")
     .required("House number is required"),
   apartmentNumber: Yup.number()
-    .min(11, "House number must be at most 11 characters")
-    .typeError("House number must be a number")
-    .integer("House number must be an integer")
-    .required("House number is required"),
+    .min(11, "Apartment number must be at most 11 characters")
+    .typeError("Apartment number must be a number")
+    .integer("Apartment number must be an integer")
+    .required("Apartment number is required"),
   city: Yup.string()
     .max(50, "City must be at most 50 characters")
     .matches(/^[^\d]*$/, "City cannot contain numbers")
@@ -46,7 +46,6 @@ const validationSchema = Yup.object({
   longitude: Yup.number()
     .typeError("Longitude must be a number")
     .required("Longitude is required"),
-
   moveInDate: Yup.date().required("Move in date is required"),
   moveOutDate: Yup.date()
     .nullable()
@@ -68,12 +67,18 @@ const EditAddressPage = () => {
   // Используем useMemo для мемоизации данных адреса
   const memoizedAddress = useMemo(() => address, [address]);
 
-  // Получаем адрес по ID при загрузке страницы
+  // const userID = "your-user-id"; // Замените это на реальное значение userID
+
   useEffect(() => {
     if (addressId) {
-      dispatch(getUserAddressByID(Number(addressId)));
+      dispatch(
+        getUserAddressByID({
+          userID: String(address?.userID),
+          addressID: Number(addressId),
+        })
+      );
     }
-  }, [dispatch, addressId]);
+  }, [dispatch, address?.userID, addressId]);
 
   // Начальные значения формы
   const initialValues = {
@@ -92,7 +97,7 @@ const EditAddressPage = () => {
       : "",
     moveOutDate: memoizedAddress?.moveOutDate
       ? new Date(memoizedAddress.moveOutDate).toISOString().substring(0, 10)
-      : "", // Якщо moveOutDate є null, ми встановлюємо порожній рядок
+      : "", // Если moveOutDate null, то пустая строка
   };
 
   // Функция обработки отправки формы
@@ -101,7 +106,6 @@ const EditAddressPage = () => {
       const updatedAddress = {
         ...memoizedAddress,
         ...values,
-        // moveOutDate: values.moveOutDate || null,
       };
       await dispatch(
         updateAddress({ addressID: Number(addressId), address: updatedAddress })
@@ -287,7 +291,7 @@ const EditAddressPage = () => {
                   <Field
                     as={TextField}
                     fullWidth
-                    value={values.moveOutDate || ""} // Якщо null, то порожній рядок
+                    value={values.moveOutDate || ""} // Если null, то пустая строка
                     label="Move Out Date"
                     name="moveOutDate"
                     type="date"

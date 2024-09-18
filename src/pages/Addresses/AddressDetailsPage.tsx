@@ -29,23 +29,20 @@ const AddressDetailsPage = () => {
 
   useEffect(() => {
     if (addressId) {
-      dispatch(getUserAddressByID(Number(addressId)));
-      console.log("СРАБОТАЛА ФУНКЦИЯ getUserAddressByID");
+      dispatch(
+        getUserAddressByID({
+          userID: String(address?.userID),
+          addressID: Number(addressId),
+        })
+      );
     }
-  }, [dispatch, addressId]);
+  }, [dispatch, address?.userID, addressId]);
 
   // Перевірка, чи є координати
   const position =
     address && address.latitude && address.longitude
       ? [address.latitude, address.longitude]
       : new Error("Немає координат");
-
-  //   useEffect(() => {
-  //     if (addressId) {
-  //       dispatch(getAddressLivingHistory(Number(addressId)));
-  //       console.log("СРАБОТАЛА ФУНКЦИЯ getAddressLivingHistory");
-  //     }
-  //   }, [dispatch, addressId]);
 
   const showAllLivingHistory = () => {
     setIsLivingHistoryVisible(!isLivingHistoryVisible);

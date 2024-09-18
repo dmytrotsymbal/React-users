@@ -41,9 +41,11 @@ export const getAllUsersAddresses = createAsyncThunk(
 
 export const getUserAddressByID = createAsyncThunk(
   "address/getUserAddressByID",
-  async (addressID: number) => {
+  async ({ userID, addressID }: { userID: string; addressID: number }) => {
     try {
-      const response = await fetch(`/api/Address/get-by-id/${addressID}`);
+      const response = await fetch(
+        `/api/Address/get-by-id/${addressID}/for-user/${userID}`
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -204,15 +206,20 @@ export const addressSlice = createSlice({
         (state, action: PayloadAction<Address>) => {
           state.loading = false;
           state.error = null;
-          state.addresses = [action.payload];
+          const existingAddressIndex = state.addresses.findIndex(
+            (address) => address.addressID === action.payload.addressID
+          );
+          if (existingAddressIndex !== -1) {
+            state.addresses[existingAddressIndex] = action.payload; // Обновляем адрес, если уже существует
+          } else {
+            state.addresses.push(action.payload); // Добавляем адрес, если его еще нет
+          }
         }
       )
       .addCase(getUserAddressByID.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Не вдалося отримати адреси";
-        state.addresses = []; // Встановлюємо пустий масив при помилці
+        state.error = action.error.message || "Не удалось загрузить адрес";
       })
-
       //================================================
 
       .addCase(getAddressLivingHistory.pending, (state) => {
