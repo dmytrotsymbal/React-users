@@ -15,15 +15,17 @@ import {
   TableRow,
   TableHead,
   TableCell,
-  // IconButton,
   Box,
+  IconButton,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 // import EditIcon from "@mui/icons-material/Edit";
 // import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Link } from "react-router-dom";
 import CustomNotFoundPaper from "../../ui/CustomNotFoundPaper";
 import ResidentTableSkeletonRow from "./ResidentTableSkeletonRow";
+import AddResidentModal from "../../ui/modals/AddResidentModal";
 
 type Props = {
   isLivingHistoryVisible: boolean;
@@ -45,6 +47,9 @@ const ResidentAccordion = ({
   const [isResidentAccordionExpanded, setIsResidentAccordionExpanded] =
     useState<boolean>(false); // Додаємо стан для відстеження відкриття аккордеону
 
+  const [isAddResidentModalOpen, setIsAddResidentModalOpen] =
+    useState<boolean>(false);
+
   const handleAccordionChange = (
     event: React.SyntheticEvent,
     isExpanded: boolean
@@ -52,16 +57,13 @@ const ResidentAccordion = ({
     setIsResidentAccordionExpanded(isExpanded);
 
     if (isExpanded && !isLivingHistoryVisible) {
-      // Затримка для завершення анімації
       setTimeout(() => {
         dispatch(getAddressLivingHistory(Number(addressId)));
         console.log("СРАБОТАЛА ФУНКЦИЯ getAddressLivingHistory");
         showAllLivingHistory();
-      }, 1000); // Затримка в мілісекундах (300 мс)
+      }, 1000);
     }
   };
-
-  console.log(livingHistory);
   return (
     <>
       <Accordion
@@ -87,6 +89,22 @@ const ResidentAccordion = ({
             }}
           >
             <Typography>Історія мешканців ції адреси</Typography>
+
+            {isResidentAccordionExpanded ? (
+              <IconButton
+                sx={{ marginRight: "1rem" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsAddResidentModalOpen(true);
+                }}
+              >
+                <AddIcon
+                  sx={{
+                    color: "white !important",
+                  }}
+                />
+              </IconButton>
+            ) : null}
           </Box>
         </AccordionSummary>
         <AccordionDetails>
@@ -104,7 +122,6 @@ const ResidentAccordion = ({
                   <TableCell>Ім'я</TableCell>
                   <TableCell>Прізвище</TableCell>
                   <TableCell>Імейл</TableCell>
-                  {/* <TableCell>Дії</TableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -182,6 +199,14 @@ const ResidentAccordion = ({
           </TableContainer>
         </AccordionDetails>
       </Accordion>
+
+      {isAddResidentModalOpen && (
+        <AddResidentModal
+          addressID={addressId}
+          open={isAddResidentModalOpen}
+          onClose={() => setIsAddResidentModalOpen(false)}
+        />
+      )}
     </>
   );
 };

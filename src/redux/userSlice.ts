@@ -6,6 +6,8 @@ export interface UserState {
   loading: boolean;
   error: string | null;
   usersCount?: number;
+
+  usersIDs: string[]; // ids array
 }
 
 const initialState: UserState = {
@@ -13,6 +15,8 @@ const initialState: UserState = {
   loading: true,
   error: null,
   usersCount: 0,
+
+  usersIDs: [], // ids array
 };
 
 export const getAllUsers = createAsyncThunk(
@@ -127,7 +131,7 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-//==========================================================================================
+//Halpers==============================================
 
 export const getUsersCount = createAsyncThunk(
   "user/getUsersCount",
@@ -144,28 +148,42 @@ export const getUsersCount = createAsyncThunk(
   }
 );
 
+export const getAllUsersIDs = createAsyncThunk(
+  "user/getAllUsersIDs",
+  async () => {
+    try {
+      const response = await fetch("/api/User/get-all-ids");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching users IDs:", error);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-
       .addCase(getAllUsers.pending, (state) => {
-        state.loading = true; // Встановлюємо стан лоадінгу
-        state.error = null; // Очищуємо помилки
+        state.loading = true;
+        state.error = null;
       })
       .addCase(
         getAllUsers.fulfilled,
         (state, action: PayloadAction<User[]>) => {
-          state.loading = false; // Знімаємо стан лоадінгу
-          state.users = action.payload; // Зберігаємо отриманих користувачів
+          state.loading = false;
+          state.users = action.payload;
         }
       )
       .addCase(getAllUsers.rejected, (state, action) => {
-        state.loading = false; // Знімаємо стан лоадінгу
+        state.loading = false;
         state.error =
-          action.error.message || "Не вдалося отримати користувачів"; // Встановлюємо помилку
+          action.error.message || "Не вдалося отримати користувачів";
       })
 
       //========================================================================================
@@ -174,12 +192,10 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-
       .addCase(getUserById.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
         state.users = [action.payload];
       })
-
       .addCase(getUserById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Не вдалося отримати користувача";
@@ -206,23 +222,21 @@ const userSlice = createSlice({
 
       //========================================================================================
 
-      // Обробка станів для createUser
       .addCase(createUser.pending, (state) => {
-        state.loading = true; // Встановлюємо стан лоадінгу
-        state.error = null; // Очищуємо помилки
+        state.loading = true;
+        state.error = null;
       })
       .addCase(createUser.fulfilled, (state, action: PayloadAction<User>) => {
-        state.loading = false; // Знімаємо стан лоадінгу
-        state.users.push(action.payload); // Додаємо нового користувача до списку
+        state.loading = false;
+        state.users.push(action.payload);
       })
       .addCase(createUser.rejected, (state, action) => {
-        state.loading = false; // Знімаємо стан лоадінгу
-        state.error = action.error.message || "Failed to create new user"; // Встановлюємо помилку
+        state.loading = false;
+        state.error = action.error.message || "Failed to create new user";
       })
 
       //========================================================================================
 
-      // Обробка станів для updateUser
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -243,20 +257,19 @@ const userSlice = createSlice({
 
       //========================================================================================
 
-      // Обробка станів для deleteUser
       .addCase(deleteUser.pending, (state) => {
-        state.loading = true; // Встановлюємо стан лоадінгу
-        state.error = null; // Очищуємо помилки
+        state.loading = true;
+        state.error = null;
       })
       .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
-        state.loading = false; // Знімаємо стан лоадінгу
+        state.loading = false;
         state.users = state.users.filter(
           (user) => user.userID !== action.payload
-        ); // Видаляємо користувача зі списку
+        );
       })
       .addCase(deleteUser.rejected, (state, action) => {
-        state.loading = false; // Знімаємо стан лоадінгу
-        state.error = action.error.message || "Failed to delete user"; // Встановлюємо помилку
+        state.loading = false;
+        state.error = action.error.message || "Failed to delete user";
       })
 
       //========================================================================================
@@ -265,7 +278,6 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-
       .addCase(
         getUsersCount.fulfilled,
         (state, action: PayloadAction<number>) => {
@@ -274,8 +286,26 @@ const userSlice = createSlice({
           state.error = null;
         }
       )
-
       .addCase(getUsersCount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to get users count";
+      })
+
+      //========================================================================================
+
+      .addCase(getAllUsersIDs.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getAllUsersIDs.fulfilled,
+        (state, action: PayloadAction<string[]>) => {
+          state.loading = false;
+          state.usersIDs = action.payload;
+          state.error = null;
+        }
+      )
+      .addCase(getAllUsersIDs.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to get users count";
       });

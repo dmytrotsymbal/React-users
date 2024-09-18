@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Address } from "../types/addressTypes";
-import { Resident } from "../types/helpers/residentTypes";
+import { Resident } from "../types/residentTypes";
 
 export interface AddressState {
   addresses: Address[];
@@ -129,6 +129,42 @@ export const removeAddressFromUser = createAsyncThunk(
       return addressID;
     } catch (error) {
       console.error("Error deleting address:", error);
+    }
+  }
+);
+
+export const addExistingUserToAddress = createAsyncThunk(
+  "address/addExistingUserToAddress",
+  async ({
+    addressID,
+    userID,
+    moveInDate,
+    moveOutDate,
+  }: {
+    addressID: number;
+    userID: string;
+    moveInDate: string;
+    moveOutDate: string | null;
+  }) => {
+    try {
+      const response = await fetch(
+        `/api/Address/add-existing-user/${addressID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userID, moveInDate, moveOutDate }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      return { userID, addressID, moveInDate, moveOutDate };
+    } catch (error) {
+      console.error("Error adding existing user to address:", error);
     }
   }
 );
@@ -275,6 +311,43 @@ export const addressSlice = createSlice({
       .addCase(removeAddressFromUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Не вдалося видалити адресу";
+      })
+
+      //================================================
+
+      .addCase(addExistingUserToAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        addExistingUserToAddress.fulfilled,
+        (
+          state,
+          action: PayloadAction<
+            | {
+                userID: string;
+                addressID: number;
+                moveInDate: string;
+                moveOutDate: string | null;
+              }
+            | undefined
+          >
+        ) => {
+          state.loading = false;
+          if (action.payload) {
+            const { userID, moveInDate, moveOutDate } = action.payload;
+            state.livingHistory.push({
+              userID,
+              moveInDate,
+              moveOutDate,
+            } as Resident);
+          }
+        }
+      )
+      .addCase(addExistingUserToAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message ?? "Не удалось добавить пользователя";
       });
   },
 });
