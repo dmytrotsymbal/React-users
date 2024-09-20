@@ -28,15 +28,14 @@ const AddressDetailsPage = () => {
     useState<boolean>(false); // стейт для аккардіону жильців
 
   useEffect(() => {
-    if (addressId && address?.userID) {
+    if (addressId) {
       dispatch(
         getUserAddressByID({
-          userID: address.userID, // Передаємо userID тільки якщо він існує
           addressID: Number(addressId),
         })
       );
     }
-  }, [dispatch, address?.userID, addressId]);
+  }, [dispatch, addressId]);
 
   // Перевірка, чи є координати
   const position =

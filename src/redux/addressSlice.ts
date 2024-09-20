@@ -41,11 +41,17 @@ export const getAllUsersAddresses = createAsyncThunk(
 
 export const getUserAddressByID = createAsyncThunk(
   "address/getUserAddressByID",
-  async ({ userID, addressID }: { userID: string; addressID: number }) => {
+  async ({ userID, addressID }: { userID?: string; addressID: number }) => {
     try {
-      const response = await fetch(
-        `/api/Address/get-by-id/${addressID}/for-user/${userID}`
-      );
+      let link: string;
+      if (userID) {
+        link = `/api/Address/get-by-id/${addressID}/for-user/${userID}`;
+      } else {
+        link = `/api/Address/get-by-id/${addressID}/for-user/`;
+      }
+
+      const response = await fetch(link);
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
