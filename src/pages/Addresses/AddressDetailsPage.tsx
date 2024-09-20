@@ -28,10 +28,10 @@ const AddressDetailsPage = () => {
     useState<boolean>(false); // стейт для аккардіону жильців
 
   useEffect(() => {
-    if (addressId) {
+    if (addressId && address?.userID) {
       dispatch(
         getUserAddressByID({
-          userID: String(address?.userID),
+          userID: address.userID, // Передаємо userID тільки якщо він існує
           addressID: Number(addressId),
         })
       );

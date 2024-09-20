@@ -24,7 +24,7 @@ import {
 } from "../../../redux/addressSlice";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import RemoveIcon from "@mui/icons-material/Remove";
 import AddressTableSkeletonRow from "./AddressTableSkeletonRow";
 import { Address } from "../../../types/addressTypes";
 import ConfirmDeleteAddressModal from "../../ui/modals/ConfirmDeleteAddressModal";
@@ -240,7 +240,7 @@ const AddressAccordion = ({
                             setOpenDeleteModal(true);
                           }}
                         >
-                          <DeleteForeverIcon sx={{ color: "red" }} />
+                          <RemoveIcon />
                         </IconButton>
                       </TableCell>
                     </TableRow>

@@ -97,7 +97,7 @@ const EditAddressPage = () => {
       : "",
     moveOutDate: memoizedAddress?.moveOutDate
       ? new Date(memoizedAddress.moveOutDate).toISOString().substring(0, 10)
-      : "", // Если moveOutDate null, то пустая строка
+      : null,
   };
 
   // Функция обработки отправки формы
@@ -106,6 +106,7 @@ const EditAddressPage = () => {
       const updatedAddress = {
         ...memoizedAddress,
         ...values,
+        moveOutDate: values.moveOutDate || null,
       };
       await dispatch(
         updateAddress({ addressID: Number(addressId), address: updatedAddress })
