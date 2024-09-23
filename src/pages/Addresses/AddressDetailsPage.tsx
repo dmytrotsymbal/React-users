@@ -2,13 +2,18 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { useEffect, useState } from "react";
-import { getUserAddressByID } from "../../redux/addressSlice";
+import {
+  getUserAddressByID,
+  totalDeleteAddress,
+} from "../../redux/addressSlice";
 import { Grid, Paper, Button, Box, Skeleton } from "@mui/material";
 import CustomErrorBlock from "../../components/ui/CustomErrorBlock";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InteractiveMap from "../../components/InteractiveMap";
 import ResidentAccordion from "../../components/Accardions/ResidentAccordion";
+import ConfirmTotalDeleteAddressModal from "../../components/ui/modals/ConfirmTotalDeleteAddressModal";
+import { Address } from "../../types/addressTypes";
 
 const AddressDetailsPage = () => {
   const { addressId } = useParams<{ addressId: string }>();
@@ -26,6 +31,8 @@ const AddressDetailsPage = () => {
 
   const [isLivingHistoryVisible, setIsLivingHistoryVisible] =
     useState<boolean>(false); // стейт для аккардіону жильців
+
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (addressId) {
@@ -45,6 +52,13 @@ const AddressDetailsPage = () => {
 
   const showAllLivingHistory = () => {
     setIsLivingHistoryVisible(!isLivingHistoryVisible);
+  };
+
+  const handleDeleteAddress = () => {
+    if (addressId) {
+      dispatch(totalDeleteAddress(Number(addressId)));
+      navigate(-1);
+    }
   };
 
   return (
@@ -112,7 +126,7 @@ const AddressDetailsPage = () => {
                   variant="contained"
                   color="error"
                   sx={{ width: "200px" }}
-                  // onClick={() => setOpenDeleteModal(true)}
+                  onClick={() => setOpenDeleteModal(true)}
                 >
                   Видалити запис
                 </Button>
@@ -197,6 +211,15 @@ const AddressDetailsPage = () => {
             />
           </Paper>
         )
+      )}
+
+      {openDeleteModal && (
+        <ConfirmTotalDeleteAddressModal
+          open={openDeleteModal}
+          handleClose={() => setOpenDeleteModal(false)}
+          handleDelete={() => handleDeleteAddress()}
+          address={address as Address}
+        />
       )}
     </>
   );

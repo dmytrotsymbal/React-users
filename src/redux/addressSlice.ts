@@ -177,6 +177,23 @@ export const addExistingUserToAddress = createAsyncThunk(
   }
 );
 
+export const totalDeleteAddress = createAsyncThunk(
+  "address/totalDeleteAddress",
+  async (addressID: number) => {
+    try {
+      const response = await fetch(`/api/Address/total-delete/${addressID}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return addressID;
+    } catch (error) {
+      console.error("Error deleting address:", error);
+    }
+  }
+);
+
 export const addressSlice = createSlice({
   name: "address",
   initialState,
@@ -361,6 +378,27 @@ export const addressSlice = createSlice({
         state.loading = false;
         state.error =
           action.error.message ?? "Не удалось добавить пользователя";
+      })
+
+      //================================================
+
+      .addCase(totalDeleteAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        totalDeleteAddress.fulfilled,
+        (state, action: PayloadAction<number | undefined>) => {
+          state.loading = false;
+          state.error = null;
+          state.addresses = state.addresses.filter(
+            (address) => address.addressID !== action.payload
+          );
+        }
+      )
+      .addCase(totalDeleteAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? "Не вдалося видалити адресу";
       });
   },
 });
