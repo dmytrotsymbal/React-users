@@ -48,7 +48,7 @@ const AddressDetailsPage = () => {
   const position =
     address && address.latitude && address.longitude
       ? [address.latitude, address.longitude]
-      : new Error("Немає координат");
+      : null;
 
   const showAllLivingHistory = () => {
     setIsLivingHistoryVisible(!isLivingHistoryVisible);
@@ -193,14 +193,14 @@ const AddressDetailsPage = () => {
                 <Skeleton
                   animation="wave"
                   variant="rectangular"
-                  width="1000px"
+                  width="1200px"
                   height="1200px"
                   sx={{
                     borderRadius: "4px",
                   }}
                 />
               ) : (
-                <InteractiveMap position={position} />
+                <InteractiveMap position={position} address={address} />
               )}
             </Box>
 

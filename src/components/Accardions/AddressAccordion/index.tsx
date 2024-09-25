@@ -63,7 +63,7 @@ const AddressAccordion = ({
         dispatch(getAllUsersAddresses(String(userId)));
         console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersAddresses");
         showAllUsersAdresses();
-      }, 1000); // Затримка в мілісекундах (300 мс)
+      }, 1000);
     }
   };
 

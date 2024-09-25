@@ -67,8 +67,6 @@ const EditAddressPage = () => {
   // Используем useMemo для мемоизации данных адреса
   const memoizedAddress = useMemo(() => address, [address]);
 
-  // const userID = "your-user-id"; // Замените это на реальное значение userID
-
   useEffect(() => {
     if (addressId) {
       dispatch(
