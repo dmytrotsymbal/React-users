@@ -71,7 +71,7 @@ const EditAddressPage = () => {
     if (addressId) {
       dispatch(
         getUserAddressByID({
-          userID: String(address?.userID),
+          userID: address?.userID,
           addressID: Number(addressId),
         })
       );

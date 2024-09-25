@@ -47,7 +47,7 @@ export const getUserAddressByID = createAsyncThunk(
       if (userID) {
         link = `/api/Address/get-by-id/${addressID}/for-user/${userID}`;
       } else {
-        link = `/api/Address/get-by-id/${addressID}/for-user/`;
+        link = `/api/Address/get-by-id/${addressID}`; // Route without userID
       }
 
       const response = await fetch(link);
