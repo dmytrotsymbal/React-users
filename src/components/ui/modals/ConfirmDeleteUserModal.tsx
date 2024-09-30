@@ -44,10 +44,13 @@ const ConfirmDeleteUserModal = ({
           ?
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="info" onClick={handleClose}>
-          Ні
-        </Button>
+      <DialogActions
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "20px 24px",
+        }}
+      >
         <Button
           variant="contained"
           color="error"
@@ -55,6 +58,10 @@ const ConfirmDeleteUserModal = ({
           autoFocus
         >
           Так
+        </Button>
+
+        <Button variant="contained" color="inherit" onClick={handleClose}>
+          Ні
         </Button>
       </DialogActions>
     </Dialog>

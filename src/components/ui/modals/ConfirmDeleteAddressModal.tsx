@@ -42,14 +42,18 @@ const ConfirmDeleteAddressModal = ({
 
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Ви впевнені, що хочете видалити цю адрессу {address?.streetAddress} в{" "}
-          {address?.city} з історії проживання цього користувача?
+          Ви впевнені, що хочете <b>видалити</b> цю адрессу{" "}
+          {address?.streetAddress} в {address?.city} з історії проживання цього
+          користувача?
         </DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="info" onClick={handleClose}>
-          Ні
-        </Button>
+      <DialogActions
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "20px 24px",
+        }}
+      >
         <Button
           variant="contained"
           color="error"
@@ -60,6 +64,10 @@ const ConfirmDeleteAddressModal = ({
           autoFocus
         >
           Так
+        </Button>
+
+        <Button variant="contained" color="inherit" onClick={handleClose}>
+          Ні
         </Button>
       </DialogActions>
     </Dialog>
