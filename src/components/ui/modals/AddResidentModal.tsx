@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -6,11 +6,14 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  MenuItem,
+  Autocomplete,
+  Box,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { addExistingUserToAddress } from "../../../redux/addressSlice";
-import { getAllUsersIDs } from "../../../redux/userSlice";
+import { searchUsersByName } from "../../../redux/userSlice";
+import { RootState } from "../../../redux/store";
+import useDebounce from "../../../hooks/useDebounce";
 
 type Props = {
   addressID: string | undefined;
@@ -21,26 +24,35 @@ type Props = {
 const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
   const dispatch = useAppDispatch();
 
-  const usersIDs = useAppSelector((state) => state.user.usersIDs);
+  const { users } = useAppSelector((state: RootState) => state.user);
 
-  const [selectedUserID, setSelectedUserID] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  const [moveInDate, setMoveInDate] = useState("");
+  const [selectedUserID, setSelectedUserID] = useState<string | null>(null);
+  const [moveInDate, setMoveInDate] = useState<string>("");
   const [moveOutDate, setMoveOutDate] = useState<string | null>("");
 
   useEffect(() => {
-    if (open) {
-      dispatch(getAllUsersIDs());
+    if (debouncedSearchQuery) {
+      dispatch(searchUsersByName(debouncedSearchQuery));
     }
-  }, [dispatch, open]);
+  }, [debouncedSearchQuery, dispatch]);
 
-  const addressIDD = Number(addressID);
+  useEffect(() => {
+    if (open) {
+      setSearchQuery("");
+      setSelectedUserID(null);
+      setMoveInDate("");
+      setMoveOutDate("");
+    }
+  }, [open]);
 
   const handleSubmit = () => {
     if (selectedUserID && moveInDate) {
       dispatch(
         addExistingUserToAddress({
-          addressID: addressIDD,
+          addressID: Number(addressID),
           userID: selectedUserID,
           moveInDate,
           moveOutDate,
@@ -51,23 +63,44 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Додати приживача до цієї адреси</DialogTitle>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <Box
+        sx={{
+          backgroundColor: "#7FA1C3",
+          color: "white !important",
+          width: "100%",
+          height: "50px",
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          Додати користувача в історію проживання
+        </DialogTitle>
+      </Box>
       <DialogContent>
-        <TextField
-          select
-          fullWidth
-          label="Пользователь"
-          value={selectedUserID}
-          onChange={(e) => setSelectedUserID(e.target.value)}
-          helperText="Оберіть існуючого користувача"
-        >
-          {usersIDs.map((id) => (
-            <MenuItem key={id} value={id}>
-              {id}
-            </MenuItem>
-          ))}
-        </TextField>
+        <Autocomplete
+          options={users}
+          getOptionLabel={(option) =>
+            `${option.firstName} ${option.lastName} (ID: ${option.userID})`
+          }
+          onInputChange={(event, value) => setSearchQuery(value)}
+          onChange={(event, value) => setSelectedUserID(value?.userID || null)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Пошук користувача за іменем або ID"
+              fullWidth
+              margin="dense"
+              InputProps={{
+                ...params.InputProps,
+              }}
+            />
+          )}
+        />
 
         <TextField
           fullWidth
@@ -90,10 +123,23 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
         />
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose}>Назад</Button>
-        <Button onClick={handleSubmit} color="primary" variant="contained">
+      <DialogActions
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "20px 24px",
+        }}
+      >
+        <Button
+          onClick={handleSubmit}
+          color="success"
+          variant="contained"
+          disabled={!selectedUserID || !moveInDate}
+        >
           Додати
+        </Button>
+        <Button onClick={onClose} variant="contained" color="inherit">
+          Назад
         </Button>
       </DialogActions>
     </Dialog>
