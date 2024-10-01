@@ -16,7 +16,12 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import { RootState } from "../../redux/store";
-import { getAllCars, getCarsCount, searchCars } from "../../redux/carSlice";
+import {
+  deleteCar,
+  getAllCars,
+  getCarsCount,
+  searchCars,
+} from "../../redux/carSlice";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CarTableSkeletonRow from "./CarTableSkeletonRow";
@@ -24,6 +29,8 @@ import useDebounce from "../../hooks/useDebounce";
 import CustomSearchInput from "../ui/CustomSearchInput";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
+import { Car } from "../../types/carTypes";
+import ConfirmDeleteCarModal from "../ui/modals/ConfirmDeleteCarModal";
 
 const CarsTable = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +38,9 @@ const CarsTable = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const debouncedSearchQuery = useDebounce(searchQuery, 1500);
+
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
 
   const { cars, loading, error, carsCount } = useAppSelector(
     (state: RootState) => state.car
@@ -42,7 +52,7 @@ const CarsTable = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 15;
-  const totalPages = Math.ceil(carsCount / pageSize);
+  const totalPages = Math.ceil(Number(carsCount) / pageSize);
 
   useEffect(() => {
     if (debouncedSearchQuery) {
@@ -54,6 +64,15 @@ const CarsTable = () => {
       dispatch(getAllCars({ pageNumber: currentPage, pageSize }));
     }
   }, [dispatch, debouncedSearchQuery, currentPage]);
+
+  //=========================================
+
+  const handleDelete = () => {
+    if (selectedCar) {
+      dispatch(deleteCar(selectedCar.carID));
+      setOpenDeleteModal(false);
+    }
+  };
 
   //=========================================
   const handlePageChange = (
@@ -199,7 +218,13 @@ const CarsTable = () => {
                   </TableCell>
 
                   <TableCell>
-                    <IconButton>
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCar(car);
+                        setOpenDeleteModal(true);
+                      }}
+                    >
                       <DeleteForeverIcon sx={{ color: "red" }} />
                     </IconButton>
                   </TableCell>
@@ -225,6 +250,15 @@ const CarsTable = () => {
 
       <br />
       <br />
+
+      {selectedCar && (
+        <ConfirmDeleteCarModal
+          open={openDeleteModal}
+          handleClose={() => setOpenDeleteModal(false)}
+          handleDelete={handleDelete}
+          car={selectedCar}
+        />
+      )}
     </>
   );
 };

@@ -26,7 +26,7 @@ export const getAllCars = createAsyncThunk(
   }) => {
     try {
       const response = await fetch(
-        `/api/Car/GetAllCars?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        `/api/Car/get-all-cars?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -44,7 +44,7 @@ export const getCarById = createAsyncThunk(
   "car/getCarById",
   async (carID: number) => {
     try {
-      const response = await fetch(`/api/Car/GetCarById/${carID}`);
+      const response = await fetch(`/api/Car/get-by-id/${carID}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -59,7 +59,7 @@ export const getAllUsersCars = createAsyncThunk(
   "car/getAllUsersCars",
   async (userID: string) => {
     try {
-      const response = await fetch(`/api/Car/GetAllUsersCars/${userID}`);
+      const response = await fetch(`/api/Car/get-all-users-cars/${userID}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -75,7 +75,7 @@ export const searchCars = createAsyncThunk(
   async (searchQuery: string) => {
     try {
       const response = await fetch(
-        `/api/Car/SearchCars?searchQuery=${searchQuery}`
+        `/api/Car/search-cars?searchQuery=${searchQuery}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -91,7 +91,7 @@ export const updateCar = createAsyncThunk(
   "car/updateCar",
   async ({ carID, car }: { carID: number; car: Car }) => {
     try {
-      const response = await fetch(`/api/Car/UpdateCar/${carID}`, {
+      const response = await fetch(`/api/Car/update/${carID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ export const addCarToUser = createAsyncThunk(
   "car/addCarToUser",
   async ({ userID, car }: { userID: string; car: Car }) => {
     try {
-      const response = await fetch(`/api/Car/AddCarToUser/${userID}`, {
+      const response = await fetch(`/api/Car/add/${userID}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -133,7 +133,7 @@ export const deleteCar = createAsyncThunk(
   "car/deleteCar",
   async (carID: number) => {
     try {
-      const response = await fetch(`/api/Car/DeleteCar/${carID}`, {
+      const response = await fetch(`/api/Car/delete/${carID}`, {
         method: "DELETE",
       });
       if (!response.ok) {

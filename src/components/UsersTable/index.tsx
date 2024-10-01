@@ -54,7 +54,7 @@ const UsersTable = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 15;
-  const totalPages = Math.ceil(usersCount / pageSize); // клво страниц
+  const totalPages = Math.ceil(Number(usersCount) / pageSize); // клво страниц
 
   useEffect(() => {
     if (debouncedSearchQuery) {
