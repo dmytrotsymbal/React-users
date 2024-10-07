@@ -14,6 +14,7 @@ import { getAllUsersPhones } from "../../redux/phoneSlice";
 import CustomErrorBlock from "../../components/ui/CustomErrorBlock";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CrimesAccardion from "../../components/Accardions/CrimesAccardion";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
@@ -25,6 +26,7 @@ const UserDetailsPage = () => {
 
   const [isCarVisible, setIsCarVisible] = useState<boolean>(false);
   const [isAddressVisible, setIsAddressVisible] = useState<boolean>(false);
+  const [isCrimesVisible, setIsCrimesVisible] = useState<boolean>(false);
 
   const user = useAppSelector((state: RootState) =>
     state.user.users.find((u) => u.userID === userId)
@@ -55,7 +57,9 @@ const UserDetailsPage = () => {
     setIsAddressVisible(!isAddressVisible);
   };
 
-  //======================
+  const showAllUsersCrimes = () => {
+    setIsCrimesVisible(!isCrimesVisible);
+  };
 
   return (
     <>
@@ -231,6 +235,12 @@ const UserDetailsPage = () => {
             <AddressAccordion
               isAddressVisible={isAddressVisible}
               showAllUsersAdresses={showAllUsersAdresses}
+            />
+
+            <br />
+            <CrimesAccardion
+              isCrimesVisible={isCrimesVisible}
+              showAllUsersCrimes={showAllUsersCrimes}
             />
           </Paper>
         )
