@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { RootState } from "../../../redux/store";
 import { useState } from "react";
@@ -24,6 +24,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CrimesTableSkeletonRow from "./CrimesTableSkeletonRow";
+import CustomTooltip from "../../ui/CustomTooltip";
 
 type Props = {
   isCrimesVisible: boolean;
@@ -58,6 +59,18 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
       }, 1000);
     }
   };
+
+  const longtext = criminalRecords.map((criminalRecord) => {
+    return (
+      criminalRecord.prison.prisonName +
+      "," +
+      criminalRecord.prison.location +
+      "," +
+      criminalRecord.prison.capacity +
+      "," +
+      criminalRecord.prison.securityLevel
+    );
+  });
 
   return (
     <>
@@ -161,8 +174,16 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
 
                       <TableCell>{crime.article}</TableCell>
                       <TableCell>{crime.sentence}</TableCell>
-                      <TableCell>{crime.caseDetailsURL}</TableCell>
-                      <TableCell>{crime.prison.prisonID}</TableCell>
+                      <TableCell>
+                        <Link to={crime.caseDetailsURL || ""}>
+                          Подробиці справи
+                        </Link>
+                      </TableCell>
+
+                      <CustomTooltip title={String(longtext)} placement="top">
+                        <TableCell>{crime.prison.prisonID}</TableCell>
+                      </CustomTooltip>
+
                       <TableCell>{crime.details}</TableCell>
 
                       <TableCell>
