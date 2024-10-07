@@ -4,6 +4,7 @@ import photoReducer from "./photoSlice";
 import carReducer from "./carSlice";
 import adressReducer from "./addressSlice";
 import phoneReducer from "./phoneSlice";
+import crimeReducer from "./criminalRecordSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     car: carReducer,
     address: adressReducer,
     phone: phoneReducer,
+    crime: crimeReducer,
   },
 });
 
