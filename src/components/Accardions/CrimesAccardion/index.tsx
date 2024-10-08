@@ -148,7 +148,9 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
                 ) : !criminalRecords || criminalRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} align="center">
-                      <Typography variant="h6">У вас ще немає адрес</Typography>
+                      <Typography variant="h6">
+                        У цього користувача нема судимостей
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 ) : (

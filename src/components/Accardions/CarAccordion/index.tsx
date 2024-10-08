@@ -154,6 +154,14 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
                       </Typography>
                     </TableCell>
                   </TableRow>
+                ) : !cars || cars.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={10} align="center">
+                      <Typography variant="h6">
+                        У цього користувача нема автомобілів
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
                 ) : (
                   cars.map((car) => (
                     <TableRow key={car.carID}>

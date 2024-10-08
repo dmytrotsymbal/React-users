@@ -163,8 +163,10 @@ const AddressAccordion = ({
                   </TableRow>
                 ) : !addresses || addresses.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={8} align="center">
-                      <Typography variant="h6">У вас ще немає адрес</Typography>
+                    <TableCell colSpan={10} align="center">
+                      <Typography variant="h6">
+                        У цього користувача нема історії проживання
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
