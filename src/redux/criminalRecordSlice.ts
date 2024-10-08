@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { CriminalRecords } from "../types/criminalRecordsTypes";
+import { CrimeDTO, CriminalRecords } from "../types/criminalRecordsTypes";
 import axios from "axios";
 
 export type CriminalRecordsState = {
@@ -15,7 +15,7 @@ const initialState: CriminalRecordsState = {
 };
 
 export const getAllUsersCriminalRecords = createAsyncThunk(
-  "phone/getAllUsersCriminalRecords",
+  "criminalRecord/getAllUsersCriminalRecords",
   async (userID: string) => {
     try {
       const response = await axios.get(
@@ -36,9 +36,31 @@ export const getCriminalRecordById = createAsyncThunk(
       const response = await axios.get(
         `/api/CriminalRecord/get-crime-by-id/${criminalRecordID}`
       );
-      return response.data;
+      return response.data; // возвращаем только данные
     } catch (error) {
       console.error("Error fetching crime by ID:", error);
+      throw error; // пробрасываем ошибку для обработки в редьюсере
+    }
+  }
+);
+
+export const updateCriminalRecord = createAsyncThunk(
+  "criminalRecord/updateCriminalRecord",
+  async ({
+    criminalRecordID,
+    criminalRecord,
+  }: {
+    criminalRecordID: number;
+    criminalRecord: CrimeDTO;
+  }) => {
+    try {
+      const response = await axios.put(
+        `/api/CriminalRecord/update/${criminalRecordID}`,
+        criminalRecord
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating crime:", error);
       throw error;
     }
   }
@@ -70,6 +92,8 @@ export const criminalRecordSlice = createSlice({
           "Не вдалося отримати кримінальні записи цього користувача";
       })
 
+      //========================================================================================
+
       .addCase(getCriminalRecordById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -79,14 +103,42 @@ export const criminalRecordSlice = createSlice({
         (state, action: PayloadAction<CriminalRecords>) => {
           state.loading = false;
           state.error = null;
+          // Прямо добавляем в criminalRecords как массив, заменяя старые данные
           state.criminalRecords = [action.payload];
         }
       )
       .addCase(getCriminalRecordById.rejected, (state, action) => {
-        state.criminalRecords = [];
         state.loading = false;
         state.error =
-          action.error.message || "Не вдалося отримати кримінальний запис";
+          action.error.message || "Не вдалося завантажити кримінальний запис";
+      })
+
+      //========================================================================================
+      .addCase(updateCriminalRecord.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        updateCriminalRecord.fulfilled,
+        (state, action: PayloadAction<CriminalRecords | undefined>) => {
+          state.loading = false;
+          if (action.payload) {
+            const updatedCrime = action.payload;
+            const index = state.criminalRecords.findIndex(
+              (crime) =>
+                crime.criminalRecordID === updatedCrime.criminalRecordID
+            );
+            if (index !== -1) {
+              state.criminalRecords[index] = updatedCrime;
+            }
+          }
+        }
+      )
+      .addCase(updateCriminalRecord.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message ??
+          "Не вдалося оновити данні про кримінальний запис";
       });
   },
 });

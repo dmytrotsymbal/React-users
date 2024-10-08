@@ -190,10 +190,10 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
 
                       <TableCell>
                         <IconButton
-                        //   onClick={(e) => {
-                        //     e.stopPropagation();
-                        //     navigate(`/address/edit/${address.addressID}`);
-                        //   }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/crime/edit/${crime.criminalRecordID}`);
+                          }}
                         >
                           <EditIcon />
                         </IconButton>

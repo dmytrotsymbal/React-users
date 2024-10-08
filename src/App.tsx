@@ -27,6 +27,10 @@ const AddAddressPage = lazy(() => import("./pages/Addresses/AddAddressPage"));
 
 //===================
 
+const EditCrimePage = lazy(() => import("./pages/Crimes/EditCrimePage"));
+
+//===================
+
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 
 function App() {
@@ -56,11 +60,11 @@ function App() {
               <Route path="user/:userId" element={<UsersDetailsPage />} />
               <Route path="user/edit/:userId" element={<EditUserPage />} />
               <Route path="user/add" element={<AddUserPage />} />
-
+              {/* =================== */}
               <Route path="/cars" element={<CarsPage />} />
               <Route path="car/edit/:carId" element={<EditCarPage />} />
               <Route path="car/add/:userId" element={<AddCarPage />} />
-
+              {/* =================== */}
               <Route
                 path="address/:addressId"
                 element={<AddressDetailsPage />}
@@ -70,7 +74,10 @@ function App() {
                 element={<EditAddressPage />}
               />
               <Route path="address/add/:userId" element={<AddAddressPage />} />
+              {/* =================== */}
+              <Route path="crime/edit/:crimeId" element={<EditCrimePage />} />
 
+              {/* =================== */}
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </Suspense>
