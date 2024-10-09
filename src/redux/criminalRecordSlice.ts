@@ -92,6 +92,21 @@ export const addCriminalRecordToUser = createAsyncThunk(
   }
 );
 
+export const deleteCriminalRecord = createAsyncThunk(
+  "criminalRecord/deleteCriminalRecord",
+  async (criminalRecordID: number) => {
+    try {
+      const response = await axios.delete(
+        `/api/CriminalRecord/delete/${criminalRecordID}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting crime:", error);
+      throw error;
+    }
+  }
+);
+
 //HALPERS=================================================
 
 export const getAllPrisons = createAsyncThunk(
@@ -206,6 +221,26 @@ export const criminalRecordSlice = createSlice({
         state.error =
           action.error.message ??
           "Не вдалося додати кримінальний запис до користувача";
+      })
+
+      .addCase(deleteCriminalRecord.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        deleteCriminalRecord.fulfilled,
+        (state, action: PayloadAction<number | undefined>) => {
+          state.loading = false;
+          state.error = null;
+          state.criminalRecords = state.criminalRecords.filter(
+            (crime) => crime.criminalRecordID !== action.payload
+          );
+        }
+      )
+      .addCase(deleteCriminalRecord.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message ?? "Не вдалося видалити кримінальний запис";
       })
 
       //========================================================================================

@@ -5,21 +5,24 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/material";
-import { Car } from "../../../types/carTypes";
+import { CriminalRecords } from "../../../types/criminalRecordsTypes";
 
 type Props = {
   open: boolean;
   handleClose: () => void;
   handleDelete: () => void;
-  car: Car | null;
+  crime: CriminalRecords | null;
 };
 
-const ConfirmDeleteCarModal = ({
+const ConfirmDeleteCrimeModal = ({
   open,
   handleClose,
   handleDelete,
-  car,
+  crime,
 }: Props) => {
+  const handleReloadPage = () => {
+    window.location.reload();
+  };
   return (
     <Dialog
       open={open}
@@ -40,7 +43,8 @@ const ConfirmDeleteCarModal = ({
 
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Ви впевнені, що хочете видалити запис {car?.firm} {car?.model}?
+          Ви впевнені, що хочете видалити запис {crime?.criminalRecordID}{" "}
+          {crime?.article}
         </DialogContentText>
       </DialogContent>
       <DialogActions
@@ -56,6 +60,7 @@ const ConfirmDeleteCarModal = ({
           onClick={() => {
             handleDelete();
             handleClose();
+            handleReloadPage();
           }}
           autoFocus
         >
@@ -70,4 +75,4 @@ const ConfirmDeleteCarModal = ({
   );
 };
 
-export default ConfirmDeleteCarModal;
+export default ConfirmDeleteCrimeModal;

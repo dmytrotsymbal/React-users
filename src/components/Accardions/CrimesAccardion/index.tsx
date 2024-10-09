@@ -2,7 +2,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { RootState } from "../../../redux/store";
 import { useState } from "react";
-import { getAllUsersCriminalRecords } from "../../../redux/criminalRecordSlice";
+import {
+  deleteCriminalRecord,
+  getAllUsersCriminalRecords,
+} from "../../../redux/criminalRecordSlice";
 import {
   Accordion,
   AccordionDetails,
@@ -21,10 +24,12 @@ import {
 import CustomNotFoundPaper from "../../ui/CustomNotFoundPaper";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CrimesTableSkeletonRow from "./CrimesTableSkeletonRow";
 import CustomTooltip from "../../ui/CustomTooltip";
+import { CriminalRecords } from "../../../types/criminalRecordsTypes";
+import ConfirmDeleteCrimeModal from "../../ui/modals/ConfirmDeleteCrimeModal";
 
 type Props = {
   isCrimesVisible: boolean;
@@ -72,6 +77,18 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
     );
   });
 
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [selectedCrime, setSelectedCrime] = useState<CriminalRecords | null>(
+    null
+  );
+
+  const handleDeleteCriminalRecord = () => {
+    if (selectedCrime) {
+      dispatch(deleteCriminalRecord(selectedCrime.criminalRecordID));
+      setOpenDeleteModal(true);
+    }
+  };
+
   return (
     <>
       <Accordion
@@ -101,7 +118,7 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
             {isCrimeAccordionExpanded ? (
               <IconButton
                 sx={{ marginRight: "1rem" }}
-                onClick={() => navigate(`/address/add/${userId}`)}
+                onClick={() => navigate(`/crime/add/${userId}`)}
               >
                 <AddIcon
                   sx={{
@@ -198,8 +215,14 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
                           <EditIcon />
                         </IconButton>
 
-                        <IconButton>
-                          <RemoveIcon />
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCrime(crime);
+                            setOpenDeleteModal(true);
+                          }}
+                        >
+                          <DeleteForeverIcon sx={{ color: "red" }} />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -210,6 +233,15 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
           </TableContainer>
         </AccordionDetails>
       </Accordion>
+
+      {openDeleteModal && (
+        <ConfirmDeleteCrimeModal
+          open={openDeleteModal}
+          handleClose={() => setOpenDeleteModal(false)}
+          handleDelete={handleDeleteCriminalRecord}
+          crime={selectedCrime}
+        />
+      )}
     </>
   );
 };
