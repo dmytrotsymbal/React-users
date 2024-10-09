@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { CrimeDTO, CriminalRecords } from "../types/criminalRecordsTypes";
+import { CriminalRecords } from "../types/criminalRecordsTypes";
 import axios from "axios";
 
 export type CriminalRecordsState = {
@@ -51,7 +51,7 @@ export const updateCriminalRecord = createAsyncThunk(
     criminalRecord,
   }: {
     criminalRecordID: number;
-    criminalRecord: CrimeDTO;
+    criminalRecord: CriminalRecords;
   }) => {
     try {
       const response = await axios.put(
