@@ -26,7 +26,6 @@ import CustomIconButton from "../../components/ui/CustomIconButton";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-// Валидация формы с использованием Yup
 const validationSchema = Yup.object().shape({
   article: Yup.string()
     .required("Article is required")

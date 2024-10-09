@@ -201,6 +201,7 @@ const AddAddressPage = () => {
                     label="Move In Date"
                     name="moveInDate"
                     type="date"
+                    InputLabelProps={{ shrink: true }}
                     helperText={<ErrorMessage name="moveInDate" />}
                   />
                 </Grid>
@@ -212,6 +213,7 @@ const AddAddressPage = () => {
                     label="Move Out Date"
                     name="moveOutDate"
                     type="date"
+                    InputLabelProps={{ shrink: true }}
                     helperText={<ErrorMessage name="moveOutDate" />}
                   />
                 </Grid>

@@ -40,10 +40,10 @@ export const getCriminalRecordById = createAsyncThunk(
       const response = await axios.get(
         `/api/CriminalRecord/get-crime-by-id/${criminalRecordID}`
       );
-      return response.data; // возвращаем только данные
+      return response.data;
     } catch (error) {
       console.error("Error fetching crime by ID:", error);
-      throw error; // пробрасываем ошибку для обработки в редьюсере
+      throw error;
     }
   }
 );
@@ -65,6 +65,28 @@ export const updateCriminalRecord = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error("Error updating crime:", error);
+      throw error;
+    }
+  }
+);
+
+export const addCriminalRecordToUser = createAsyncThunk(
+  "criminalRecord/addCriminalRecordToUser",
+  async ({
+    userID,
+    criminalRecord,
+  }: {
+    userID: string;
+    criminalRecord: CriminalRecords;
+  }) => {
+    try {
+      const response = await axios.post(
+        `/api/CriminalRecord/add-crime-to/${userID}`,
+        criminalRecord
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error adding crime to user:", error);
       throw error;
     }
   }
@@ -158,6 +180,32 @@ export const criminalRecordSlice = createSlice({
         state.error =
           action.error.message ??
           "Не вдалося оновити данні про кримінальний запис";
+      })
+
+      .addCase(addCriminalRecordToUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        addCriminalRecordToUser.fulfilled,
+        (
+          state,
+          action: PayloadAction<
+            { userID: string; criminalRecord: CriminalRecords } | undefined
+          >
+        ) => {
+          state.loading = false;
+          if (action.payload) {
+            const { criminalRecord } = action.payload;
+            state.criminalRecords.push(criminalRecord);
+          }
+        }
+      )
+      .addCase(addCriminalRecordToUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message ??
+          "Не вдалося додати кримінальний запис до користувача";
       })
 
       //========================================================================================
