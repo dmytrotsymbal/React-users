@@ -1,17 +1,21 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { CriminalRecords } from "../types/criminalRecordsTypes";
+import { CriminalRecords, Prison } from "../types/criminalRecordsTypes";
 import axios from "axios";
 
 export type CriminalRecordsState = {
   criminalRecords: CriminalRecords[];
   loading: boolean;
   error: string | null;
+
+  prisonsList: Prison[];
 };
 
 const initialState: CriminalRecordsState = {
   criminalRecords: [],
   loading: true,
   error: null,
+
+  prisonsList: [],
 };
 
 export const getAllUsersCriminalRecords = createAsyncThunk(
@@ -61,6 +65,21 @@ export const updateCriminalRecord = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error("Error updating crime:", error);
+      throw error;
+    }
+  }
+);
+
+//HALPERS=================================================
+
+export const getAllPrisons = createAsyncThunk(
+  "criminalRecord/getAllPrisons",
+  async () => {
+    try {
+      const response = await axios.get("/api/CriminalRecord/get-all-prisons");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching prisons:", error);
       throw error;
     }
   }
@@ -139,6 +158,27 @@ export const criminalRecordSlice = createSlice({
         state.error =
           action.error.message ??
           "Не вдалося оновити данні про кримінальний запис";
+      })
+
+      //========================================================================================
+
+      .addCase(getAllPrisons.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getAllPrisons.fulfilled,
+        (state, action: PayloadAction<Prison[] | undefined>) => {
+          state.loading = false;
+          state.error = null;
+          state.prisonsList = action.payload ?? [];
+        }
+      )
+      .addCase(getAllPrisons.rejected, (state, action) => {
+        state.prisonsList = [];
+        state.loading = false;
+        state.error =
+          action.error.message || "Не вдалося отримати список судів";
       });
   },
 });

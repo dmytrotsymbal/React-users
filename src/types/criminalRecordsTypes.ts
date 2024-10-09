@@ -5,6 +5,14 @@ export enum SecurityLevelEnum {
   Maximum = "Maximum",
 }
 
+export type Prison = {
+  prisonID: number;
+  prisonName?: string;
+  location?: string;
+  capacity?: number;
+  securityLevel?: SecurityLevelEnum;
+};
+
 export type CriminalRecords = {
   criminalRecordID: number;
   userID: string;
@@ -14,13 +22,7 @@ export type CriminalRecords = {
   sentence: string;
   caseDetailsURL?: string | null;
   details: string;
-  prison: {
-    prisonID: number;
-    prisonName?: string;
-    location?: string;
-    capacity?: number;
-    securityLevel?: SecurityLevelEnum;
-  };
+  prison: Prison;
 };
 
 export type CrimeDTO = {

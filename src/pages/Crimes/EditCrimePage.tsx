@@ -3,11 +3,24 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { CriminalRecords } from "../../types/criminalRecordsTypes";
 import {
+  getAllPrisons,
   getCriminalRecordById,
   updateCriminalRecord,
 } from "../../redux/criminalRecordSlice";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+  SelectChangeEvent,
+} from "@mui/material";
 import CustomLoader from "../../components/ui/CustomLoader";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CustomIconButton from "../../components/ui/CustomIconButton";
@@ -23,11 +36,16 @@ const EditCrimePage = () => {
         criminalRecord.criminalRecordID === Number(crimeId)
     )
   );
-  const { loading, error } = useAppSelector((state: RootState) => state.crime);
+  const { prisonsList, loading, error } = useAppSelector(
+    (state: RootState) => state.crime
+  );
+
+  useEffect(() => {
+    dispatch(getAllPrisons());
+  }, [dispatch]);
 
   const memoizedCrime = useMemo(() => criminalRecord, [criminalRecord]);
 
-  // Локальное состояние для полей формы
   const [formValues, setFormValues] = useState({
     criminalRecordID: memoizedCrime?.criminalRecordID || 0,
     userID: memoizedCrime?.userID || "",
@@ -72,11 +90,21 @@ const EditCrimePage = () => {
     }
   }, [memoizedCrime]);
 
+  // Обработчик для обычных полей ввода
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
+    }));
+  };
+
+  // Обработчик для изменения значения в Select (тюрем)
+  const handleSelectChange = (e: SelectChangeEvent<number>) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: Number(value), // Преобразуем значение в число
     }));
   };
 
@@ -147,110 +175,122 @@ const EditCrimePage = () => {
   }
 
   return (
-    <Paper style={{ padding: 16, position: "relative" }}>
-      <Typography variant="h6">
-        Редагувати кримінальний запис {crimeId}
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Criminal ID"
-              name="criminalRecordID"
-              value={formValues.criminalRecordID}
-              disabled
-            />
+    <>
+      <br />
+      <Paper style={{ padding: 16, position: "relative" }}>
+        <Typography variant="h6">
+          Редагувати кримінальний запис {crimeId}
+        </Typography>
+
+        <br />
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Criminal ID"
+                name="criminalRecordID"
+                value={formValues.criminalRecordID}
+                disabled
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Article"
+                name="article"
+                value={formValues.article}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Conviction Date"
+                name="convictionDate"
+                type="date"
+                value={formValues.convictionDate}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Release Date"
+                name="releaseDate"
+                type="date"
+                value={formValues.releaseDate}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Sentence"
+                name="sentence"
+                value={formValues.sentence}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Case Details URL"
+                name="caseDetailsURL"
+                value={formValues.caseDetailsURL}
+                onChange={handleInputChange}
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              <FormControl fullWidth>
+                <InputLabel id="prison-label">Prison</InputLabel>
+                <Select
+                  labelId="prison-label"
+                  name="prisonID"
+                  value={formValues.prisonID}
+                  onChange={handleSelectChange} // Используем новый обработчик для Select
+                >
+                  {prisonsList.map((prison) => (
+                    <MenuItem key={prison.prisonID} value={prison.prisonID}>
+                      {prison.prisonName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Details"
+                name="details"
+                value={formValues.details}
+                onChange={handleInputChange}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Article"
-              name="article"
-              value={formValues.article}
-              onChange={handleInputChange}
+
+          <br />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button variant="contained" color="success" type="submit">
+              Зберегти
+            </Button>
+            <Button type="reset" variant="contained" color="inherit">
+              Скинути
+            </Button>
+            <CustomIconButton
+              icon={<ArrowBackIcon />}
+              onClick={() => navigate(-1)}
             />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Conviction Date"
-              name="convictionDate"
-              type="date"
-              // InputLabelProps={{ shrink: true }}
-              value={formValues.convictionDate}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Release Date"
-              name="releaseDate"
-              type="date"
-              // InputLabelProps={{ shrink: true }}
-              value={formValues.releaseDate}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Sentence"
-              name="sentence"
-              value={formValues.sentence}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Case Details URL"
-              name="caseDetailsURL"
-              value={formValues.caseDetailsURL}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Details"
-              name="details"
-              value={formValues.details}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Prison ID"
-              name="prisonID"
-              type="number"
-              value={formValues.prisonID}
-              onChange={handleInputChange}
-            />
-          </Grid>
-        </Grid>
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: 16,
-          }}
-        >
-          <Button variant="contained" color="success" type="submit">
-            Зберегти
-          </Button>
-          <Button type="reset" variant="contained" color="inherit">
-            Скинути
-          </Button>
-          <CustomIconButton
-            icon={<ArrowBackIcon />}
-            onClick={() => navigate(-1)}
-          />
-        </Box>
-      </form>
-    </Paper>
+          </Box>
+        </form>
+      </Paper>
+    </>
   );
 };
 
