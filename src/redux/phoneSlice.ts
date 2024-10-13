@@ -153,7 +153,8 @@ export const phoneSlice = createSlice({
       .addCase(updatePhone.rejected, (state, action) => {
         state.loading = false;
         state.error =
-          action.error.message ?? "Не вдалося оновити данні цей номер телефону";
+          action.error.message ??
+          "Не вдалося оновити данні цього номер телефону";
       })
 
       .addCase(addPhoneToUser.pending, (state) => {

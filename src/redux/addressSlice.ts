@@ -7,7 +7,7 @@ export type AddressState = {
   loading: boolean;
   error: string | null;
 
-  // жильці
+  // жильці / Residents
   livingHistory: Resident[];
   livingLoading: boolean;
   livingError: string | null;
@@ -18,7 +18,7 @@ const initialState: AddressState = {
   loading: true,
   error: null,
 
-  // жильці
+  // жильці / Residents
   livingHistory: [],
   livingLoading: true,
   livingError: null,
@@ -47,7 +47,7 @@ export const getUserAddressByID = createAsyncThunk(
       if (userID) {
         link = `/api/Address/get-by-id/${addressID}/for-user/${userID}`;
       } else {
-        link = `/api/Address/get-by-id/${addressID}`; // Route without userID
+        link = `/api/Address/get-by-id/${addressID}`; // without userID
       }
 
       const response = await fetch(link);
@@ -215,10 +215,10 @@ export const addressSlice = createSlice({
       .addCase(getAllUsersAddresses.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Не вдалося отримати адреси";
-        state.addresses = []; // Встановлюємо пустий масив при помилці
+        state.addresses = [];
       })
 
-      //================================================
+      //========================================================================================
 
       .addCase(getUserAddressByID.pending, (state) => {
         state.loading = true;
@@ -233,9 +233,9 @@ export const addressSlice = createSlice({
             (address) => address.addressID === action.payload.addressID
           );
           if (existingAddressIndex !== -1) {
-            state.addresses[existingAddressIndex] = action.payload; // Обновляем адрес, если уже существует
+            state.addresses[existingAddressIndex] = action.payload;
           } else {
-            state.addresses.push(action.payload); // Добавляем адрес, если его еще нет
+            state.addresses.push(action.payload);
           }
         }
       )
@@ -243,7 +243,8 @@ export const addressSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Не удалось загрузить адрес";
       })
-      //================================================
+
+      //========================================================================================
 
       .addCase(getAddressLivingHistory.pending, (state) => {
         state.livingLoading = true;
@@ -265,7 +266,7 @@ export const addressSlice = createSlice({
         state.livingHistory = [];
       })
 
-      //================================================
+      //========================================================================================
 
       .addCase(updateAddress.pending, (state) => {
         state.loading = true;
@@ -293,11 +294,10 @@ export const addressSlice = createSlice({
       )
       .addCase(updateAddress.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to update car";
+        state.error = action.error.message ?? "Не вдалося оновити адресу";
       })
 
-      //================================================
-
+      //========================================================================================
       .addCase(addAddressToUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -322,8 +322,7 @@ export const addressSlice = createSlice({
         state.error = action.error.message ?? "Не вдалося додати адресу";
       })
 
-      //================================================
-
+      //========================================================================================
       .addCase(removeAddressFromUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -343,7 +342,7 @@ export const addressSlice = createSlice({
         state.error = action.error.message ?? "Не вдалося видалити адресу";
       })
 
-      //================================================
+      //========================================================================================
 
       .addCase(addExistingUserToAddress.pending, (state) => {
         state.loading = true;
@@ -377,10 +376,10 @@ export const addressSlice = createSlice({
       .addCase(addExistingUserToAddress.rejected, (state, action) => {
         state.loading = false;
         state.error =
-          action.error.message ?? "Не удалось добавить пользователя";
+          action.error.message ?? "Не вдалося прив'язати користувача до адреси";
       })
 
-      //================================================
+      //========================================================================================
 
       .addCase(totalDeleteAddress.pending, (state) => {
         state.loading = true;

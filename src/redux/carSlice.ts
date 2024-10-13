@@ -179,6 +179,8 @@ const carSlice = createSlice({
           action.error.message || "Не вдалося завантажити автомобілі";
       })
 
+      //========================================================================================
+
       .addCase(getCarById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -194,7 +196,8 @@ const carSlice = createSlice({
           action.error.message ?? "Не вдалося завантажити автомобіль";
       })
 
-      //|=|=|=|=|=|=|=|=|=|=|=|
+      //========================================================================================
+
       .addCase(getAllUsersCars.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -214,7 +217,8 @@ const carSlice = createSlice({
           "Не вдалося завантажити автомобілі цього користувача";
       })
 
-      //|=|=|=|=|=|=|=|=|=|=|=|
+      //========================================================================================
+
       .addCase(searchCars.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -229,7 +233,8 @@ const carSlice = createSlice({
         state.error = action.error.message ?? "Не вдалось знайти автомобілі";
       })
 
-      //|=|=|=|=|=|=|=|=|=|=|=|
+      //========================================================================================
+
       .addCase(updateCar.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -247,7 +252,7 @@ const carSlice = createSlice({
               (existingCar) => existingCar.carID === carID
             );
             if (index !== -1) {
-              state.cars[index] = car; // Оновлюємо автомобіль в списку
+              state.cars[index] = car;
             }
           }
         }
@@ -258,7 +263,8 @@ const carSlice = createSlice({
           action.error.message ?? "Не вдалося оновити данні про автомобіль";
       })
 
-      //|=|=|=|=|=|=|=|=|=|=|=|
+      //========================================================================================
+
       .addCase(addCarToUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -272,7 +278,7 @@ const carSlice = createSlice({
           state.loading = false;
           if (action.payload) {
             const { car } = action.payload;
-            state.cars.push(car); // Додаємо автомобіль до списку
+            state.cars.push(car);
           }
         }
       )
@@ -281,7 +287,8 @@ const carSlice = createSlice({
         state.error = action.error.message ?? "Не вдалося додати автомобіль";
       })
 
-      //|=|=|=|=|=|=|=|=|=|=|=|
+      //========================================================================================
+
       .addCase(deleteCar.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -299,7 +306,9 @@ const carSlice = createSlice({
         state.error = action.error.message ?? "Не вдалося видалити автомобіль";
       })
 
-      // HALPERS |=|=|=|=|=|=|=|=|=|=|=|
+      //========================================================================================
+      // HALPERS
+
       .addCase(getCarsCount.pending, (state) => {
         state.loading = true;
         state.error = null;

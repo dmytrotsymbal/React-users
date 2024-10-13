@@ -159,7 +159,6 @@ export const criminalRecordSlice = createSlice({
         (state, action: PayloadAction<CriminalRecords>) => {
           state.loading = false;
           state.error = null;
-          // Прямо добавляем в criminalRecords как массив, заменяя старые данные
           state.criminalRecords = [action.payload];
         }
       )
@@ -261,7 +260,7 @@ export const criminalRecordSlice = createSlice({
         state.prisonsList = [];
         state.loading = false;
         state.error =
-          action.error.message || "Не вдалося отримати список судів";
+          action.error.message || "Не вдалося отримати список всіх ув'язнених";
       });
   },
 });
