@@ -1,14 +1,14 @@
 import { User, UserDTO } from "../types/userTypes";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-export interface UserState {
+export type UserState = {
   users: User[];
   loading: boolean;
   error: string | null;
   usersCount?: number;
 
   usersIDs: string[]; // ids array
-}
+};
 
 const initialState: UserState = {
   users: [],
@@ -69,7 +69,7 @@ export const searchUsersByName = createAsyncThunk(
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return await response.json(); // Повертаємо масив користувачів
+      return await response.json();
     } catch (error) {
       console.error("Error fetching users:", error);
       throw error;
@@ -131,7 +131,7 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-//Halpers==============================================
+// HALPERS
 
 export const getUsersCount = createAsyncThunk(
   "user/getUsersCount",
@@ -217,7 +217,7 @@ const userSlice = createSlice({
       )
       .addCase(searchUsersByName.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? "Failed to search users";
+        state.error = action.error.message ?? "Не вдалося знайти користувача";
       })
 
       //========================================================================================
@@ -232,7 +232,8 @@ const userSlice = createSlice({
       })
       .addCase(createUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to create new user";
+        state.error =
+          action.error.message || "Не вдалося створити нового користувача";
       })
 
       //========================================================================================
@@ -252,7 +253,8 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to update user";
+        state.error =
+          action.error.message || "Не вдалося ононовити данні користувача";
       })
 
       //========================================================================================
@@ -269,7 +271,7 @@ const userSlice = createSlice({
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to delete user";
+        state.error = action.error.message || "Не вдалося видалити користувача";
       })
 
       //========================================================================================
@@ -288,7 +290,9 @@ const userSlice = createSlice({
       )
       .addCase(getUsersCount.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to get users count";
+        state.error =
+          action.error.message ||
+          "Не вдалося отримати загальну кількість користувачів";
       })
 
       //========================================================================================
@@ -307,7 +311,8 @@ const userSlice = createSlice({
       )
       .addCase(getAllUsersIDs.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to get users count";
+        state.error =
+          action.error.message || "Не вдалося отримати список ID користувачів";
       });
   },
 });

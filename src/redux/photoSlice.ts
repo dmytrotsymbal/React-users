@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Photo } from "../types/photoTypes";
 
-export interface PhotoState {
+export type PhotoState = {
   photos: Photo[];
   loading: boolean;
   error: string | null;
-}
+};
 
 const initialState: PhotoState = {
   photos: [],

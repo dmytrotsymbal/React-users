@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Car } from "../types/carTypes";
 
-export interface CarState {
+export type CarState = {
   cars: Car[];
   loading: boolean;
   error: string | null;
   carsCount?: number;
-}
+};
 
 const initialState: CarState = {
   cars: [],
@@ -170,16 +170,15 @@ const carSlice = createSlice({
         state.error = null;
       })
       .addCase(getAllCars.fulfilled, (state, action: PayloadAction<Car[]>) => {
-        state.loading = false; // Знімаємо стан лоадінгу
-        state.cars = action.payload; // Зберігаємо отриманих користувачів
+        state.loading = false;
+        state.cars = action.payload;
       })
       .addCase(getAllCars.rejected, (state, action) => {
-        state.loading = false; // Знімаємо стан лоадінгу
+        state.loading = false;
         state.error =
-          action.error.message || "Не вдалося завантажити автомобілі"; // Встановлюємо помилку
+          action.error.message || "Не вдалося завантажити автомобілі";
       })
 
-      //|=|=|=|=|=|=|=|=|=|=|=|
       .addCase(getCarById.pending, (state) => {
         state.loading = true;
         state.error = null;

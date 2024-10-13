@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Address } from "../types/addressTypes";
 import { Resident } from "../types/residentTypes";
 
-export interface AddressState {
+export type AddressState = {
   addresses: Address[];
   loading: boolean;
   error: string | null;
@@ -11,7 +11,7 @@ export interface AddressState {
   livingHistory: Resident[];
   livingLoading: boolean;
   livingError: string | null;
-}
+};
 
 const initialState: AddressState = {
   addresses: [],
