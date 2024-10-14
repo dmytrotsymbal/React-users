@@ -1,8 +1,22 @@
-import { AppBar, Toolbar, Button, Container, Box } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Container,
+  Box,
+  IconButton,
+} from "@mui/material";
 import HeaderLogo from "../../assets/headerLogo.webp";
 import { Link } from "react-router-dom";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { toggleTheme } from "../../redux/themeSlice";
 
 const Header = () => {
+  const dispatch = useAppDispatch();
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
   return (
     <AppBar
       position="static"
@@ -26,13 +40,16 @@ const Header = () => {
 
           <Box
             sx={{
-              width: "170px",
+              width: "250px",
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            <Link to="/" style={{ textDecoration: "none", color: "#f5eded" }}>
+            <Link
+              to="/users"
+              style={{ textDecoration: "none", color: "#f5eded" }}
+            >
               <Button color="inherit">Люди</Button>
             </Link>
 
@@ -41,6 +58,23 @@ const Header = () => {
               style={{ textDecoration: "none", color: "#f5eded" }}
             >
               <Button color="inherit">Машини</Button>
+            </Link>
+
+            <IconButton onClick={() => dispatch(toggleTheme())}>
+              {lightTheme ? (
+                <LightModeIcon sx={{ color: "#f5eded" }} />
+              ) : (
+                <DarkModeIcon sx={{ color: "#f5eded" }} />
+              )}
+            </IconButton>
+
+            <Link
+              to="/auth"
+              style={{ textDecoration: "none", color: "#f5eded" }}
+            >
+              <IconButton>
+                <AccountCircleIcon sx={{ color: "#f5eded" }} />
+              </IconButton>
             </Link>
           </Box>
         </Toolbar>

@@ -110,7 +110,9 @@ const UsersTable = () => {
           marginBottom: "16px",
         }}
       >
-        <Button onClick={() => navigate("user/add")}>Додати користувача</Button>
+        <Button onClick={() => navigate("/users/add")}>
+          Додати користувача
+        </Button>
 
         <CustomSearchInput
           searchQuery={searchQuery}

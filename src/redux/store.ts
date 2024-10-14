@@ -5,6 +5,7 @@ import carReducer from "./carSlice";
 import adressReducer from "./addressSlice";
 import phoneReducer from "./phoneSlice";
 import crimeReducer from "./criminalRecordSlice";
+import themeReducer from "./themeSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,8 @@ export const store = configureStore({
     address: adressReducer,
     phone: phoneReducer,
     crime: crimeReducer,
+
+    theme: themeReducer,
   },
 });
 
