@@ -5,6 +5,7 @@ import carReducer from "./carSlice";
 import adressReducer from "./addressSlice";
 import phoneReducer from "./phoneSlice";
 import crimeReducer from "./criminalRecordSlice";
+import authReducer from "./authSlice";
 import themeReducer from "./themeSlice";
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     address: adressReducer,
     phone: phoneReducer,
     crime: crimeReducer,
+    auth: authReducer,
 
     theme: themeReducer,
   },

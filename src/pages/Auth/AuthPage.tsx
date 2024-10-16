@@ -1,10 +1,35 @@
-import { TextField, Button, Box, Typography } from "@mui/material";
+import { TextField, Button, Box, Typography, Alert } from "@mui/material";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { RootState } from "../../redux/store";
+import { LoginDTO } from "../../types/staffTypes";
+import { login } from "../../redux/authSlice";
+import CustomLoader from "../../components/ui/CustomLoader";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const { loading, error, isLoggedIn } = useAppSelector(
+    (state: RootState) => state.auth
+  );
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const loginData: LoginDTO = { email, password };
+    dispatch(login(loginData));
+  };
+
+  if (isLoggedIn) {
+    navigate("/users");
+  }
   return (
     <>
       <br />
-
       <br />
       <form
         style={{
@@ -14,6 +39,7 @@ const AuthPage = () => {
           width: 500,
           backgroundColor: "white",
         }}
+        onSubmit={handleSubmit}
       >
         <Typography variant="h4">Вхід</Typography>
 
@@ -23,6 +49,8 @@ const AuthPage = () => {
           variant="outlined"
           fullWidth
           margin="normal"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           label="Пароль"
@@ -30,7 +58,12 @@ const AuthPage = () => {
           variant="outlined"
           fullWidth
           margin="normal"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
+
+        {error && <Alert severity="error">{error}</Alert>}
+        {loading && <CustomLoader />}
 
         <br />
         <br />
