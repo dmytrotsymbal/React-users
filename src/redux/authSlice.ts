@@ -22,6 +22,7 @@ export const login = createAsyncThunk(
   async (loginData: LoginDTO, thunkAPI) => {
     try {
       const response = await axios.post("/api/Staff/login", loginData);
+      console.log("response.data" + response.data);
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || "Login failed");
@@ -36,6 +37,8 @@ const authSlice = createSlice({
     logout: (state) => {
       state.staff = null;
       state.isLoggedIn = false;
+      localStorage.removeItem("token");
+      localStorage.removeItem("staffID");
     },
   },
   extraReducers: (builder) => {
@@ -46,7 +49,13 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.staff = action.payload;
+        state.staff = {
+          staffID: action.payload.staffID, // Add this line
+          nickname: action.payload.nickname,
+          role: action.payload.role,
+          createdAt: action.payload.createdAt,
+          email: action.payload.email,
+        };
         state.isLoggedIn = true;
       })
       .addCase(login.rejected, (state, action) => {

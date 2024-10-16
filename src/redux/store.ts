@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage"; // Используем localStorage
+import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import userReducer from "./userSlice";
 import photoReducer from "./photoSlice";
@@ -16,7 +16,6 @@ const persistConfig = {
   whitelist: ["auth", "theme"],
 };
 
-// Комбинируем все редьюсеры
 const rootReducer = combineReducers({
   user: userReducer,
   photo: photoReducer,
@@ -32,6 +31,12 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);

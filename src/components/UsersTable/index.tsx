@@ -110,7 +110,7 @@ const UsersTable = () => {
           marginBottom: "16px",
         }}
       >
-        <Button onClick={() => navigate("/users/add")}>
+        <Button onClick={() => navigate("/user/add")}>
           Додати користувача
         </Button>
 
