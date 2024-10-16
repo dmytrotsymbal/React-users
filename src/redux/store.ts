@@ -1,26 +1,40 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage"; // Используем localStorage
+import { persistStore, persistReducer } from "redux-persist";
 import userReducer from "./userSlice";
 import photoReducer from "./photoSlice";
 import carReducer from "./carSlice";
-import adressReducer from "./addressSlice";
+import addressReducer from "./addressSlice";
 import phoneReducer from "./phoneSlice";
 import crimeReducer from "./criminalRecordSlice";
 import authReducer from "./authSlice";
 import themeReducer from "./themeSlice";
 
-export const store = configureStore({
-  reducer: {
-    user: userReducer,
-    photo: photoReducer,
-    car: carReducer,
-    address: adressReducer,
-    phone: phoneReducer,
-    crime: crimeReducer,
-    auth: authReducer,
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth", "theme"],
+};
 
-    theme: themeReducer,
-  },
+// Комбинируем все редьюсеры
+const rootReducer = combineReducers({
+  user: userReducer,
+  photo: photoReducer,
+  car: carReducer,
+  address: addressReducer,
+  phone: phoneReducer,
+  crime: crimeReducer,
+  auth: authReducer, // будет в localStorage
+  theme: themeReducer, // будет в localStorage
 });
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+});
+
+export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
