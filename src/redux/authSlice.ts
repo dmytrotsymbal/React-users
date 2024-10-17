@@ -6,7 +6,8 @@ export type AuthState = {
   staff: Staff | null;
   loading: boolean;
   error: string | null;
-  isLoggedIn: boolean;
+  isLoggedIn: boolean; // поле для отслеживания состояния входа
+  token: string | null; // поле для токена
 };
 
 const initialState: AuthState = {
@@ -14,15 +15,18 @@ const initialState: AuthState = {
   loading: false,
   error: null,
   isLoggedIn: false,
+  token: localStorage.getItem("token"), // попытка загрузить токен из localStorage при инициализации
 };
 
-// Асинхронное действие для входа
 export const login = createAsyncThunk(
   "auth/login",
   async (loginData: LoginDTO, thunkAPI) => {
     try {
       const response = await axios.post("/api/Staff/login", loginData);
-      console.log("response.data" + response.data);
+
+      const token = response.data.Token; // Отримання токена з відповіді
+      localStorage.setItem("token", token); // Збереження токена в localStorage
+
       return response.data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.response?.data || "Login failed");
@@ -37,8 +41,16 @@ const authSlice = createSlice({
     logout: (state) => {
       state.staff = null;
       state.isLoggedIn = false;
-      localStorage.removeItem("token");
-      localStorage.removeItem("staffID");
+      state.token = null;
+      localStorage.removeItem("token"); // удаляем токен из localStorage при логауте
+      localStorage.clear(); // очищаем localStorage
+    },
+    loadStaffFromLocalStorage: (state) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        state.token = token;
+        state.isLoggedIn = true;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -50,13 +62,14 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.staff = {
-          staffID: action.payload.staffID, // Add this line
+          staffID: action.payload.staffID,
           nickname: action.payload.nickname,
           role: action.payload.role,
           createdAt: action.payload.createdAt,
           email: action.payload.email,
         };
         state.isLoggedIn = true;
+        state.token = action.payload.token; // сохраняем токен в состоянии
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -65,5 +78,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, loadStaffFromLocalStorage } = authSlice.actions;
 export default authSlice.reducer;

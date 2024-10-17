@@ -1,5 +1,5 @@
 import { TextField, Button, Box, Typography, Alert } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { LoginDTO } from "../../types/staffTypes";
@@ -24,9 +24,12 @@ const AuthPage = () => {
     dispatch(login(loginData));
   };
 
-  if (isLoggedIn) {
-    navigate("/users");
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/users");
+    }
+  }, [isLoggedIn, navigate]);
+
   return (
     <>
       <br />

@@ -6,7 +6,9 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import CustomLoader from "./components/ui/CustomLoader";
 import ScrollToTop from "./utils/scrollToTop";
-import PrivateRoute from "./utils/PrivateRoute"; // Импортируем PrivateRoute
+import PrivateRoute from "./utils/PrivateRoute";
+import { useAppSelector } from "./redux/hooks";
+import { RootState } from "./redux/store";
 
 const AuthPage = lazy(() => import("./pages/Auth/AuthPage"));
 const UsersPage = lazy(() => import("./pages/Users/UsersPage"));
@@ -26,6 +28,7 @@ const AddCrimePage = lazy(() => import("./pages/Crimes/AddCrimePage"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 
 function App() {
+  const { isLoggedIn } = useAppSelector((state: RootState) => state.auth);
   return (
     <>
       <Header />
@@ -48,10 +51,8 @@ function App() {
             }
           >
             <Routes>
-              {/* Страница авторизации */}
               <Route path="/auth" element={<AuthPage />} />
 
-              {/* Защищенные маршруты */}
               <Route
                 path="/users"
                 element={
@@ -152,10 +153,16 @@ function App() {
                 }
               />
 
-              {/* Переадресация на страницу авторизации по умолчанию */}
-              <Route path="/" element={<Navigate to="/auth" replace />} />
+              <Route
+                path="/"
+                element={
+                  <Navigate
+                    to={isLoggedIn === true ? "/users" : "/auth"}
+                    replace
+                  />
+                }
+              />
 
-              {/* Страница ошибок */}
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </Suspense>
