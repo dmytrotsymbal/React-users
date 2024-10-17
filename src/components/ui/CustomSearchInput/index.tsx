@@ -1,5 +1,6 @@
 import { Box, TextField, IconButton, InputAdornment } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import { useState } from "react";
 
 type Props = {
   searchQuery: string;
@@ -14,6 +15,16 @@ const CustomSearchInput = ({
   handleClearSearch,
   placeholder,
 }: Props) => {
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
   return (
     <Box
       sx={{
@@ -27,11 +38,15 @@ const CustomSearchInput = ({
         sx={{
           width: "400px",
           position: "relative",
+          transition: "width 0.3s ease-in-out",
+          ...(isFocused && { width: "500px" }),
         }}
         label={placeholder}
         variant="outlined"
         value={searchQuery}
         onChange={handleSearchInputChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

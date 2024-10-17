@@ -41,6 +41,8 @@ const UsersTable = () => {
     (state: RootState) => state.user
   );
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   useEffect(() => {
     dispatch(getUsersCount()); // usersCount
   }, [dispatch]);
@@ -110,7 +112,10 @@ const UsersTable = () => {
           marginBottom: "16px",
         }}
       >
-        <Button onClick={() => navigate("/user/add")}>
+        <Button
+          onClick={() => navigate("/user/add")}
+          disabled={staff?.role !== "admin" && staff?.role !== "moderator"}
+        >
           Додати користувача
         </Button>
 
@@ -238,6 +243,7 @@ const UsersTable = () => {
                   </TableCell>
                   <TableCell>
                     <IconButton
+                      disabled={staff?.role !== "admin"}
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedUser(user);
