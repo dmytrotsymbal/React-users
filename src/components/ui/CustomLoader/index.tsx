@@ -1,9 +1,13 @@
 import "./CustomLoader.scss";
 
-const CustomLoader = () => {
+type Props = {
+  size?: string;
+};
+
+const CustomLoader = ({ size }: Props) => {
   return (
     <>
-      <div className="spinner">
+      <div className={size === "small" ? "spinner-small" : "spinner"}>
         <div></div>
         <div></div>
         <div></div>

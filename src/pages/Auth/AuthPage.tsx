@@ -1,85 +1,128 @@
-import { TextField, Button, Box, Typography, Alert } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Alert,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
-import { LoginDTO } from "../../types/staffTypes";
 import { login } from "../../redux/authSlice";
 import CustomLoader from "../../components/ui/CustomLoader";
 import { useNavigate } from "react-router-dom";
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("Невірний формат email")
+    .matches(/^[a-zA-Z0-9@.]+$/, "Лише латиниця")
+    .required("Email обов'язковий"),
+  password: Yup.string()
+    .matches(/^[a-zA-Z0-9]+$/, "Лише латиниця")
+    .required("Пароль обов'язковий"),
+});
 
 const AuthPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
   const { loading, error, isLoggedIn } = useAppSelector(
     (state: RootState) => state.auth
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const loginData: LoginDTO = { email, password };
-    dispatch(login(loginData));
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/users");
-    }
-  }, [isLoggedIn, navigate]);
+  const handleSubmit = (values: { email: string; password: string }) => {
+    dispatch(login(values));
+  };
+
+  if (isLoggedIn) {
+    navigate("/users");
+  }
 
   return (
     <>
       <br />
       <br />
-      <form
-        style={{
-          margin: "auto",
-          padding: "25px",
-          borderRadius: 5,
-          width: 500,
-          backgroundColor: "white",
-        }}
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h4">Вхід</Typography>
+        {({ errors, touched }) => (
+          <Form
+            style={{
+              margin: "auto",
+              padding: "25px",
+              borderRadius: 5,
+              width: 500,
+              backgroundColor: "white",
+            }}
+          >
+            <Typography variant="h4">Вхід</Typography>
 
-        <TextField
-          label="Електронна пошта"
-          type="email"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <TextField
-          label="Пароль"
-          type="password"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+            <Field
+              as={TextField}
+              label="Електронна пошта"
+              name="email"
+              type="email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              error={touched.email && Boolean(errors.email)}
+              helperText={touched.email && errors.email}
+            />
 
-        {error && <Alert severity="error">{error}</Alert>}
-        {loading && <CustomLoader />}
+            <Field
+              as={TextField}
+              label="Пароль"
+              name="password"
+              type={showPassword ? "text" : "password"}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              error={touched.password && Boolean(errors.password)}
+              helperText={touched.password && errors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={toggleShowPassword}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-        <br />
-        <br />
+            {error && <Alert severity="error">{error}</Alert>}
 
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Button variant="contained" color="success" type="submit">
-            Увійти
-          </Button>
-          <Button variant="contained" color="inherit" type="reset">
-            Скинути
-          </Button>
-        </Box>
-      </form>
+            <br />
+            <br />
+
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Button variant="contained" color="success" type="submit">
+                {loading ? <CustomLoader size="small" /> : <span>Увійти</span>}
+              </Button>
+              <Button variant="contained" color="inherit" type="reset">
+                Скинути
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };

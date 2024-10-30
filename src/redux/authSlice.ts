@@ -24,7 +24,7 @@ export const login = createAsyncThunk(
     try {
       const response = await axios.post("/api/Staff/login", loginData);
 
-      const token = response.data.Token; // Отримання токена з відповіді
+      const token = response.data.token; // Отримання токена з відповіді
       localStorage.setItem("token", token); // Збереження токена в localStorage
 
       return response.data;
@@ -44,13 +44,6 @@ const authSlice = createSlice({
       state.token = null;
       localStorage.removeItem("token"); // удаляем токен из localStorage при логауте
       localStorage.clear(); // очищаем localStorage
-    },
-    loadStaffFromLocalStorage: (state) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        state.token = token;
-        state.isLoggedIn = true;
-      }
     },
   },
   extraReducers: (builder) => {
@@ -78,5 +71,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, loadStaffFromLocalStorage } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

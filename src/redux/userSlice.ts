@@ -1,5 +1,6 @@
 import { User, UserDTO } from "../types/userTypes";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export type UserState = {
   users: User[];
@@ -29,13 +30,11 @@ export const getAllUsers = createAsyncThunk(
     pageSize: number;
   }) => {
     try {
-      const response = await fetch(
-        `/api/User?pageNumber=${pageNumber}&pageSize=${pageSize}`
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get(`/api/User`, {
+        params: { pageNumber, pageSize },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching users:", error);
       throw error;
@@ -47,11 +46,10 @@ export const getUserById = createAsyncThunk(
   "user/getUserById",
   async (userID: string) => {
     try {
-      const response = await fetch(`/api/User/${userID}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get(`/api/User/${userID}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching user:", error);
       throw error;
@@ -63,13 +61,11 @@ export const searchUsersByName = createAsyncThunk(
   "user/searchUsersByName",
   async (searchQuery: string) => {
     try {
-      const response = await fetch(
-        `/api/User/search?searchQuery=${searchQuery}`
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get(`/api/User/search`, {
+        params: { searchQuery },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching users:", error);
       throw error;
@@ -81,22 +77,20 @@ export const createUser = createAsyncThunk(
   "user/createUser",
   async (user: UserDTO, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/User", {
-        method: "POST",
+      const response = await axios.post("/api/User", user, {
         headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
       });
-
-      if (!response.ok) {
-        const error = await response.json();
-        return rejectWithValue(error);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        return rejectWithValue(
+          "У вас недостатньо прав для створення нових користувачів"
+        );
       }
-
-      return await response.json();
-    } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -104,30 +98,37 @@ export const createUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   "user/updateUser",
   async ({ userID, user }: { userID: string; user: User }) => {
-    const response = await fetch(`/api/User/${userID}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    try {
+      const response = await axios.put(`/api/User/${userID}`, user, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return { userID, user: response.data };
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        throw new Error("У вас недостатньо прав для редагування користувачів");
+      }
+      throw error;
     }
-    return { userID, user };
   }
 );
 
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
   async (userID: string) => {
-    const response = await fetch(`/api/User/${userID}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    try {
+      await axios.delete(`/api/User/${userID}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return userID;
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        throw new Error("У вас недостатньо прав для видалення користувачів");
+      }
+      throw error;
     }
-    return userID;
   }
 );
 
@@ -137,13 +138,13 @@ export const getUsersCount = createAsyncThunk(
   "user/getUsersCount",
   async () => {
     try {
-      const response = await fetch("/api/User/quantity");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get("/api/User/quantity", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching users count:", error);
+      throw error;
     }
   }
 );
@@ -152,13 +153,13 @@ export const getAllUsersIDs = createAsyncThunk(
   "user/getAllUsersIDs",
   async () => {
     try {
-      const response = await fetch("/api/User/get-all-ids");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get("/api/User/get-all-ids", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching users IDs:", error);
+      throw error;
     }
   }
 );
