@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   IconButton,
-  Pagination,
   Paper,
   Skeleton,
   Table,
@@ -31,6 +30,7 @@ import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import { Car } from "../../types/carTypes";
 import ConfirmDeleteCarModal from "../ui/modals/ConfirmDeleteCarModal";
+import CustomPagination from "../ui/CustomPagination";
 
 const CarsTable = () => {
   const dispatch = useAppDispatch();
@@ -240,11 +240,10 @@ const CarsTable = () => {
         <Box
           sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
         >
-          <Pagination
-            count={totalPages} // Общее количество страниц
-            page={currentPage} // Текущая страница
-            onChange={handlePageChange} // Обработчик смены страницы
-            color="primary"
+          <CustomPagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
           />
         </Box>
       )}

@@ -21,7 +21,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Pagination,
 } from "@mui/material";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +31,7 @@ import useDebounce from "../../hooks/useDebounce";
 import CustomSearchInput from "../ui/CustomSearchInput";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
+import CustomPagination from "../ui/CustomPagination";
 
 const UsersTable = () => {
   const navigate = useNavigate();
@@ -209,9 +209,7 @@ const UsersTable = () => {
                     },
                   }}
                 >
-                  <TableCell sx={{ maxWidth: "150px" }}>
-                    {user.userID}
-                  </TableCell>
+                  <TableCell>{user.userID}</TableCell>
                   <TableCell>
                     {user.photos?.length > 0 ? (
                       <Avatar
@@ -265,11 +263,10 @@ const UsersTable = () => {
         <Box
           sx={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
         >
-          <Pagination
-            count={totalPages} // Общее количество страниц
-            page={currentPage} // Текущая страница
-            onChange={handlePageChange} // Обработчик смены страницы
-            color="primary"
+          <CustomPagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handlePageChange={handlePageChange}
           />
         </Box>
       )}
