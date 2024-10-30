@@ -19,7 +19,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from "@mui/material";
 import { RootState } from "../../redux/store";
@@ -32,6 +31,7 @@ import CustomSearchInput from "../ui/CustomSearchInput";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import CustomPagination from "../ui/CustomPagination";
+import UserTableHead from "./UserTableHead";
 
 const UsersTable = () => {
   const navigate = useNavigate();
@@ -56,9 +56,12 @@ const UsersTable = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
+  // параметри для getAllUsers
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 15;
   const totalPages = Math.ceil(Number(usersCount) / pageSize); // клво страниц
+  const [sortBy, setSortBy] = useState<string>("UserID");
+  const [sortDirection, setSortDirection] = useState<string>("asc");
 
   useEffect(() => {
     if (debouncedSearchQuery) {
@@ -67,9 +70,16 @@ const UsersTable = () => {
       dispatch(searchUsersByName(debouncedSearchQuery)); // Поиск по имени
     } else {
       setIsTyping(false);
-      dispatch(getAllUsers({ pageNumber: currentPage, pageSize })); // Загрузка всех пользователей с пагинацией
+      dispatch(
+        getAllUsers({
+          pageNumber: currentPage,
+          pageSize,
+          sortBy,
+          sortDirection,
+        })
+      );
     }
-  }, [debouncedSearchQuery, currentPage, dispatch]);
+  }, [debouncedSearchQuery, currentPage, dispatch, sortBy, sortDirection]);
 
   // Обработчик изменения значения строки поиска
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +91,9 @@ const UsersTable = () => {
   const handleClearSearch = () => {
     setSearchQuery("");
     setIsTyping(false);
-    dispatch(getAllUsers({ pageNumber: currentPage, pageSize }));
+    dispatch(
+      getAllUsers({ pageNumber: currentPage, pageSize, sortBy, sortDirection })
+    );
   };
 
   const handleDelete = () => {
@@ -96,7 +108,18 @@ const UsersTable = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setCurrentPage(value); // Обновляем текущую страницу
+    event.preventDefault();
+    setCurrentPage(value);
+  };
+
+  // Обработчик сортировки
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortDirection("asc");
+    }
   };
 
   return (
@@ -158,22 +181,12 @@ const UsersTable = () => {
 
       <TableContainer component={Paper}>
         <Table>
-          <TableHead
-            sx={{
-              backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
-            }}
-          >
-            <TableRow>
-              <TableCell>User ID</TableCell>
-              <TableCell>Фото</TableCell>
-              <TableCell>Ім'я</TableCell>
-              <TableCell>Прізвище</TableCell>
-              <TableCell>Імейл</TableCell>
-              <TableCell>Дата народження</TableCell>
-              <TableCell>Запис створено</TableCell>
-              <TableCell>Дії</TableCell>
-            </TableRow>
-          </TableHead>
+          <UserTableHead
+            lightTheme={lightTheme}
+            sortBy={sortBy}
+            sortDirection={sortDirection as "asc" | "desc"}
+            handleSort={handleSort}
+          />
 
           <TableBody>
             {loading || isTyping ? (

@@ -1,6 +1,6 @@
 import { User, UserDTO } from "../types/userTypes";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export type UserState = {
   users: User[];
@@ -25,13 +25,17 @@ export const getAllUsers = createAsyncThunk(
   async ({
     pageNumber,
     pageSize,
+    sortBy,
+    sortDirection,
   }: {
     pageNumber: number;
     pageSize: number;
+    sortBy: string;
+    sortDirection: string;
   }) => {
     try {
       const response = await axios.get(`/api/User`, {
-        params: { pageNumber, pageSize },
+        params: { pageNumber, pageSize, sortBy, sortDirection },
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return response.data;
@@ -84,20 +88,25 @@ export const createUser = createAsyncThunk(
         },
       });
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 403) {
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      if (axiosError.response?.status === 403) {
         return rejectWithValue(
           "У вас недостатньо прав для створення нових користувачів"
         );
       }
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async ({ userID, user }: { userID: string; user: User }) => {
+  async (
+    { userID, user }: { userID: string; user: User },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.put(`/api/User/${userID}`, user, {
         headers: {
@@ -106,28 +115,34 @@ export const updateUser = createAsyncThunk(
         },
       });
       return { userID, user: response.data };
-    } catch (error: any) {
-      if (error.response?.status === 403) {
-        throw new Error("У вас недостатньо прав для редагування користувачів");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 403) {
+        return rejectWithValue(
+          "У вас недостатньо прав для редагування користувачів"
+        );
       }
-      throw error;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
-  async (userID: string) => {
+  async (userID: string, { rejectWithValue }) => {
     try {
       await axios.delete(`/api/User/${userID}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return userID;
-    } catch (error: any) {
-      if (error.response?.status === 403) {
-        throw new Error("У вас недостатньо прав для видалення користувачів");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 403) {
+        return rejectWithValue(
+          "У вас недостатньо прав для видалення користувачів"
+        );
       }
-      throw error;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
