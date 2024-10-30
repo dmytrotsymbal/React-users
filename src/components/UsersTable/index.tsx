@@ -37,6 +37,8 @@ const UsersTable = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
+
   const { users, loading, error, usersCount } = useAppSelector(
     (state: RootState) => state.user
   );
@@ -158,8 +160,7 @@ const UsersTable = () => {
         <Table>
           <TableHead
             sx={{
-              backgroundColor: "#7FA1C3",
-              color: "white !important",
+              backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
             }}
           >
             <TableRow>

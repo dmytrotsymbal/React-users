@@ -35,6 +35,8 @@ import ConfirmDeleteCarModal from "../ui/modals/ConfirmDeleteCarModal";
 const CarsTable = () => {
   const dispatch = useAppDispatch();
 
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
+
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const debouncedSearchQuery = useDebounce(searchQuery, 1500);
@@ -152,8 +154,7 @@ const CarsTable = () => {
         <Table>
           <TableHead
             sx={{
-              backgroundColor: "#7FA1C3",
-              color: "white !important",
+              backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
             }}
           >
             <TableRow>

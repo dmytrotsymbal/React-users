@@ -38,6 +38,8 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
+
   const { cars, loading, error } = useAppSelector(
     (state: RootState) => state.car
   );
@@ -81,7 +83,7 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
       >
         <AccordionSummary
           sx={{
-            backgroundColor: "#7FA1C3",
+            backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
             color: "white !important",
           }}
           expandIcon={
@@ -116,7 +118,7 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
             ) : null}
           </Box>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ padding: "0px !important" }}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead

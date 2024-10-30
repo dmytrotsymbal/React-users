@@ -42,6 +42,8 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
+
   const { criminalRecords, loading, error } = useAppSelector(
     (state: RootState) => state.crime
   );
@@ -96,7 +98,10 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
         onChange={handleAccordionChange}
       >
         <AccordionSummary
-          sx={{ backgroundColor: "#7FA1C3", color: "white !important" }}
+          sx={{
+            backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
+            color: "white !important",
+          }}
           expandIcon={
             <ExpandMoreIcon
               sx={{
@@ -129,7 +134,7 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
             ) : null}
           </Box>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ padding: "0px !important" }}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead

@@ -38,6 +38,8 @@ const ResidentAccordion = ({
 
   const dispatch = useAppDispatch();
 
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
+
   const { livingHistory, livingLoading, livingError } = useAppSelector(
     (state: RootState) => state.address
   );
@@ -69,7 +71,10 @@ const ResidentAccordion = ({
         onChange={handleAccordionChange}
       >
         <AccordionSummary
-          sx={{ backgroundColor: "#7FA1C3", color: "white !important" }}
+          sx={{
+            backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
+            color: "white !important",
+          }}
           expandIcon={
             <ExpandMoreIcon
               sx={{
@@ -105,7 +110,7 @@ const ResidentAccordion = ({
             ) : null}
           </Box>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ padding: "0px !important" }}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead

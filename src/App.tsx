@@ -29,11 +29,12 @@ const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 
 function App() {
   const { isLoggedIn } = useAppSelector((state: RootState) => state.auth);
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
   return (
     <>
       <Header />
 
-      <main className="main">
+      <main className={lightTheme ? "main" : "main-dark"}>
         <ScrollToTop />
         <Container maxWidth="xl">
           <Suspense

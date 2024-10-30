@@ -44,6 +44,8 @@ const AddressAccordion = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const lightTheme = useAppSelector((state) => state.theme.lightTheme);
+
   const { addresses, loading, error } = useAppSelector(
     (state: RootState) => state.address
   );
@@ -91,7 +93,10 @@ const AddressAccordion = ({
         onChange={handleAccordionChange}
       >
         <AccordionSummary
-          sx={{ backgroundColor: "#7FA1C3", color: "white !important" }}
+          sx={{
+            backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
+            color: "white !important",
+          }}
           expandIcon={
             <ExpandMoreIcon
               sx={{
@@ -124,7 +129,7 @@ const AddressAccordion = ({
             ) : null}
           </Box>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ padding: "0px !important" }}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead

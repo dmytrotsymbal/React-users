@@ -37,7 +37,7 @@ const Header = () => {
       <AppBar
         position="static"
         sx={{
-          backgroundColor: "#6482AD",
+          backgroundColor: lightTheme ? "#6482AD" : "#27374D",
           position: "sticky",
           top: 0,
           zIndex: 1000000000,
