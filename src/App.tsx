@@ -25,6 +25,7 @@ const EditAddressPage = lazy(() => import("./pages/Addresses/EditAddressPage"));
 const AddAddressPage = lazy(() => import("./pages/Addresses/AddAddressPage"));
 const EditCrimePage = lazy(() => import("./pages/Crimes/EditCrimePage"));
 const AddCrimePage = lazy(() => import("./pages/Crimes/AddCrimePage"));
+const NoAccessPage = lazy(() => import("./pages/NoAccess/NoAccessPage"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 
 function App() {
@@ -57,7 +58,9 @@ function App() {
               <Route
                 path="/users"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute
+                    allowedRoles={["admin", "moderator", "visitor"]}
+                  >
                     <UsersPage />
                   </PrivateRoute>
                 }
@@ -65,7 +68,9 @@ function App() {
               <Route
                 path="/user/:userId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute
+                    allowedRoles={["admin", "moderator", "visitor"]}
+                  >
                     <UserDetailsPage />
                   </PrivateRoute>
                 }
@@ -73,7 +78,7 @@ function App() {
               <Route
                 path="/user/edit/:userId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <EditUserPage />
                   </PrivateRoute>
                 }
@@ -81,7 +86,7 @@ function App() {
               <Route
                 path="/user/add"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <AddUserPage />
                   </PrivateRoute>
                 }
@@ -90,7 +95,9 @@ function App() {
               <Route
                 path="/cars"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute
+                    allowedRoles={["admin", "moderator", "visitor"]}
+                  >
                     <CarsPage />
                   </PrivateRoute>
                 }
@@ -98,7 +105,7 @@ function App() {
               <Route
                 path="/car/edit/:carId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <EditCarPage />
                   </PrivateRoute>
                 }
@@ -106,7 +113,7 @@ function App() {
               <Route
                 path="/car/add/:userId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <AddCarPage />
                   </PrivateRoute>
                 }
@@ -115,7 +122,9 @@ function App() {
               <Route
                 path="/address/:addressId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute
+                    allowedRoles={["admin", "moderator", "visitor"]}
+                  >
                     <AddressDetailsPage />
                   </PrivateRoute>
                 }
@@ -123,7 +132,7 @@ function App() {
               <Route
                 path="/address/edit/:addressId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <EditAddressPage />
                   </PrivateRoute>
                 }
@@ -131,7 +140,7 @@ function App() {
               <Route
                 path="/address/add/:userId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <AddAddressPage />
                   </PrivateRoute>
                 }
@@ -140,7 +149,7 @@ function App() {
               <Route
                 path="/crime/edit/:crimeId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <EditCrimePage />
                   </PrivateRoute>
                 }
@@ -148,7 +157,7 @@ function App() {
               <Route
                 path="/crime/add/:userId"
                 element={
-                  <PrivateRoute>
+                  <PrivateRoute allowedRoles={["admin", "moderator"]}>
                     <AddCrimePage />
                   </PrivateRoute>
                 }
@@ -164,6 +173,7 @@ function App() {
                 }
               />
 
+              <Route path="/no-access" element={<NoAccessPage />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </Suspense>

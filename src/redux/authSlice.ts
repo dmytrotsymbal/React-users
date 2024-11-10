@@ -4,6 +4,7 @@ import { LoginDTO, Staff } from "../types/staffTypes";
 
 export type AuthState = {
   staff: Staff | null;
+  role: string | null;
   loading: boolean;
   error: string | null;
   isLoggedIn: boolean; // поле для отслеживания состояния входа
@@ -12,6 +13,7 @@ export type AuthState = {
 
 const initialState: AuthState = {
   staff: null,
+  role: null,
   loading: false,
   error: null,
   isLoggedIn: false,
@@ -40,6 +42,7 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.staff = null;
+      state.role = null;
       state.isLoggedIn = false;
       state.token = null;
       localStorage.removeItem("token"); // удаляем токен из localStorage при логауте
@@ -61,8 +64,9 @@ const authSlice = createSlice({
           createdAt: action.payload.createdAt,
           email: action.payload.email,
         };
+        state.role = action.payload.role;
         state.isLoggedIn = true;
-        state.token = action.payload.token; // сохраняем токен в состоянии
+        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
