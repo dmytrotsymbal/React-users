@@ -8,7 +8,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -31,6 +30,7 @@ import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import { Car } from "../../types/carTypes";
 import ConfirmDeleteCarModal from "../ui/modals/ConfirmDeleteCarModal";
 import CustomPagination from "../ui/CustomPagination";
+import CarTableHead from "./CarTableHead";
 
 const CarsTable = () => {
   const dispatch = useAppDispatch();
@@ -55,6 +55,8 @@ const CarsTable = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 15;
   const totalPages = Math.ceil(Number(carsCount) / pageSize);
+  const [sortBy, setSortBy] = useState<string>("carID");
+  const [sortDirection, setSortDirection] = useState<string>("asc");
 
   useEffect(() => {
     if (debouncedSearchQuery) {
@@ -63,9 +65,11 @@ const CarsTable = () => {
       dispatch(searchCars(debouncedSearchQuery));
     } else {
       setIsTyping(false);
-      dispatch(getAllCars({ pageNumber: currentPage, pageSize }));
+      dispatch(
+        getAllCars({ pageNumber: currentPage, pageSize, sortBy, sortDirection })
+      );
     }
-  }, [dispatch, debouncedSearchQuery, currentPage]);
+  }, [debouncedSearchQuery, currentPage, dispatch, sortBy, sortDirection]);
 
   //=========================================
 
@@ -81,6 +85,7 @@ const CarsTable = () => {
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
+    event.preventDefault();
     setCurrentPage(value);
   };
 
@@ -96,10 +101,23 @@ const CarsTable = () => {
   const handleClearSearch = () => {
     setSearchQuery("");
     setIsTyping(false);
-    dispatch(getAllCars({ pageNumber: currentPage, pageSize }));
+    dispatch(
+      getAllCars({ pageNumber: currentPage, pageSize, sortBy, sortDirection })
+    );
   };
 
   const [isFullSkeleton] = useState<boolean>(true);
+
+  //=========================================
+
+  const handleSort = (column: string) => {
+    if (column === sortBy) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortDirection("asc");
+    }
+  };
 
   return (
     <>
@@ -152,23 +170,12 @@ const CarsTable = () => {
       </Box>
       <TableContainer component={Paper}>
         <Table>
-          <TableHead
-            sx={{
-              backgroundColor: lightTheme ? "#7FA1C3" : "#526D82",
-            }}
-          >
-            <TableRow>
-              <TableCell>Car ID</TableCell>
-              <TableCell>User ID</TableCell>
-              <TableCell>Марка</TableCell>
-              <TableCell>Модель</TableCell>
-              <TableCell>Колір</TableCell>
-              <TableCell>Рік</TableCell>
-              <TableCell>Номерний знак</TableCell>
-              <TableCell>Фото</TableCell>
-              <TableCell>Дії</TableCell>
-            </TableRow>
-          </TableHead>
+          <CarTableHead
+            lightTheme={lightTheme}
+            sortBy={sortBy}
+            sortDirection={sortDirection as "asc" | "desc"}
+            handleSort={handleSort}
+          />
           <TableBody>
             {loading || isTyping ? (
               <>

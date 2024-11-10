@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Car } from "../types/carTypes";
+import axios from "axios";
 
 export type CarState = {
   cars: Car[];
@@ -20,19 +21,19 @@ export const getAllCars = createAsyncThunk(
   async ({
     pageNumber,
     pageSize,
+    sortBy,
+    sortDirection,
   }: {
     pageNumber: number;
     pageSize: number;
+    sortBy: string;
+    sortDirection: string;
   }) => {
     try {
-      const response = await fetch(
-        `/api/Car/get-all-cars?pageNumber=${pageNumber}&pageSize=${pageSize}`
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      return data;
+      const response = await axios.get(`/api/Car/get-all-cars`, {
+        params: { pageNumber, pageSize, sortBy, sortDirection },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching cars:", error);
       throw error;
