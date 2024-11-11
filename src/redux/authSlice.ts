@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { LoginDTO, Staff } from "../types/staffTypes";
 
 export type AuthState = {
@@ -22,7 +22,7 @@ const initialState: AuthState = {
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (loginData: LoginDTO, thunkAPI) => {
+  async (loginData: LoginDTO, { rejectWithValue }) => {
     try {
       const response = await axios.post("/api/Staff/login", loginData);
 
@@ -30,8 +30,9 @@ export const login = createAsyncThunk(
       localStorage.setItem("token", token); // Збереження токена в localStorage
 
       return response.data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response?.data || "Login failed");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );

@@ -22,17 +22,20 @@ const initialState: UserState = {
 
 export const getAllUsers = createAsyncThunk(
   "user/getAllUsers",
-  async ({
-    pageNumber,
-    pageSize,
-    sortBy,
-    sortDirection,
-  }: {
-    pageNumber: number;
-    pageSize: number;
-    sortBy: string;
-    sortDirection: string;
-  }) => {
+  async (
+    {
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+    }: {
+      pageNumber: number;
+      pageSize: number;
+      sortBy: string;
+      sortDirection: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.get(`/api/User`, {
         params: { pageNumber, pageSize, sortBy, sortDirection },
@@ -40,30 +43,34 @@ export const getAllUsers = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching users:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка при отриманні користувачів"
+      );
     }
   }
 );
 
 export const getUserById = createAsyncThunk(
   "user/getUserById",
-  async (userID: string) => {
+  async (userID: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/User/${userID}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching user:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка при отриманні користувача по ID"
+      );
     }
   }
 );
 
 export const searchUsersByName = createAsyncThunk(
   "user/searchUsersByName",
-  async (searchQuery: string) => {
+  async (searchQuery: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/User/search`, {
         params: { searchQuery },
@@ -71,8 +78,10 @@ export const searchUsersByName = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching users:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка при пошуку користувачів"
+      );
     }
   }
 );
@@ -151,30 +160,30 @@ export const deleteUser = createAsyncThunk(
 
 export const getUsersCount = createAsyncThunk(
   "user/getUsersCount",
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("/api/User/quantity", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching users count:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const getAllUsersIDs = createAsyncThunk(
   "user/getAllUsersIDs",
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("/api/User/get-all-ids", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching users IDs:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );

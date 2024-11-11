@@ -18,17 +18,20 @@ const initialState: CarState = {
 
 export const getAllCars = createAsyncThunk(
   "car/getAllCars",
-  async ({
-    pageNumber,
-    pageSize,
-    sortBy,
-    sortDirection,
-  }: {
-    pageNumber: number;
-    pageSize: number;
-    sortBy: string;
-    sortDirection: string;
-  }) => {
+  async (
+    {
+      pageNumber,
+      pageSize,
+      sortBy,
+      sortDirection,
+    }: {
+      pageNumber: number;
+      pageSize: number;
+      sortBy: string;
+      sortDirection: string;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.get(`/api/Car/get-all-cars`, {
         params: { pageNumber, pageSize, sortBy, sortDirection },
@@ -36,30 +39,30 @@ export const getAllCars = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching cars:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const getCarById = createAsyncThunk(
   "car/getCarById",
-  async (carID: number) => {
+  async (carID: number, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/Car/get-by-id/${carID}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching car:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const getAllUsersCars = createAsyncThunk(
   "car/getAllUsersCars",
-  async (userID: string) => {
+  async (userID: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         `/api/Car/get-all-users-cars/${userID}`,
@@ -69,15 +72,15 @@ export const getAllUsersCars = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      console.error("Error fetching cars:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const searchCars = createAsyncThunk(
   "car/searchCars",
-  async (searchQuery: string) => {
+  async (searchQuery: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/Car/search-cars`, {
         params: { searchQuery },
@@ -85,8 +88,8 @@ export const searchCars = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching cars:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );

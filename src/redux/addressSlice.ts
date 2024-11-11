@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Address } from "../types/addressTypes";
 import { Resident } from "../types/residentTypes";
+import axios, { AxiosError } from "axios";
 
 export type AddressState = {
   addresses: Address[];
@@ -26,170 +27,201 @@ const initialState: AddressState = {
 
 export const getAllUsersAddresses = createAsyncThunk(
   "address/getAllUsersAddresses",
-  async (userID: string) => {
+  async (userID: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/Address/get-all/${userID}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get(`/api/Address/get-all/${userID}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
-      console.error("Error fetching addresses:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка при отриманні адрес"
+      );
     }
   }
 );
 
 export const getUserAddressByID = createAsyncThunk(
   "address/getUserAddressByID",
-  async ({ userID, addressID }: { userID?: string; addressID: number }) => {
+  async (
+    { userID, addressID }: { userID?: string; addressID: number },
+    { rejectWithValue }
+  ) => {
     try {
-      let link: string;
-      if (userID) {
-        link = `/api/Address/get-by-id/${addressID}/for-user/${userID}`;
-      } else {
-        link = `/api/Address/get-by-id/${addressID}`; // without userID
-      }
-
-      const response = await fetch(link);
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const link = userID
+        ? `/api/Address/get-by-id/${addressID}/for-user/${userID}`
+        : `/api/Address/get-by-id/${addressID}`;
+      const response = await axios.get(link, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
-      console.error("Error fetching address:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка при отриманні адреси"
+      );
     }
   }
 );
 
 export const getAddressLivingHistory = createAsyncThunk(
   "address/getAddressLivingHistory",
-  async (addressID: number) => {
+  async (addressID: number, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        `/api/Address/get-living-history/${addressID}`
+      const response = await axios.get(
+        `/api/Address/get-living-history/${addressID}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      return response.data;
     } catch (error) {
-      console.error("Error fetching address:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка при отриманні исторії проживання"
+      );
     }
   }
 );
 
 export const updateAddress = createAsyncThunk(
   "address/updateAddress",
-  async ({ addressID, address }: { addressID: number; address: Address }) => {
+  async (
+    { addressID, address }: { addressID: number; address: Address },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetch(`/api/Address/update/${addressID}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(address),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return { addressID, address };
+      const response = await axios.put(
+        `/api/Address/update/${addressID}`,
+        address,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return { addressID, address: response.data };
     } catch (error) {
-      console.error("Error updating address:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка при оновленні адреси"
+      );
     }
   }
 );
 
 export const addAddressToUser = createAsyncThunk(
   "address/addAddressToUser",
-  async ({ userID, address }: { userID: string; address: Address }) => {
+  async (
+    { userID, address }: { userID: string; address: Address },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetch(`/api/Address/add/${userID}`, {
-        method: "POST",
+      const response = await axios.post(`/api/Address/add/${userID}`, address, {
         headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(address),
       });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return { userID, address };
+      return { userID, address: response.data };
     } catch (error) {
-      console.error("Error adding address to user:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data ||
+          "Помилка при додаванні адреси до користувача"
+      );
     }
   }
 );
 
 export const removeAddressFromUser = createAsyncThunk(
   "address/removeAddressFromUser",
-  async ({ userID, addressID }: { userID: string; addressID: number }) => {
+  async (
+    { userID, addressID }: { userID: string; addressID: number },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetch(
+      await axios.delete(
         `/api/Address/remove/${addressID}/from-user/${userID}`,
         {
-          method: "DELETE",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
       return addressID;
     } catch (error) {
-      console.error("Error deleting address:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data ||
+          "Помилка при видаленні адреси із списка користувача"
+      );
     }
   }
 );
 
 export const addExistingUserToAddress = createAsyncThunk(
   "address/addExistingUserToAddress",
-  async ({
-    addressID,
-    userID,
-    moveInDate,
-    moveOutDate,
-  }: {
-    addressID: number;
-    userID: string;
-    moveInDate: string;
-    moveOutDate: string | null;
-  }) => {
+  async (
+    {
+      addressID,
+      userID,
+      moveInDate,
+      moveOutDate,
+    }: {
+      addressID: number;
+      userID: string;
+      moveInDate: string;
+      moveOutDate: string | null;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `/api/Address/add-existing-user/${addressID}`,
         {
-          method: "POST",
+          userID,
+          moveInDate,
+          moveOutDate,
+        },
+        {
           headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userID, moveInDate, moveOutDate }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+      if (!response.data) {
+        return rejectWithValue(
+          "Помилка додавання користувача в історію проживання"
+        );
       }
 
       return { userID, addressID, moveInDate, moveOutDate };
     } catch (error) {
-      console.error("Error adding existing user to address:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data ||
+          "Помилка додавання користувача в історію проживання"
+      );
     }
   }
 );
 
 export const totalDeleteAddress = createAsyncThunk(
   "address/totalDeleteAddress",
-  async (addressID: number) => {
+  async (addressID: number, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/Address/total-delete/${addressID}`, {
-        method: "DELETE",
+      await axios.delete(`/api/Address/total-delete/${addressID}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
       return addressID;
     } catch (error) {
-      console.error("Error deleting address:", error);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Помилка повного видалення адреси"
+      );
     }
   }
 );
