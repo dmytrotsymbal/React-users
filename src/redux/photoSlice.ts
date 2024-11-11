@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Photo } from "../types/photoTypes";
+import axios, { AxiosError } from "axios";
 
 export type PhotoState = {
   photos: Photo[];
@@ -15,37 +16,52 @@ const initialState: PhotoState = {
 
 export const addPhoto = createAsyncThunk(
   "photo/addPhoto",
-  async ({
-    userID,
-    photo,
-  }: {
-    userID: string;
-    photo: Omit<Photo, "imageID">;
-  }) => {
-    const response = await fetch(`/api/Photo/${userID}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(photo),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to add photo");
+  async (
+    {
+      userID,
+      photo,
+    }: {
+      userID: string;
+      photo: Omit<Photo, "imageID">;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.post(`/api/Photo/${userID}`, photo, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data as Photo;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Failed to add photo"
+      );
     }
-    return (await response.json()) as Photo;
   }
 );
 
 export const deletePhoto = createAsyncThunk(
   "photo/deletePhoto",
-  async (imageID: string) => {
-    const response = await fetch(`/api/Photo/${imageID}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error("Failed to delete photo");
+  async (imageID: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`/api/Photo/${imageID}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (!response) {
+        throw new Error("Network response was not ok");
+      }
+      return imageID;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Failed to delete photo"
+      );
     }
-    return imageID;
   }
 );
 
