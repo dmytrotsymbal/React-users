@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Car } from "../types/carTypes";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export type CarState = {
   cars: Car[];
@@ -32,6 +32,7 @@ export const getAllCars = createAsyncThunk(
     try {
       const response = await axios.get(`/api/Car/get-all-cars`, {
         params: { pageNumber, pageSize, sortBy, sortDirection },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return response.data;
     } catch (error) {
@@ -45,13 +46,13 @@ export const getCarById = createAsyncThunk(
   "car/getCarById",
   async (carID: number) => {
     try {
-      const response = await fetch(`/api/Car/get-by-id/${carID}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get(`/api/Car/get-by-id/${carID}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching car:", error);
+      throw error;
     }
   }
 );
@@ -60,13 +61,16 @@ export const getAllUsersCars = createAsyncThunk(
   "car/getAllUsersCars",
   async (userID: string) => {
     try {
-      const response = await fetch(`/api/Car/get-all-users-cars/${userID}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get(
+        `/api/Car/get-all-users-cars/${userID}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      return response.data;
     } catch (error) {
       console.error("Error fetching cars:", error);
+      throw error;
     }
   }
 );
@@ -75,74 +79,77 @@ export const searchCars = createAsyncThunk(
   "car/searchCars",
   async (searchQuery: string) => {
     try {
-      const response = await fetch(
-        `/api/Car/search-cars?searchQuery=${searchQuery}`
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await response.json();
+      const response = await axios.get(`/api/Car/search-cars`, {
+        params: { searchQuery },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error fetching cars:", error);
+      throw error;
     }
   }
 );
 
 export const updateCar = createAsyncThunk(
   "car/updateCar",
-  async ({ carID, car }: { carID: number; car: Car }) => {
+  async ({ carID, car }: { carID: number; car: Car }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/Car/update/${carID}`, {
-        method: "PUT",
+      const response = await axios.put(`/api/Car/update/${carID}`, car, {
         headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(car),
       });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return { carID, car };
+      return { carID, car: response.data };
     } catch (error) {
-      console.error("Error updating car:", error);
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 403) {
+        return rejectWithValue("У вас недостатньо прав для редагування машин");
+      }
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const addCarToUser = createAsyncThunk(
   "car/addCarToUser",
-  async ({ userID, car }: { userID: string; car: Car }) => {
+  async (
+    { userID, car }: { userID: string; car: Car },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetch(`/api/Car/add/${userID}`, {
-        method: "POST",
+      const response = await axios.post(`/api/Car/add/${userID}`, car, {
         headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(car),
       });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return { userID, car };
+      return { userID, car: response.data };
     } catch (error) {
-      console.error("Error adding car to user:", error);
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 403) {
+        return rejectWithValue("У вас недостатньо прав для додавання машин");
+      }
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const deleteCar = createAsyncThunk(
   "car/deleteCar",
-  async (carID: number) => {
+  async (carID: number, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/Car/delete/${carID}`, {
-        method: "DELETE",
+      await axios.delete(`/api/Car/delete/${carID}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
       return carID;
     } catch (error) {
-      console.error("Error deleting car:", error);
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === 403) {
+        return rejectWithValue("У вас недостатньо прав для видалення машин");
+      }
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
@@ -150,13 +157,13 @@ export const deleteCar = createAsyncThunk(
 // HALPERS
 export const getCarsCount = createAsyncThunk("car/getCarsCount", async () => {
   try {
-    const response = await fetch("/api/Car/quantity");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return await response.json();
+    const response = await axios.get("/api/Car/quantity", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return response.data;
   } catch (error) {
     console.error("Error fetching cars count:", error);
+    throw error;
   }
 });
 
