@@ -305,7 +305,7 @@ const EditUserPage = () => {
 
               <br />
               <Box
-                style={{
+                sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   width: "100%",

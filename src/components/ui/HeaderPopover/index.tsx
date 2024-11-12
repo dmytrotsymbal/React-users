@@ -4,6 +4,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useAppDispatch } from "../../../redux/hooks";
 import { logout } from "../../../redux/authSlice";
+import { useState } from "react";
+import ManageAccountModal from "../modals/ManageAccountModal";
 
 type Props = {
   staff: Staff | null;
@@ -17,6 +19,8 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
     dispatch(logout());
     window.location.reload();
   };
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
     <>
       {isLoggedIn === true ? (
@@ -106,8 +110,9 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
             >
               <Button
                 variant="contained"
-                color="info"
+                color="inherit"
                 sx={{ width: "80px", height: "30px" }}
+                onClick={() => setIsModalOpen(true)}
               >
                 <ManageAccountsIcon />
               </Button>
@@ -133,6 +138,13 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
         >
           <p>Ви не увійшли</p>
         </Box>
+      )}
+
+      {isModalOpen && (
+        <ManageAccountModal
+          open={isModalOpen}
+          handleClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );
