@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { CriminalRecords, Prison } from "../types/criminalRecordsTypes";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export type CriminalRecordsState = {
   criminalRecords: CriminalRecords[];
@@ -20,89 +20,116 @@ const initialState: CriminalRecordsState = {
 
 export const getAllUsersCriminalRecords = createAsyncThunk(
   "criminalRecord/getAllUsersCriminalRecords",
-  async (userID: string) => {
+  async (userID: string, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `/api/CriminalRecord/get-all-users-crimes/${userID}`
+        `/api/CriminalRecord/get-all-users-crimes/${userID}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       return response.data;
     } catch (error) {
-      console.error("Error fetching users crimes:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const getCriminalRecordById = createAsyncThunk(
   "criminalRecord/getCriminalRecordById",
-  async (criminalRecordID: number) => {
+  async (criminalRecordID: number, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `/api/CriminalRecord/get-crime-by-id/${criminalRecordID}`
+        `/api/CriminalRecord/get-crime-by-id/${criminalRecordID}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       return response.data;
     } catch (error) {
-      console.error("Error fetching crime by ID:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const updateCriminalRecord = createAsyncThunk(
   "criminalRecord/updateCriminalRecord",
-  async ({
-    criminalRecordID,
-    criminalRecord,
-  }: {
-    criminalRecordID: number;
-    criminalRecord: CriminalRecords;
-  }) => {
+  async (
+    {
+      criminalRecordID,
+      criminalRecord,
+    }: {
+      criminalRecordID: number;
+      criminalRecord: CriminalRecords;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.put(
         `/api/CriminalRecord/update/${criminalRecordID}`,
-        criminalRecord
+        criminalRecord,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       return response.data;
     } catch (error) {
-      console.error("Error updating crime:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const addCriminalRecordToUser = createAsyncThunk(
   "criminalRecord/addCriminalRecordToUser",
-  async ({
-    userID,
-    criminalRecord,
-  }: {
-    userID: string;
-    criminalRecord: CriminalRecords;
-  }) => {
+  async (
+    {
+      userID,
+      criminalRecord,
+    }: {
+      userID: string;
+      criminalRecord: CriminalRecords;
+    },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.post(
         `/api/CriminalRecord/add-crime-to/${userID}`,
-        criminalRecord
+        criminalRecord,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       return response.data;
     } catch (error) {
-      console.error("Error adding crime to user:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
 
 export const deleteCriminalRecord = createAsyncThunk(
   "criminalRecord/deleteCriminalRecord",
-  async (criminalRecordID: number) => {
+  async (criminalRecordID: number, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `/api/CriminalRecord/delete/${criminalRecordID}`
+        `/api/CriminalRecord/delete/${criminalRecordID}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       return response.data;
     } catch (error) {
-      console.error("Error deleting crime:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
@@ -111,13 +138,15 @@ export const deleteCriminalRecord = createAsyncThunk(
 
 export const getAllPrisons = createAsyncThunk(
   "criminalRecord/getAllPrisons",
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/CriminalRecord/get-all-prisons");
+      const response = await axios.get("/api/CriminalRecord/get-all-prisons", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       return response.data;
     } catch (error) {
-      console.error("Error fetching prisons:", error);
-      throw error;
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
     }
   }
 );
