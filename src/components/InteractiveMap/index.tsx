@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer } from "react-leaflet";
+import { TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Address } from "../../types/addressTypes";
 import CustomNoCoordinatesBlock from "../ui/CustomNoCoordinatesBlock";
@@ -15,18 +16,17 @@ const InteractiveMap = ({ position, address }: Props) => {
         <CustomNoCoordinatesBlock />
       ) : (
         <MapContainer
-          center={position}
-          zoom={15}
-          scrollWheelZoom={true}
-          zoomAnimation={true}
+          center={[position[0], position[1]]}
+          zoom={13}
+          scrollWheelZoom={false}
         >
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Marker position={position}>
+          <Marker position={[position[0], position[1]]}>
             <Popup>
-              Адреса: {address.streetAddress} {address.houseNumber}{" "}
+              {address.streetAddress}, {address.city}, {address.country}
             </Popup>
           </Marker>
         </MapContainer>

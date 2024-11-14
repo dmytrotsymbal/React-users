@@ -56,7 +56,7 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
     isExpanded: boolean
   ) => {
     setIsCrimeAccordionExpanded(isExpanded);
-
+    event.stopPropagation();
     if (isExpanded && !isCrimesVisible) {
       // Затримка для завершення анімації
       setTimeout(() => {

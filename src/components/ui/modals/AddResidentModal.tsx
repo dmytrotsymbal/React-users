@@ -87,8 +87,8 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
           getOptionLabel={(option) =>
             `${option.firstName} ${option.lastName} (ID: ${option.userID})`
           }
-          onInputChange={(event, value) => setSearchQuery(value)}
-          onChange={(event, value) => setSelectedUserID(value?.userID || null)}
+          onInputChange={(_, value) => setSearchQuery(value)}
+          onChange={(_, value) => setSelectedUserID(value?.userID || null)}
           renderInput={(params) => (
             <TextField
               {...params}

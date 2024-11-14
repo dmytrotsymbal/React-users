@@ -58,7 +58,7 @@ const AddressAccordion = ({
     isExpanded: boolean
   ) => {
     setIsAddressAccordionExpanded(isExpanded);
-
+    event.preventDefault();
     if (isExpanded && !isAddressVisible) {
       // Затримка для завершення анімації
       setTimeout(() => {

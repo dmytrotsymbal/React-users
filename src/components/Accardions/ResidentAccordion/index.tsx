@@ -51,7 +51,7 @@ const ResidentAccordion = ({
     useState<boolean>(false);
 
   const handleAccordionChange = (
-    event: React.SyntheticEvent,
+    _: React.SyntheticEvent,
     isExpanded: boolean
   ) => {
     setIsResidentAccordionExpanded(isExpanded);

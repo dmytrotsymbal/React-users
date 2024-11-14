@@ -52,7 +52,7 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
     isExpanded: boolean
   ) => {
     setIsCarAccordionExpanded(isExpanded);
-
+    event.preventDefault();
     if (isExpanded && !isCarVisible) {
       // Затримка для завершення анімації
       setTimeout(() => {
