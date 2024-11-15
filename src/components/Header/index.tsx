@@ -7,6 +7,7 @@ import {
   IconButton,
   Avatar,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import HeaderLogo from "../../assets/headerLogo.webp";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -17,16 +18,21 @@ import { toggleTheme } from "../../redux/themeSlice";
 import { RootState } from "../../redux/store";
 import { useState } from "react";
 import HeaderPopover from "../ui/HeaderPopover";
+import Sidebar from "./Sidebar";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const lightTheme = useAppSelector((state) => state.theme.lightTheme);
-
   const { staff, isLoggedIn } = useAppSelector(
     (state: RootState) => state.auth
   );
 
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+  const toggleDrawer = (open: boolean) => {
+    setIsDrawerOpen(open);
+  };
 
   const togglePopover = () => {
     setIsPopoverOpen(!isPopoverOpen);
@@ -52,11 +58,30 @@ const Header = () => {
               alignItems: "center",
             }}
           >
-            <img
-              src={HeaderLogo}
-              alt="logo"
-              style={{ width: "50px", borderRadius: "5px" }}
-            />
+            <Box
+              sx={{
+                width: "100px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <IconButton
+                onClick={() => toggleDrawer(true)}
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <img
+                src={HeaderLogo}
+                alt="logo"
+                style={{ width: "50px", borderRadius: "5px" }}
+              />
+            </Box>
 
             <Box
               sx={{
@@ -112,7 +137,14 @@ const Header = () => {
           </Toolbar>
         </Container>
       </AppBar>
+
+      <Sidebar
+        isDrawerOpen={isDrawerOpen}
+        toggleDrawer={toggleDrawer}
+        lightTheme={lightTheme}
+      />
     </>
   );
 };
+
 export default Header;
