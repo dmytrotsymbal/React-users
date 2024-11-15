@@ -205,6 +205,10 @@ const userSlice = createSlice({
         (user) => user.userID !== action.payload.userID
       );
     },
+
+    clearSelectedUsers: (state) => {
+      state.selectedUsers = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -356,7 +360,10 @@ const userSlice = createSlice({
   },
 });
 
-export const { addUserToSelectedList, removeUserFromSelectedList } =
-  userSlice.actions;
+export const {
+  addUserToSelectedList,
+  removeUserFromSelectedList,
+  clearSelectedUsers,
+} = userSlice.actions;
 
 export default userSlice.reducer;
