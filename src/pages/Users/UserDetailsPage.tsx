@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getUserById, deleteUser } from "../../redux/userSlice";
+import {
+  getUserById,
+  deleteUser,
+  addUserToSelectedList,
+} from "../../redux/userSlice";
 import { RootState } from "../../redux/store";
 import { Paper, Avatar, Grid, Button, Box } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
@@ -216,6 +220,15 @@ const UserDetailsPage = () => {
                   onClick={() => setOpenDeleteModal(true)}
                 >
                   Видалити профіль
+                </Button>
+
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{ width: "200px" }}
+                  onClick={() => dispatch(addUserToSelectedList(user))}
+                >
+                  Додати в закладки
                 </Button>
 
                 <CustomIconButton

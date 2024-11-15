@@ -1,11 +1,11 @@
 import { IconButton } from "@mui/material";
 import { ReactNode } from "react";
 
-interface Props {
+type Props = {
   icon: ReactNode; // Проп для передачи иконки
   onClick: () => void;
   color?: "inherit" | "primary" | "secondary" | "default"; // Опционально: цвет кнопки
-}
+};
 
 const CustomIconButton = ({
   icon,

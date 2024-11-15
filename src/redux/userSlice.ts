@@ -9,6 +9,8 @@ export type UserState = {
   usersCount?: number;
 
   usersIDs: string[]; // ids array
+
+  selectedUsers: User[];
 };
 
 const initialState: UserState = {
@@ -18,6 +20,8 @@ const initialState: UserState = {
   usersCount: 0,
 
   usersIDs: [], // ids array
+
+  selectedUsers: [],
 };
 
 export const getAllUsers = createAsyncThunk(
@@ -191,7 +195,17 @@ export const getAllUsersIDs = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    addUserToSelectedList: (state, action: PayloadAction<User>) => {
+      state.selectedUsers.push(action.payload);
+    },
+
+    removeUserFromSelectedList: (state, action: PayloadAction<User>) => {
+      state.selectedUsers = state.selectedUsers.filter(
+        (user) => user.userID !== action.payload.userID
+      );
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getAllUsers.pending, (state) => {
@@ -341,5 +355,8 @@ const userSlice = createSlice({
       });
   },
 });
+
+export const { addUserToSelectedList, removeUserFromSelectedList } =
+  userSlice.actions;
 
 export default userSlice.reducer;
