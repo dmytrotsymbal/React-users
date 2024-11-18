@@ -4,7 +4,7 @@ import { RootState } from "../../redux/store";
 import { useEffect, useMemo, useState } from "react";
 import { getUserById, updateUser } from "../../redux/userSlice";
 import { deletePhoto, addPhoto } from "../../redux/photoSlice";
-import AddPhotoModal from "../../components/ui/modals/AddPhotoModal";
+import AddPhotoModal from "../../components/modals/AddPhotoModal";
 import { Photo } from "../../types/photoTypes";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
@@ -16,7 +16,7 @@ import {
   Box,
   IconButton,
 } from "@mui/material";
-import ConfirmDeletePhotoModal from "../../components/ui/modals/ConfirmDeletePhotoModal";
+import ConfirmDeletePhotoModal from "../../components/modals/ConfirmDeletePhotoModal";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CustomLoader from "../../components/ui/CustomLoader";
