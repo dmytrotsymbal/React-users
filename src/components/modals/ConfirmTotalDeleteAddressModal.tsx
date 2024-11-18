@@ -5,7 +5,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { Box } from "@mui/material";
-import { Address } from "../../../types/addressTypes";
+import { Address } from "../../types/addressTypes";
 
 type Props = {
   open: boolean;

@@ -6,7 +6,7 @@ import {
   DialogActions,
   Dialog,
 } from "@mui/material";
-import { Photo } from "../../../types/photoTypes";
+import { Photo } from "../../types/photoTypes";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
