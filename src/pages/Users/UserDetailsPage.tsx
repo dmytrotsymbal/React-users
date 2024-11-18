@@ -19,9 +19,12 @@ import CustomErrorBlock from "../../components/ui/CustomErrorBlock";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CrimesAccardion from "../../components/Accardions/CrimesAccardion";
+import { User } from "../../types/userTypes";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
+
+  const selectedList = useAppSelector((state: RootState) => state.user); // масив вибраних юзерів для дізейбла кнопки
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -223,6 +226,9 @@ const UserDetailsPage = () => {
                 </Button>
 
                 <Button
+                  disabled={selectedList.selectedUsers.some(
+                    (selectedUser: User) => selectedUser.userID === user.userID
+                  )}
                   variant="contained"
                   color="success"
                   sx={{ width: "200px" }}

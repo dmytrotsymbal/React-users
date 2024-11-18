@@ -19,6 +19,7 @@ import { RootState } from "../../redux/store";
 import { useState } from "react";
 import HeaderPopover from "../../components/ui/HeaderPopover";
 import Sidebar from "../Sidebar";
+import CustomTooltip from "../../components/ui/CustomTooltip";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -66,16 +67,18 @@ const Header = () => {
                 alignItems: "center",
               }}
             >
-              <IconButton
-                onClick={() => toggleDrawer(true)}
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
+              <CustomTooltip title="Закладки" placement="bottom">
+                <IconButton
+                  onClick={() => toggleDrawer(true)}
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  sx={{ mr: 2 }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </CustomTooltip>
               <img
                 src={HeaderLogo}
                 alt="logo"
@@ -114,20 +117,22 @@ const Header = () => {
               </IconButton>
 
               <Box>
-                <IconButton onClick={togglePopover}>
-                  {isLoggedIn ? (
-                    <Avatar
-                      sx={{
-                        width: "32px",
-                        height: "32px",
-                      }}
-                      alt={staff?.nickname}
-                      src={"abrakadabra"}
-                    />
-                  ) : (
-                    <AccountCircleIcon sx={{ color: "#f5eded" }} />
-                  )}
-                </IconButton>
+                <CustomTooltip title="Профіль" placement="bottom">
+                  <IconButton onClick={togglePopover}>
+                    {isLoggedIn ? (
+                      <Avatar
+                        sx={{
+                          width: "32px",
+                          height: "32px",
+                        }}
+                        alt={staff?.nickname}
+                        src={"abrakadabra"}
+                      />
+                    ) : (
+                      <AccountCircleIcon sx={{ color: "#f5eded" }} />
+                    )}
+                  </IconButton>
+                </CustomTooltip>
 
                 {isPopoverOpen && (
                   <HeaderPopover staff={staff} isLoggedIn={isLoggedIn} />

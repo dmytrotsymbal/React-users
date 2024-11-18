@@ -16,6 +16,7 @@ import { RootState } from "../../redux/store";
 import { login } from "../../redux/authSlice";
 import CustomLoader from "../../components/ui/CustomLoader";
 import { useNavigate } from "react-router-dom";
+import CustomTooltip from "../../components/ui/CustomTooltip";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -95,13 +96,20 @@ const AuthPage = () => {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={toggleShowPassword}
-                      edge="end"
-                      aria-label="toggle password visibility"
+                    <CustomTooltip
+                      title={
+                        showPassword ? "Приховати пароль" : "Показати пароль"
+                      }
+                      placement="right"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
+                      <IconButton
+                        onClick={toggleShowPassword}
+                        edge="end"
+                        aria-label="toggle password visibility"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </CustomTooltip>
                   </InputAdornment>
                 ),
               }}

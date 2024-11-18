@@ -6,6 +6,7 @@ import { useAppDispatch } from "../../../redux/hooks";
 import { logout } from "../../../redux/authSlice";
 import { useState } from "react";
 import ManageAccountModal from "../../modals/ManageAccountModal";
+import CustomTooltip from "../CustomTooltip";
 
 type Props = {
   staff: Staff | null;
@@ -90,14 +91,16 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
                 justifyContent: "flex-start",
               }}
             >
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ width: "80px", height: "30px" }}
-                onClick={goLogout}
-              >
-                <LogoutIcon />
-              </Button>
+              <CustomTooltip title="Вийти з акаунту" placement="bottom">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ width: "80px", height: "30px" }}
+                  onClick={goLogout}
+                >
+                  <LogoutIcon />
+                </Button>
+              </CustomTooltip>
             </Grid>
 
             <Grid
@@ -108,14 +111,16 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
                 justifyContent: "flex-end",
               }}
             >
-              <Button
-                variant="contained"
-                color="inherit"
-                sx={{ width: "80px", height: "30px" }}
-                onClick={() => setIsModalOpen(true)}
-              >
-                <ManageAccountsIcon />
-              </Button>
+              <CustomTooltip title="Редагувати" placement="bottom">
+                <Button
+                  variant="contained"
+                  color="inherit"
+                  sx={{ width: "80px", height: "30px" }}
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <ManageAccountsIcon />
+                </Button>
+              </CustomTooltip>
             </Grid>
           </Grid>
         </Box>

@@ -1,11 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { RootState } from "../../../redux/store";
-import { useState } from "react";
-import {
-  deleteCriminalRecord,
-  getAllUsersCriminalRecords,
-} from "../../../redux/criminalRecordSlice";
+import React, { useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -21,15 +14,21 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import CustomNotFoundPaper from "../../ui/CustomNotFoundPaper";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { RootState } from "../../../redux/store";
+import CustomTooltip from "../../ui/CustomTooltip";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import AddIcon from "@mui/icons-material/Add";
 import CrimesTableSkeletonRow from "./CrimesTableSkeletonRow";
-import CustomTooltip from "../../ui/CustomTooltip";
-import { CriminalRecords } from "../../../types/criminalRecordsTypes";
 import ConfirmDeleteCrimeModal from "../../modals/ConfirmDeleteCrimeModal";
+import {
+  deleteCriminalRecord,
+  getAllUsersCriminalRecords,
+} from "../../../redux/criminalRecordSlice";
+import { CriminalRecords } from "../../../types/criminalRecordsTypes";
 
 type Props = {
   isCrimesVisible: boolean;
@@ -38,7 +37,6 @@ type Props = {
 
 const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
   const { userId } = useParams<{ userId: string }>();
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -51,6 +49,8 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
   const [isCrimeAccordionExpanded, setIsCrimeAccordionExpanded] =
     useState<boolean>(false);
 
+  const [hoveredPrisonId, setHoveredPrisonId] = useState<number | null>(null);
+
   const handleAccordionChange = (
     event: React.SyntheticEvent,
     isExpanded: boolean
@@ -58,26 +58,13 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
     setIsCrimeAccordionExpanded(isExpanded);
     event.stopPropagation();
     if (isExpanded && !isCrimesVisible) {
-      // Затримка для завершення анімації
+      // Задержка для завершения анимации
       setTimeout(() => {
         dispatch(getAllUsersCriminalRecords(String(userId)));
-        console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersCriminalRecords");
         showAllUsersCrimes();
       }, 1000);
     }
   };
-
-  const longtext = criminalRecords.map((criminalRecord) => {
-    return (
-      criminalRecord.prison.prisonName +
-      "," +
-      criminalRecord.prison.location +
-      "," +
-      criminalRecord.prison.capacity +
-      "," +
-      criminalRecord.prison.securityLevel
-    );
-  });
 
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [selectedCrime, setSelectedCrime] = useState<CriminalRecords | null>(
@@ -119,7 +106,6 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
             }}
           >
             <Typography>Судимості</Typography>
-
             {isCrimeAccordionExpanded ? (
               <IconButton
                 sx={{ marginRight: "1rem" }}
@@ -163,7 +149,7 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
                   <TableRow>
                     <TableCell colSpan={8} align="center">
                       <Typography variant="h6" color="error">
-                        <CustomNotFoundPaper errorMessage={error} />
+                        У цього користувача нема судимостей
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -183,19 +169,13 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
                           "uk-UA"
                         )}
                       </TableCell>
-
                       <TableCell>
-                        {!crime.releaseDate ? (
-                          "До тепер"
-                        ) : (
-                          <>
-                            {new Date(crime.releaseDate).toLocaleDateString(
+                        {!crime.releaseDate
+                          ? "До тепер"
+                          : new Date(crime.releaseDate).toLocaleDateString(
                               "uk-UA"
                             )}
-                          </>
-                        )}
                       </TableCell>
-
                       <TableCell>{crime.article}</TableCell>
                       <TableCell>{crime.sentence}</TableCell>
                       <TableCell>
@@ -203,13 +183,37 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
                           Подробиці справи
                         </Link>
                       </TableCell>
-
-                      <CustomTooltip title={String(longtext)} placement="top">
-                        <TableCell>{crime.prison.prisonID}</TableCell>
-                      </CustomTooltip>
-
+                      <TableCell
+                        onMouseEnter={() =>
+                          setHoveredPrisonId(crime.prison.prisonID)
+                        }
+                        onMouseLeave={() => setHoveredPrisonId(null)}
+                      >
+                        <CustomTooltip
+                          title={
+                            hoveredPrisonId === crime.prison.prisonID
+                              ? `${crime.prison.prisonName}, ${crime.prison.location}, ${crime.prison.capacity}, ${crime.prison.securityLevel}`
+                              : ""
+                          }
+                          placement="top"
+                        >
+                          <div
+                            style={{
+                              cursor: "pointer",
+                              width: "30px",
+                              height: "30px",
+                              borderRadius: "4px",
+                              border: "1px solid #ccc",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            {crime.criminalRecordID}
+                          </div>
+                        </CustomTooltip>
+                      </TableCell>
                       <TableCell>{crime.details}</TableCell>
-
                       <TableCell>
                         <IconButton
                           onClick={(e) => {
@@ -219,7 +223,6 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
                         >
                           <EditIcon />
                         </IconButton>
-
                         <IconButton
                           onClick={(e) => {
                             e.stopPropagation();
@@ -238,7 +241,6 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
           </TableContainer>
         </AccordionDetails>
       </Accordion>
-
       {openDeleteModal && (
         <ConfirmDeleteCrimeModal
           open={openDeleteModal}
@@ -250,4 +252,5 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
     </>
   );
 };
+
 export default CrimesAccardion;

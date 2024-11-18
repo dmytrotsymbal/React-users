@@ -224,4 +224,5 @@ const AddressDetailsPage = () => {
     </>
   );
 };
+
 export default AddressDetailsPage;
