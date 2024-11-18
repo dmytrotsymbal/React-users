@@ -11,7 +11,7 @@ import { Paper, Avatar, Grid, Button, Box } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
 import { Skeleton } from "@mui/material";
-import ConfirmDeleteModal from "../../components/ui/modals/ConfirmDeleteUserModal";
+import ConfirmDeleteModal from "../../components/modals/ConfirmDeleteUserModal";
 import CarAccordion from "../../components/Accardions/CarAccordion";
 import AddressAccordion from "../../components/Accardions/AddressAccordion";
 import { getAllUsersPhones } from "../../redux/phoneSlice";

@@ -27,7 +27,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddressTableSkeletonRow from "./AddressTableSkeletonRow";
 import { Address } from "../../../types/addressTypes";
-import ConfirmDeleteAddressModal from "../../ui/modals/ConfirmDeleteAddressModal";
+import ConfirmDeleteAddressModal from "../../modals/ConfirmDeleteAddressModal";
 import CustomNotFoundPaper from "../../ui/CustomNotFoundPaper";
 
 type Props = {

@@ -153,13 +153,14 @@ const Sidebar = ({ isDrawerOpen, toggleDrawer, lightTheme }: Props) => {
         <Box
           sx={{
             display: "flex",
-            padding: "5px",
+            padding: "10px",
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
             bottom: "0",
             left: "0",
             right: "0",
+            backgroundColor: lightTheme ? "#6482AD" : "#27374D",
           }}
         >
           <IconButton

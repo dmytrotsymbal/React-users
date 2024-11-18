@@ -23,7 +23,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Link } from "react-router-dom";
 import CustomNotFoundPaper from "../../ui/CustomNotFoundPaper";
 import ResidentTableSkeletonRow from "./ResidentTableSkeletonRow";
-import AddResidentModal from "../../ui/modals/AddResidentModal";
+import AddResidentModal from "../../modals/AddResidentModal";
 
 type Props = {
   isLivingHistoryVisible: boolean;

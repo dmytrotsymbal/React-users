@@ -5,7 +5,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useAppDispatch } from "../../../redux/hooks";
 import { logout } from "../../../redux/authSlice";
 import { useState } from "react";
-import ManageAccountModal from "../modals/ManageAccountModal";
+import ManageAccountModal from "../../modals/ManageAccountModal";
 
 type Props = {
   staff: Staff | null;

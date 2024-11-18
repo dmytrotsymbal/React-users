@@ -28,7 +28,7 @@ import CustomSearchInput from "../ui/CustomSearchInput";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import { Car } from "../../types/carTypes";
-import ConfirmDeleteCarModal from "../ui/modals/ConfirmDeleteCarModal";
+import ConfirmDeleteCarModal from "../modals/ConfirmDeleteCarModal";
 import CustomPagination from "../ui/CustomPagination";
 import CarTableHead from "./CarTableHead";
 

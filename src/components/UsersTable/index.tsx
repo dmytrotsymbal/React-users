@@ -24,7 +24,7 @@ import {
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
 import NoProfilePicture from "../../assets/noProfilePicture.webp";
-import ConfirmDeleteModal from "../ui/modals/ConfirmDeleteUserModal";
+import ConfirmDeleteUserModal from "../modals/ConfirmDeleteUserModal";
 import { User } from "../../types/userTypes";
 import useDebounce from "../../hooks/useDebounce";
 import CustomSearchInput from "../ui/CustomSearchInput";
@@ -288,7 +288,7 @@ const UsersTable = () => {
       <br />
 
       {selectedUser && (
-        <ConfirmDeleteModal
+        <ConfirmDeleteUserModal
           open={openDeleteModal}
           handleClose={() => setOpenDeleteModal(false)}
           handleDelete={handleDelete}

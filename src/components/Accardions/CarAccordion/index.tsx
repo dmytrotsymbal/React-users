@@ -22,7 +22,7 @@ import { deleteCar, getAllUsersCars } from "../../../redux/carSlice";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import ConfirmDeleteCarModal from "../../ui/modals/ConfirmDeleteCarModal";
+import ConfirmDeleteCarModal from "../../modals/ConfirmDeleteCarModal";
 import CarTableSkeletonRow from "../../CarsTable/CarTableSkeletonRow";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../redux/store";

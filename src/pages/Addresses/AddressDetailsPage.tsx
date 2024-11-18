@@ -12,7 +12,7 @@ import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import InteractiveMap from "../../components/InteractiveMap";
 import ResidentAccordion from "../../components/Accardions/ResidentAccordion";
-import ConfirmTotalDeleteAddressModal from "../../components/ui/modals/ConfirmTotalDeleteAddressModal";
+import ConfirmTotalDeleteAddressModal from "../../components/modals/ConfirmTotalDeleteAddressModal";
 import { Address } from "../../types/addressTypes";
 
 const AddressDetailsPage = () => {

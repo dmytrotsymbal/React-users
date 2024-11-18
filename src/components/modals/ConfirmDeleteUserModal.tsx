@@ -4,7 +4,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-import { User } from "../../../types/userTypes";
+import { User } from "../../types/userTypes";
 import { Box } from "@mui/material";
 
 type Props = {

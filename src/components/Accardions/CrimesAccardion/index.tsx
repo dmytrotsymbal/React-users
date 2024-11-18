@@ -29,7 +29,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CrimesTableSkeletonRow from "./CrimesTableSkeletonRow";
 import CustomTooltip from "../../ui/CustomTooltip";
 import { CriminalRecords } from "../../../types/criminalRecordsTypes";
-import ConfirmDeleteCrimeModal from "../../ui/modals/ConfirmDeleteCrimeModal";
+import ConfirmDeleteCrimeModal from "../../modals/ConfirmDeleteCrimeModal";
 
 type Props = {
   isCrimesVisible: boolean;
