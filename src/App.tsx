@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import Header from "./components/Header";
+import Header from "./layouts/Header";
 import "./styles/App.css";
 import "./styles/font.css";
 import { Route, Routes, Navigate } from "react-router-dom";

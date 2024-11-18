@@ -17,8 +17,8 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { toggleTheme } from "../../redux/themeSlice";
 import { RootState } from "../../redux/store";
 import { useState } from "react";
-import HeaderPopover from "../ui/HeaderPopover";
-import Sidebar from "./Sidebar";
+import HeaderPopover from "../../components/ui/HeaderPopover";
+import Sidebar from "../Sidebar";
 
 const Header = () => {
   const dispatch = useAppDispatch();
