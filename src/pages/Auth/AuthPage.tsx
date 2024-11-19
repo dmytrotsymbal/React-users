@@ -3,20 +3,20 @@ import {
   Button,
   Box,
   Typography,
-  Alert,
   IconButton,
   InputAdornment,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { RootState } from "../../redux/store";
 import { login } from "../../redux/authSlice";
 import CustomLoader from "../../components/ui/CustomLoader";
 import { useNavigate } from "react-router-dom";
 import CustomTooltip from "../../components/ui/CustomTooltip";
+import CustomSnackbar from "../../components/ui/CustomSnackbar";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -37,6 +37,7 @@ const AuthPage = () => {
   );
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isErrorAlertOpen, setIsErrorAlertOpen] = useState<boolean>(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -46,9 +47,19 @@ const AuthPage = () => {
     dispatch(login(values));
   };
 
-  if (isLoggedIn) {
-    navigate("/users");
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/users");
+    }
+  }, [isLoggedIn, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      setIsErrorAlertOpen(true);
+    } else {
+      setIsErrorAlertOpen(false);
+    }
+  }, [error]);
 
   return (
     <>
@@ -115,8 +126,6 @@ const AuthPage = () => {
               }}
             />
 
-            {error && <Alert severity="error">{error}</Alert>}
-
             <br />
             <br />
 
@@ -131,6 +140,14 @@ const AuthPage = () => {
           </Form>
         )}
       </Formik>
+
+      {error && (
+        <CustomSnackbar
+          open={isErrorAlertOpen && !!error}
+          handleClose={() => setIsErrorAlertOpen(false)}
+          message={error || ""}
+        />
+      )}
     </>
   );
 };
