@@ -215,7 +215,7 @@ const UserDetailsPage = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  sx={{ width: "200px" }}
+                  sx={{ width: "220px" }}
                   onClick={() => navigate(`/user/edit/${user.userID}`)}
                 >
                   Редагувати профіль
@@ -224,7 +224,7 @@ const UserDetailsPage = () => {
                 <Button
                   variant="contained"
                   color="error"
-                  sx={{ width: "200px" }}
+                  sx={{ width: "220px" }}
                   onClick={() => setOpenDeleteModal(true)}
                 >
                   Видалити профіль
@@ -236,7 +236,7 @@ const UserDetailsPage = () => {
                   )}
                   variant="contained"
                   color="success"
-                  sx={{ width: "200px" }}
+                  sx={{ width: "220px" }}
                   onClick={() => dispatch(addUserToSelectedList(user))}
                 >
                   Додати в закладки
