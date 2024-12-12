@@ -2158,6 +2158,11 @@ queue-microtask@^1.2.2:
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
+react-apple-emojis@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-apple-emojis/-/react-apple-emojis-2.2.2.tgz#7a4b845e26276a4c7a3e2f392c5025adb87346f3"
+  integrity sha512-kXHudk5ONL4M5/WzAWRojRgKiTA9H5CAItjjhrhrCthbc0+xOKzeXZtOsCnZC4UfYWa9tcg9IXDQLcRm/J6i0A==
+
 react-dom@^18.3.1:
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.3.1.tgz#c2265d79511b57d479b3dd3fdfa51536494c5cb4"

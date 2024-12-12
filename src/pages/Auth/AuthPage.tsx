@@ -146,6 +146,7 @@ const AuthPage = () => {
           open={isErrorAlertOpen && !!error}
           handleClose={() => setIsErrorAlertOpen(false)}
           message={error || ""}
+          severity="error"
         />
       )}
     </>

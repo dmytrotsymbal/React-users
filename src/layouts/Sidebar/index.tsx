@@ -10,6 +10,9 @@ import {
 import ConfirmDeleteUserFromListModal from "../../components/modals/ConfirmDeleteUserFromListModal";
 import CustomTooltip from "../../components/ui/CustomTooltip";
 import UserCard from "../../components/ui/UserCard";
+import CustomSnackbar from "../../components/ui/CustomSnackbar";
+import { EmojiProvider, Emoji } from "react-apple-emojis";
+import emojiData from "../../assets/emojis/data.json";
 
 type Props = {
   isDrawerOpen: boolean;
@@ -21,7 +24,8 @@ const Sidebar = ({ isDrawerOpen, toggleDrawer, lightTheme }: Props) => {
   const dispatch = useAppDispatch();
   const selectedUsers = useAppSelector((state) => state.user.selectedUsers);
 
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [isSnackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const handleOpenModal = (user: User) => {
@@ -85,15 +89,28 @@ const Sidebar = ({ isDrawerOpen, toggleDrawer, lightTheme }: Props) => {
           ) : (
             <Box
               sx={{
+                width: "100%",
                 height: "600px",
                 overflow: "auto",
                 padding: "10px",
                 display: "flex",
+                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <Typography variant="body1" color="whitesmoke" gutterBottom>
+              <EmojiProvider data={emojiData}>
+                <Emoji name="man-shrugging-light-skin-tone" width={50} />
+              </EmojiProvider>
+              <Typography
+                sx={{
+                  fontSize: "16px",
+                  textAlign: "center",
+                  mt: 2,
+                }}
+                color="whitesmoke"
+                gutterBottom
+              >
                 Не вибрано жодного користувача
               </Typography>
             </Box>
@@ -126,6 +143,7 @@ const Sidebar = ({ isDrawerOpen, toggleDrawer, lightTheme }: Props) => {
                 onClick={(event) => {
                   event.stopPropagation();
                   dispatch(clearSelectedUsers());
+                  setSnackbarOpen(true);
                 }}
               >
                 <DeleteForeverIcon
@@ -145,6 +163,15 @@ const Sidebar = ({ isDrawerOpen, toggleDrawer, lightTheme }: Props) => {
         handleDelete={handleDeleteUser}
         user={selectedUser}
       />
+
+      {isSnackbarOpen && (
+        <CustomSnackbar
+          open={isSnackbarOpen}
+          handleClose={() => setSnackbarOpen(false)}
+          message="Закладки успішно очищені"
+          severity="success"
+        />
+      )}
     </>
   );
 };

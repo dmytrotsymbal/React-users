@@ -20,6 +20,8 @@ import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CrimesAccardion from "../../components/Accardions/CrimesAccardion";
 import { User } from "../../types/userTypes";
+import { EmojiProvider, Emoji } from "react-apple-emojis";
+import emojiData from "../../assets/emojis/data.json";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
@@ -190,7 +192,19 @@ const UserDetailsPage = () => {
                     )}
                   </Box>
                 ) : (
-                  <p>Телефонів немає</p>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p style={{ marginRight: "10px" }}>Телефонів немає</p>
+
+                    <EmojiProvider data={emojiData}>
+                      <Emoji name="pensive-face" width={24} />
+                    </EmojiProvider>
+                  </Box>
                 )}
               </Grid>
 
