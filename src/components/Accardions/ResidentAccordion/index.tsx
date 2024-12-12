@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { RootState } from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { RootState } from "../../../store/store";
 import { useState } from "react";
-import { getAddressLivingHistory } from "../../../redux/addressSlice";
+import { getAddressLivingHistory } from "../../../store/addressSlice";
 import {
   Paper,
   Typography,

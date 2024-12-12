@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   getUserById,
   deleteUser,
   addUserToSelectedList,
-} from "../../redux/userSlice";
-import { RootState } from "../../redux/store";
+} from "../../store/userSlice";
+import { RootState } from "../../store/store";
 import { Paper, Avatar, Grid, Button, Box } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
 import NoProfilePicture from "../../assets/images/noProfilePicture.png";
@@ -14,7 +14,7 @@ import { Skeleton } from "@mui/material";
 import ConfirmDeleteModal from "../../components/modals/ConfirmDeleteUserModal";
 import CarAccordion from "../../components/Accardions/CarAccordion";
 import AddressAccordion from "../../components/Accardions/AddressAccordion";
-import { getAllUsersPhones } from "../../redux/phoneSlice";
+import { getAllUsersPhones } from "../../store/phoneSlice";
 import CustomErrorBlock from "../../components/ui/CustomErrorBlock";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -22,6 +22,7 @@ import CrimesAccardion from "../../components/Accardions/CrimesAccardion";
 import { User } from "../../types/userTypes";
 import { EmojiProvider, Emoji } from "react-apple-emojis";
 import emojiData from "../../assets/emojis/data.json";
+import { formatDateTime } from "../../utils/formatDateTime";
 
 const UserDetailsPage = () => {
   const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
@@ -145,17 +146,7 @@ const UserDetailsPage = () => {
                     animation="wave"
                   />
                 ) : (
-                  <p>
-                    Запис створено:{" "}
-                    {new Date(user.createdAt).toLocaleString("uk-UA", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit",
-                    })}
-                  </p>
+                  <p>Запис створено: {formatDateTime(user.createdAt)}</p>
                 )}
 
                 <br />

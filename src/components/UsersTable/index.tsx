@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   getAllUsers,
   deleteUser,
   searchUsersByName,
   getUsersCount,
-} from "../../redux/userSlice";
+} from "../../store/userSlice";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import UserTableSkeletonRow from "./UserTableSkeletonRow";
 import {
@@ -21,7 +21,7 @@ import {
   TableContainer,
   TableRow,
 } from "@mui/material";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../store/store";
 import { useNavigate } from "react-router-dom";
 import NoProfilePicture from "../../assets/images/noProfilePicture.png";
 import ConfirmDeleteUserModal from "../modals/ConfirmDeleteUserModal";
@@ -32,6 +32,7 @@ import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import CustomPagination from "../ui/CustomPagination";
 import UserTableHead from "./UserTableHead";
+import { formatDateTime } from "../../utils/formatDateTime";
 
 const UsersTable = () => {
   const navigate = useNavigate();
@@ -243,16 +244,7 @@ const UsersTable = () => {
                       new Date(user.dateOfBirth).getFullYear()}{" "}
                     років)
                   </TableCell>
-                  <TableCell>
-                    {new Date(user.createdAt).toLocaleString("uk-UA", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      second: "2-digit",
-                    })}
-                  </TableCell>
+                  <TableCell>{formatDateTime(user.createdAt)}</TableCell>
                   <TableCell>
                     <IconButton
                       disabled={staff?.role !== "admin"}

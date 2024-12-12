@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { RootState } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RootState } from "../../store/store";
 import { useEffect, useState } from "react";
 import {
   getUserAddressByID,
   totalDeleteAddress,
-} from "../../redux/addressSlice";
+} from "../../store/addressSlice";
 import { Grid, Paper, Button, Box, Skeleton } from "@mui/material";
 import CustomErrorBlock from "../../components/ui/CustomErrorBlock";
 import CustomIconButton from "../../components/ui/CustomIconButton";

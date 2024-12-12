@@ -2,11 +2,12 @@ import { Staff } from "../../../types/staffTypes";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import { useAppDispatch } from "../../../redux/hooks";
-import { logout } from "../../../redux/authSlice";
+import { useAppDispatch } from "../../../store/hooks";
+import { logout } from "../../../store/authSlice";
 import { useState } from "react";
 import ManageAccountModal from "../../modals/ManageAccountModal";
 import CustomTooltip from "../CustomTooltip";
+import { formatDateTime } from "../../../utils/formatDateTime";
 
 type Props = {
   staff: Staff | null;
@@ -76,10 +77,7 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
 
           <br />
           <br />
-          <p>
-            {" "}
-            {new Date(staff?.createdAt as string).toLocaleDateString("uk-UA")}
-          </p>
+          <p>{formatDateTime(staff?.createdAt as string)}</p>
 
           <br />
           <Grid container spacing={1}>

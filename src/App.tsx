@@ -7,8 +7,8 @@ import { lazy, Suspense } from "react";
 import CustomLoader from "./components/ui/CustomLoader";
 import ScrollToTop from "./utils/scrollToTop";
 import PrivateRoute from "./utils/PrivateRoute";
-import { useAppSelector } from "./redux/hooks";
-import { RootState } from "./redux/store";
+import { useAppSelector } from "./store/hooks";
+import { RootState } from "./store/store";
 import Footer from "./layouts/Footer";
 
 const AuthPage = lazy(() => import("./pages/Auth/AuthPage"));

@@ -18,14 +18,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { Car } from "../../../types/carTypes";
-import { deleteCar, getAllUsersCars } from "../../../redux/carSlice";
+import { deleteCar, getAllUsersCars } from "../../../store/carSlice";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import ConfirmDeleteCarModal from "../../modals/ConfirmDeleteCarModal";
 import CarTableSkeletonRow from "../../CarsTable/CarTableSkeletonRow";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootState } from "../../../redux/store";
+import { RootState } from "../../../store/store";
 
 type Props = {
   isCarVisible: boolean;

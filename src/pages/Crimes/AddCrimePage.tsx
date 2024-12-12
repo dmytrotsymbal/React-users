@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { CriminalRecords } from "../../types/criminalRecordsTypes";
 import {
   addCriminalRecordToUser,
   getAllPrisons,
-} from "../../redux/criminalRecordSlice";
+} from "../../store/criminalRecordSlice";
 import * as Yup from "yup";
 import {
   Box,
@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../store/store";
 import { useEffect } from "react";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";

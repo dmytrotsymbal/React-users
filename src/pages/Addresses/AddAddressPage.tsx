@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../redux/hooks";
-import { addAddressToUser } from "../../redux/addressSlice";
+import { useAppDispatch } from "../../store/hooks";
+import { addAddressToUser } from "../../store/addressSlice";
 import { Button, TextField, Paper, Grid, Typography, Box } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";

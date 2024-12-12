@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../redux/hooks";
-import { addCarToUser } from "../../redux/carSlice";
+import { useAppDispatch } from "../../store/hooks";
+import { addCarToUser } from "../../store/carSlice";
 import { Button, TextField, Paper, Grid, Typography, Box } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";

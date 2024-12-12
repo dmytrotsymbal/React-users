@@ -15,8 +15,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { RootState } from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { RootState } from "../../../store/store";
 import CustomTooltip from "../../ui/CustomTooltip";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -27,7 +27,7 @@ import ConfirmDeleteCrimeModal from "../../modals/ConfirmDeleteCrimeModal";
 import {
   deleteCriminalRecord,
   getAllUsersCriminalRecords,
-} from "../../../redux/criminalRecordSlice";
+} from "../../../store/criminalRecordSlice";
 import { CriminalRecords } from "../../../types/criminalRecordsTypes";
 
 type Props = {

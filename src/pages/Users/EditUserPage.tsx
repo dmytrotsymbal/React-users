@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { RootState } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RootState } from "../../store/store";
 import { useEffect, useMemo, useState } from "react";
-import { getUserById, updateUser } from "../../redux/userSlice";
-import { deletePhoto, addPhoto } from "../../redux/photoSlice";
+import { getUserById, updateUser } from "../../store/userSlice";
+import { deletePhoto, addPhoto } from "../../store/photoSlice";
 import AddPhotoModal from "../../components/modals/AddPhotoModal";
 import { Photo } from "../../types/photoTypes";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";

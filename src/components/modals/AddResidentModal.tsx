@@ -9,10 +9,10 @@ import {
   Autocomplete,
   Box,
 } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { addExistingUserToAddress } from "../../redux/addressSlice";
-import { searchUsersByName } from "../../redux/userSlice";
-import { RootState } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { addExistingUserToAddress } from "../../store/addressSlice";
+import { searchUsersByName } from "../../store/userSlice";
+import { RootState } from "../../store/store";
 import useDebounce from "../../hooks/useDebounce";
 
 type Props = {

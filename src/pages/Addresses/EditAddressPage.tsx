@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { RootState } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RootState } from "../../store/store";
 import { useEffect, useMemo } from "react";
-import { getUserAddressByID, updateAddress } from "../../redux/addressSlice";
+import { getUserAddressByID, updateAddress } from "../../store/addressSlice";
 import { Button, TextField, Paper, Grid, Typography, Box } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";

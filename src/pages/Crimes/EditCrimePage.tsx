@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { RootState } from "../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { RootState } from "../../store/store";
 import { CriminalRecords } from "../../types/criminalRecordsTypes";
 import {
   getAllPrisons,
   getCriminalRecordById,
   updateCriminalRecord,
-} from "../../redux/criminalRecordSlice";
+} from "../../store/criminalRecordSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Box,

@@ -1,5 +1,5 @@
 import { Box, Container, Typography } from "@mui/material";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppSelector } from "../../store/hooks";
 
 const Footer = () => {
   const lightTheme = useAppSelector((state) => state.theme.lightTheme);

@@ -11,15 +11,15 @@ import {
   TableRow,
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import NoProfilePicture from "../../assets/images/noProfilePicture.png";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../store/store";
 import {
   deleteCar,
   getAllCars,
   getCarsCount,
   searchCars,
-} from "../../redux/carSlice";
+} from "../../store/carSlice";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CarTableSkeletonRow from "./CarTableSkeletonRow";

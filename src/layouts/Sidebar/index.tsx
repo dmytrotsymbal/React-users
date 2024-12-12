@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Drawer, Box, Typography, IconButton } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { User } from "../../types/userTypes";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   clearSelectedUsers,
   removeUserFromSelectedList,
-} from "../../redux/userSlice";
+} from "../../store/userSlice";
 import ConfirmDeleteUserFromListModal from "../../components/modals/ConfirmDeleteUserFromListModal";
 import CustomTooltip from "../../components/ui/CustomTooltip";
 import UserCard from "../../components/ui/UserCard";

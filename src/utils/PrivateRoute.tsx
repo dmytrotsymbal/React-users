@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import { useAppSelector } from "../redux/hooks";
-import { RootState } from "../redux/store";
+import { useAppSelector } from "../store/hooks";
+import { RootState } from "../store/store";
 
 type Props = {
   children: React.ReactNode;

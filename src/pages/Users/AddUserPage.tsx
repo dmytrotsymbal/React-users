@@ -1,8 +1,8 @@
 import { Box, Paper, TextField, Button, Typography } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useAppDispatch } from "../../redux/hooks";
-import { createUser } from "../../redux/userSlice";
+import { useAppDispatch } from "../../store/hooks";
+import { createUser } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CustomIconButton from "../../components/ui/CustomIconButton";
