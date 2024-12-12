@@ -1,5 +1,5 @@
 import { Paper, Grid, Typography, IconButton, Avatar } from "@mui/material";
-import NoProfilePicture from "../../../assets/noProfilePicture.webp";
+import NoProfilePicture from "../../../assets/images/noProfilePicture.png";
 import { User } from "../../../types/userTypes";
 import { useNavigate } from "react-router-dom";
 import RemoveIcon from "@mui/icons-material/Remove";

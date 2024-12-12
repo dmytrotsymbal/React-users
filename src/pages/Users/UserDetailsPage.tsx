@@ -9,7 +9,7 @@ import {
 import { RootState } from "../../redux/store";
 import { Paper, Avatar, Grid, Button, Box } from "@mui/material";
 import UserPaperSlider from "../../components/ui/UserPaperSlider";
-import NoProfilePicture from "../../assets/noProfilePicture.webp";
+import NoProfilePicture from "../../assets/images/noProfilePicture.png";
 import { Skeleton } from "@mui/material";
 import ConfirmDeleteModal from "../../components/modals/ConfirmDeleteUserModal";
 import CarAccordion from "../../components/Accardions/CarAccordion";

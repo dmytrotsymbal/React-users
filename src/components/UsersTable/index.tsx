@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { RootState } from "../../redux/store";
 import { useNavigate } from "react-router-dom";
-import NoProfilePicture from "../../assets/noProfilePicture.webp";
+import NoProfilePicture from "../../assets/images/noProfilePicture.png";
 import ConfirmDeleteUserModal from "../modals/ConfirmDeleteUserModal";
 import { User } from "../../types/userTypes";
 import useDebounce from "../../hooks/useDebounce";

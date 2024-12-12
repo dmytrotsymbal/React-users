@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import NoProfilePicture from "../../assets/noProfilePicture.webp";
+import NoProfilePicture from "../../assets/images/noProfilePicture.png";
 import { RootState } from "../../redux/store";
 import {
   deleteCar,

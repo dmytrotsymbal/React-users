@@ -8,7 +8,7 @@ import {
   Avatar,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import HeaderLogo from "../../assets/headerLogo.webp";
+import HeaderLogo from "../../assets/images/headerLogo.png";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LightModeIcon from "@mui/icons-material/LightMode";
