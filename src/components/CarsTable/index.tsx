@@ -37,6 +37,8 @@ const CarsTable = () => {
 
   const lightTheme = useAppSelector((state) => state.theme.lightTheme);
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const debouncedSearchQuery = useDebounce(searchQuery, 1500);
@@ -232,6 +234,9 @@ const CarsTable = () => {
                         setSelectedCar(car);
                         setOpenDeleteModal(true);
                       }}
+                      disabled={
+                        staff?.role !== "admin" && staff?.role !== "moderator"
+                      }
                     >
                       <DeleteForeverIcon sx={{ color: "red" }} />
                     </IconButton>

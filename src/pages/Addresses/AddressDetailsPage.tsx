@@ -25,6 +25,8 @@ const AddressDetailsPage = () => {
     state.address.addresses.find((a) => a.addressID === Number(addressId))
   );
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   const { loading, error } = useAppSelector(
     (state: RootState) => state.address
   );
@@ -71,7 +73,7 @@ const AddressDetailsPage = () => {
         address && (
           <Paper
             elevation={3}
-            sx={{ padding: "16px !important", position: "relative" }}
+            sx={{ padding: "16px !important", position: "relative", mb: 2 }}
           >
             <Grid container spacing={2}>
               <Grid item xs={9}>
@@ -127,6 +129,9 @@ const AddressDetailsPage = () => {
                   color="error"
                   sx={{ width: "200px" }}
                   onClick={() => setOpenDeleteModal(true)}
+                  disabled={
+                    staff?.role !== "admin" && staff?.role !== "moderator"
+                  }
                 >
                   Видалити запис
                 </Button>

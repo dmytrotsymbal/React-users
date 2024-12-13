@@ -29,6 +29,8 @@ const UserDetailsPage = () => {
 
   const selectedList = useAppSelector((state: RootState) => state.user); // масив вибраних юзерів для дізейбла кнопки
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -79,7 +81,9 @@ const UserDetailsPage = () => {
         <CustomErrorBlock />
       ) : (
         user && (
-          <Paper sx={{ padding: "16px !important", position: "relative" }}>
+          <Paper
+            sx={{ padding: "16px !important", position: "relative", mb: 2 }}
+          >
             <Grid container spacing={2} sx={{ height: "300px", width: "100%" }}>
               <Grid item xs={12} sm={3} md={3} lg={3}>
                 {!user.photos?.length ? (
@@ -226,6 +230,9 @@ const UserDetailsPage = () => {
                   color="error"
                   sx={{ width: "220px" }}
                   onClick={() => setOpenDeleteModal(true)}
+                  disabled={
+                    staff?.role !== "admin" && staff?.role !== "moderator"
+                  }
                 >
                   Видалити профіль
                 </Button>
