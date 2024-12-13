@@ -28,15 +28,19 @@ const Header = () => {
     (state: RootState) => state.auth
   );
 
-  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
   const toggleDrawer = (open: boolean) => {
     setIsDrawerOpen(open);
   };
 
-  const togglePopover = () => {
-    setIsPopoverOpen(!isPopoverOpen);
+  const openDropdown = () => {
+    setIsDropdownOpen(true);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -118,7 +122,7 @@ const Header = () => {
 
               <Box>
                 <CustomTooltip title="Профіль" placement="bottom">
-                  <IconButton onClick={togglePopover}>
+                  <IconButton onClick={openDropdown}>
                     {isLoggedIn ? (
                       <Avatar
                         sx={{
@@ -134,9 +138,12 @@ const Header = () => {
                   </IconButton>
                 </CustomTooltip>
 
-                {isPopoverOpen && (
-                  <HeaderPopover staff={staff} isLoggedIn={isLoggedIn} />
-                )}
+                <HeaderPopover
+                  staff={staff}
+                  isLoggedIn={isLoggedIn}
+                  isDropdownOpen={isDropdownOpen}
+                  onClose={closeDropdown}
+                />
               </Box>
             </Box>
           </Toolbar>

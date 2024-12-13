@@ -1,43 +1,60 @@
 import { Staff } from "../../../types/staffTypes";
-import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+import { Box, Chip, Grid, Typography, Menu, Button } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useAppDispatch } from "../../../store/hooks";
 import { logout } from "../../../store/authSlice";
 import { useState } from "react";
 import ManageAccountModal from "../../modals/ManageAccountModal";
-import CustomTooltip from "../CustomTooltip";
 import { formatDateTime } from "../../../utils/formatDateTime";
+import CustomTooltip from "../CustomTooltip";
 
 type Props = {
   staff: Staff | null;
   isLoggedIn: boolean;
+  isDropdownOpen: boolean;
+  onClose: () => void;
 };
 
-const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
+const HeaderPopover = ({
+  staff,
+  isLoggedIn,
+  isDropdownOpen,
+  onClose,
+}: Props) => {
   const dispatch = useAppDispatch();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const goLogout = () => {
     dispatch(logout());
     window.location.reload();
   };
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   return (
-    <>
-      {isLoggedIn === true ? (
-        <Box
-          sx={{
-            marginLeft: "-120px",
-            width: "200px",
-            backgroundColor: "white",
-            position: "absolute",
-            border: "1px solid rgba(0, 0, 0, 0.12)",
-            borderRadius: "4px",
-            padding: "5px",
-            color: "black",
-          }}
-        >
+    <Menu
+      open={isDropdownOpen}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      anchorEl={isDropdownOpen ? document.body : null}
+      onClose={onClose}
+      PaperProps={{
+        style: {
+          width: 250,
+          height: "auto",
+          marginTop: "55px",
+          zIndex: 99999999999999,
+          padding: "10px",
+        },
+      }}
+    >
+      {isLoggedIn ? (
+        <Box>
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <Typography variant="h6">{staff?.nickname}</Typography>
@@ -48,7 +65,7 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
               xs={6}
               sx={{
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "flex-end",
               }}
             >
               <Chip
@@ -68,7 +85,7 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
           <a
             target="_blank"
             style={{
-              fontSize: "12px",
+              fontSize: "16px",
             }}
             href={`mailto:${staff?.email}`}
           >
@@ -77,7 +94,13 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
 
           <br />
           <br />
-          <p>{formatDateTime(staff?.createdAt as string)}</p>
+          <p
+            style={{
+              fontSize: "15px",
+            }}
+          >
+            {formatDateTime(staff?.createdAt as string)}
+          </p>
 
           <br />
           <Grid container spacing={1}>
@@ -121,35 +144,17 @@ const HeaderPopover = ({ staff, isLoggedIn }: Props) => {
               </CustomTooltip>
             </Grid>
           </Grid>
+          {isModalOpen && (
+            <ManageAccountModal
+              open={isModalOpen}
+              handleClose={() => setIsModalOpen(false)}
+            />
+          )}
         </Box>
       ) : (
-        <Box
-          sx={{
-            marginLeft: "-120px",
-            width: "200px",
-            height: "200px",
-            backgroundColor: "white",
-            position: "absolute",
-            border: "1px solid rgba(0, 0, 0, 0.12)",
-            borderRadius: "4px",
-            padding: "5px",
-            color: "black",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <p>Ви не увійшли</p>
-        </Box>
+        <Typography>Ви не увійшли</Typography>
       )}
-
-      {isModalOpen && (
-        <ManageAccountModal
-          open={isModalOpen}
-          handleClose={() => setIsModalOpen(false)}
-        />
-      )}
-    </>
+    </Menu>
   );
 };
 
