@@ -7,8 +7,8 @@ import * as Yup from "yup";
 import { Car } from "../../types/carTypes";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useState } from "react";
 
-// Валидация формы с помощью Yup
 const validationSchema = Yup.object({
   firm: Yup.string()
     .max(40, "Firm must be at most 40 characters")
@@ -40,7 +40,8 @@ const AddCarPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  // Начальные значения формы
+  const [licensePlateError, setlicensePlateError] = useState<string>("");
+
   const initialValues = {
     firm: "",
     model: "",
@@ -50,24 +51,37 @@ const AddCarPage = () => {
     carPhotoURL: "",
   };
 
-  // Функция для обработки отправки формы
   const handleSubmit = async (values: typeof initialValues) => {
-    if (userId) {
-      const car: Car = {
-        ...values,
-        year: Number(values.year), // Преобразуем год в число
-        carID: 0, // Add carID property with the correct type
-        userID: userId, // Add userID property
-      };
-      await dispatch(addCarToUser({ userID: userId, car }));
-      navigate(-1); // Переход на предыдущую страницу
+    try {
+      const response = await fetch(
+        `/api/Car/check-licensePlate?licensePlate=${values.licensePlate}`
+      );
+
+      if (response.status === 409) {
+        const data = await response.json();
+        setlicensePlateError(data.message);
+        return;
+      }
+
+      if (userId) {
+        const car: Car = {
+          ...values,
+          year: Number(values.year), // Преобразуем год в число
+          carID: 0, // Add carID property with the correct type
+          userID: userId, // Add userID property
+        };
+        await dispatch(addCarToUser({ userID: userId, car }));
+        navigate(-1); // Переход на предыдущую страницу
+      }
+    } catch (error) {
+      console.error("Failed to add car:", error);
     }
   };
 
   return (
     <>
       <br />
-      <Paper style={{ padding: 16, position: "relative" }}>
+      <Paper style={{ padding: 16, position: "relative", marginBottom: 2 }}>
         <Typography variant="h6">Додати автомобіль</Typography>
         <br />
         <Formik
@@ -129,7 +143,14 @@ const AddCarPage = () => {
                     fullWidth
                     label="License Plate"
                     name="licensePlate"
-                    helperText={<ErrorMessage name="licensePlate" />}
+                    helperText={
+                      licensePlateError || <ErrorMessage name="licensePlate" />
+                    }
+                    error={
+                      Boolean(licensePlateError) ||
+                      Boolean(<ErrorMessage name="licensePlate" />)
+                    }
+                    onFocus={() => setlicensePlateError("")}
                   />
                 </Grid>
                 <Grid item xs={12}>

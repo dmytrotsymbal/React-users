@@ -11,7 +11,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Car } from "../../types/carTypes";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 
-// Валідація форми за допомогою Yup
 const validationSchema = Yup.object({
   firm: Yup.string()
     .max(40, "Firm must be at most 40 characters")
