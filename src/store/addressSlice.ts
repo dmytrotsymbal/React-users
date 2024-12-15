@@ -177,12 +177,16 @@ export const addExistingUserToAddress = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      // Очистка значення moveOutDate
+      const sanitizedMoveOutDate =
+        moveOutDate?.trim() === "" ? null : moveOutDate;
+
       const response = await axios.post(
         `/api/Address/add-existing-user/${addressID}`,
         {
           userID,
           moveInDate,
-          moveOutDate,
+          moveOutDate: sanitizedMoveOutDate, // NULL замість порожнього рядка
         },
         {
           headers: {
@@ -198,7 +202,12 @@ export const addExistingUserToAddress = createAsyncThunk(
         );
       }
 
-      return { userID, addressID, moveInDate, moveOutDate };
+      return {
+        userID,
+        addressID,
+        moveInDate,
+        moveOutDate: sanitizedMoveOutDate,
+      };
     } catch (error) {
       const axiosError = error as AxiosError;
       return rejectWithValue(

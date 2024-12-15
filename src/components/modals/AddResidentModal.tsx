@@ -53,13 +53,16 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
     console.log("MoveInDate:", moveInDate);
     console.log("MoveOutDate:", moveOutDate);
 
+    const sanitizedMoveOutDate =
+      moveOutDate?.trim() === "" ? null : moveOutDate;
+
     if (selectedUserID && moveInDate) {
       dispatch(
         addExistingUserToAddress({
           addressID: Number(addressID),
           userID: selectedUserID,
           moveInDate,
-          moveOutDate,
+          moveOutDate: sanitizedMoveOutDate, // NULL замість порожнього рядка
         })
       );
       onClose();
