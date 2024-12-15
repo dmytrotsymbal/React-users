@@ -39,7 +39,7 @@ const AddressAccordion = ({
   isAddressVisible,
   showAllUsersAdresses,
 }: Props) => {
-  const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
+  const { userId } = useParams<{ userId: string }>();
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -51,26 +51,24 @@ const AddressAccordion = ({
   );
 
   const [isAddressAccordionExpanded, setIsAddressAccordionExpanded] =
-    useState<boolean>(false); // Додаємо стан для відстеження відкриття аккордеону
+    useState<boolean>(false); // стан для відстеження відкриття аккордеону
 
   const handleAccordionChange = (
-    event: React.SyntheticEvent,
+    _: React.SyntheticEvent,
     isExpanded: boolean
   ) => {
     setIsAddressAccordionExpanded(isExpanded);
-    event.preventDefault();
+
     if (isExpanded && !isAddressVisible) {
-      // Затримка для завершення анімації
       setTimeout(() => {
         dispatch(getAllUsersAddresses(String(userId)));
-        console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersAddresses");
+        console.log("СПРАЦЮВАЛА ФУНКЦІЯ getAllUsersAddresses");
         showAllUsersAdresses();
       }, 1000);
     }
   };
 
   // delete address
-
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
 
@@ -153,12 +151,10 @@ const AddressAccordion = ({
               </TableHead>
               <TableBody>
                 {loading ? (
-                  // Показуємо скелетони під час завантаження
                   Array.from({ length: 2 }).map((_, i) => (
                     <AddressTableSkeletonRow key={`skeleton-${i}`} />
                   ))
                 ) : error ? (
-                  // Показуємо повідомлення про помилку
                   <TableRow>
                     <TableCell colSpan={8} align="center">
                       <Typography variant="h6" color="error">
@@ -175,7 +171,6 @@ const AddressAccordion = ({
                     </TableCell>
                   </TableRow>
                 ) : (
-                  // Відображаємо адреси, якщо вони є
                   addresses.map((address) => (
                     <TableRow
                       key={address.addressID}
@@ -272,17 +267,3 @@ const AddressAccordion = ({
 };
 
 export default AddressAccordion;
-
-// export const StyledTableCell = styled(TableCell)(() => ({
-//   color: "black",
-//   fontSize: "1rem",
-//   borderLeft: "2px solid #229799",
-//   borderRight: "2px solid #229799",
-
-//   "&:first-child": {
-//     borderLeft: "none",
-//   },
-//   "&:last-child": {
-//     borderRight: "none",
-//   },
-// }));

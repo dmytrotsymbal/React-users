@@ -82,7 +82,7 @@ const AddCrimePage = () => {
     <>
       <br />
       <Paper style={{ padding: 16, position: "relative" }}>
-        <Typography variant="h6">Додати автомобіль</Typography>
+        <Typography variant="h6">Додати судимість</Typography>
         <br />
         <Formik
           initialValues={initialValues}

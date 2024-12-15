@@ -49,6 +49,10 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
   }, [open]);
 
   const handleSubmit = () => {
+    console.log("Selected UserID:", selectedUserID);
+    console.log("MoveInDate:", moveInDate);
+    console.log("MoveOutDate:", moveOutDate);
+
     if (selectedUserID && moveInDate) {
       dispatch(
         addExistingUserToAddress({
@@ -59,6 +63,8 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
         })
       );
       onClose();
+    } else {
+      console.error("UserID або MoveInDate відсутні");
     }
   };
 
@@ -83,21 +89,24 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
       </Box>
       <DialogContent>
         <Autocomplete
-          options={users}
+          options={users || []}
           getOptionLabel={(option) =>
             `${option.firstName} ${option.lastName} (ID: ${option.userID})`
           }
+          isOptionEqualToValue={(option, value) =>
+            option.userID === value.userID
+          }
           onInputChange={(_, value) => setSearchQuery(value)}
-          onChange={(_, value) => setSelectedUserID(value?.userID || null)}
+          onChange={(_, value) => {
+            console.log("Selected user:", value);
+            setSelectedUserID(value ? value.userID : null);
+          }}
           renderInput={(params) => (
             <TextField
               {...params}
               label="Пошук користувача за іменем або ID"
               fullWidth
               margin="dense"
-              InputProps={{
-                ...params.InputProps,
-              }}
             />
           )}
         />
@@ -131,7 +140,10 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
         }}
       >
         <Button
-          onClick={handleSubmit}
+          onClick={() => {
+            handleSubmit();
+            window.location.reload();
+          }}
           color="success"
           variant="contained"
           disabled={!selectedUserID || !moveInDate}

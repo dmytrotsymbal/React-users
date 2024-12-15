@@ -33,7 +33,7 @@ type Props = {
 };
 
 const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
-  const { userId } = useParams<{ userId: string }>(); // Отримуємо параметр userId з URL
+  const { userId } = useParams<{ userId: string }>();
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -48,18 +48,16 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
     useState<boolean>(false);
 
   const handleAccordionChange = (
-    event: React.SyntheticEvent,
+    _: React.SyntheticEvent,
     isExpanded: boolean
   ) => {
     setIsCarAccordionExpanded(isExpanded);
-    event.preventDefault();
     if (isExpanded && !isCarVisible) {
-      // Затримка для завершення анімації
       setTimeout(() => {
         dispatch(getAllUsersCars(String(userId)));
-        console.log("СРАБОТАЛА ФУНКЦИЯ getAllUsersCars");
+        console.log("СПРАЦЮВАЛА ФУНКЦІЯ getAllUsersCars");
         showAllUsersCars();
-      }, 1000); // Затримка в мілісекундах (300 мс)
+      }, 1000);
     }
   };
 
@@ -140,7 +138,6 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
               </TableHead>
               <TableBody>
                 {loading ? (
-                  // Показуємо скелетони під час завантаження
                   Array.from({ length: 2 }).map((_, i) => (
                     <CarTableSkeletonRow
                       key={`skeleton-${i}`}
@@ -148,7 +145,6 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
                     />
                   ))
                 ) : error ? (
-                  // Показуємо повідомлення про помилку
                   <TableRow>
                     <TableCell colSpan={8} align="center">
                       <Typography variant="h6" color="error">

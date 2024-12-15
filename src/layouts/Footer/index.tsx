@@ -16,7 +16,7 @@ const Footer = () => {
     >
       <Container maxWidth="xl">
         <Typography variant="body1">
-          © {new Date().getFullYear()} My Company. All rights reserved.
+          © {new Date().getFullYear()} React Users. All rights reserved.
         </Typography>
       </Container>
     </Box>

@@ -52,15 +52,14 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
   const [hoveredPrisonId, setHoveredPrisonId] = useState<number | null>(null);
 
   const handleAccordionChange = (
-    event: React.SyntheticEvent,
+    _: React.SyntheticEvent,
     isExpanded: boolean
   ) => {
     setIsCrimeAccordionExpanded(isExpanded);
-    event.stopPropagation();
     if (isExpanded && !isCrimesVisible) {
-      // Задержка для завершения анимации
       setTimeout(() => {
         dispatch(getAllUsersCriminalRecords(String(userId)));
+        console.log("СПРАЦЮВАЛА ФУНКЦІЯ getAllUsersCriminalRecords");
         showAllUsersCrimes();
       }, 1000);
     }

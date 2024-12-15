@@ -45,7 +45,7 @@ const ResidentAccordion = ({
   );
 
   const [isResidentAccordionExpanded, setIsResidentAccordionExpanded] =
-    useState<boolean>(false); // Додаємо стан для відстеження відкриття аккордеону
+    useState<boolean>(false); // стан для відстеження відкриття аккордеону
 
   const [isAddResidentModalOpen, setIsAddResidentModalOpen] =
     useState<boolean>(false);
@@ -59,7 +59,7 @@ const ResidentAccordion = ({
     if (isExpanded && !isLivingHistoryVisible) {
       setTimeout(() => {
         dispatch(getAddressLivingHistory(Number(addressId)));
-        console.log("СРАБОТАЛА ФУНКЦИЯ getAddressLivingHistory");
+        console.log("СПРАЦЮВАЛА ФУНКЦІЯ getAddressLivingHistory");
         showAllLivingHistory();
       }, 1000);
     }
@@ -173,27 +173,6 @@ const ResidentAccordion = ({
                       <TableCell>{resident.firstName}</TableCell>
                       <TableCell>{resident.lastName}</TableCell>
                       <TableCell>{resident.email}</TableCell>
-
-                      {/* <TableCell>
-                        <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate(`/address/edit/${address.addressID}`);
-                        }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-
-                        <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedAddress(address);
-                          setOpenDeleteModal(true);
-                        }}
-                        >
-                          <DeleteForeverIcon sx={{ color: "red" }} />
-                        </IconButton>
-                      </TableCell> */}
                     </TableRow>
                   ))
                 )}

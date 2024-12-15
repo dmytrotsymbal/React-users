@@ -8,7 +8,6 @@ import { Address } from "../../types/addressTypes";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 
-// Валидация формы с помощью Yup
 const validationSchema = Yup.object({
   streetAddress: Yup.string()
     .max(100, "Street address must be at most 100 characters")
@@ -87,7 +86,9 @@ const AddAddressPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16, position: "relative" }}>
+      <Paper
+        style={{ padding: 16, position: "relative", marginBottom: "16px" }}
+      >
         <Typography variant="h6">Додати адресу</Typography>
         <br />
         <Formik
