@@ -46,6 +46,8 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
     (state: RootState) => state.crime
   );
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   const [isCrimeAccordionExpanded, setIsCrimeAccordionExpanded] =
     useState<boolean>(false);
 
@@ -228,6 +230,7 @@ const CrimesAccardion = ({ isCrimesVisible, showAllUsersCrimes }: Props) => {
                             setSelectedCrime(crime);
                             setOpenDeleteModal(true);
                           }}
+                          disabled={staff?.role !== "admin"}
                         >
                           <DeleteForeverIcon sx={{ color: "red" }} />
                         </IconButton>

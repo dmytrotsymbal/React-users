@@ -50,6 +50,8 @@ const AddressAccordion = ({
     (state: RootState) => state.address
   );
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   const [isAddressAccordionExpanded, setIsAddressAccordionExpanded] =
     useState<boolean>(false); // стан для відстеження відкриття аккордеону
 
@@ -241,6 +243,7 @@ const AddressAccordion = ({
                             setSelectedAddress(address);
                             setOpenDeleteModal(true);
                           }}
+                          disabled={staff?.role !== "admin"}
                         >
                           <RemoveIcon />
                         </IconButton>

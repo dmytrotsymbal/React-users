@@ -230,9 +230,7 @@ const UserDetailsPage = () => {
                   color="error"
                   sx={{ width: "220px" }}
                   onClick={() => setOpenDeleteModal(true)}
-                  disabled={
-                    staff?.role !== "admin" && staff?.role !== "moderator"
-                  }
+                  disabled={staff?.role !== "admin"}
                 >
                   Видалити профіль
                 </Button>

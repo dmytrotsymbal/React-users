@@ -44,6 +44,8 @@ const ResidentAccordion = ({
     (state: RootState) => state.address
   );
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   const [isResidentAccordionExpanded, setIsResidentAccordionExpanded] =
     useState<boolean>(false); // стан для відстеження відкриття аккордеону
 
@@ -100,6 +102,9 @@ const ResidentAccordion = ({
                   e.stopPropagation();
                   setIsAddResidentModalOpen(true);
                 }}
+                disabled={
+                  staff?.role !== "admin" && staff?.role !== "moderator"
+                }
               >
                 <AddIcon
                   sx={{

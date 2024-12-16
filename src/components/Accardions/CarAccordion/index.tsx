@@ -44,6 +44,8 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
     (state: RootState) => state.car
   );
 
+  const { staff } = useAppSelector((state: RootState) => state.auth);
+
   const [isCarAccordionExpanded, setIsCarAccordionExpanded] =
     useState<boolean>(false);
 
@@ -186,6 +188,7 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
                             setSelectedCar(car);
                             setOpenDeleteModal(true);
                           }}
+                          disabled={staff?.role !== "admin"}
                         >
                           <DeleteForeverIcon sx={{ color: "red" }} />
                         </IconButton>
