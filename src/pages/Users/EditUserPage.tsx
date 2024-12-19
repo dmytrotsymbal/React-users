@@ -23,7 +23,6 @@ import CustomLoader from "../../components/ui/CustomLoader";
 import CustomIconButton from "../../components/ui/CustomIconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-// Валідація форми за допомогою Yup
 const validationSchema = Yup.object({
   firstName: Yup.string()
     .matches(
@@ -167,7 +166,9 @@ const EditUserPage = () => {
   return (
     <>
       <br />
-      <Paper style={{ padding: 16, position: "relative" }}>
+      <Paper
+        style={{ padding: 16, position: "relative", marginBottom: "16px" }}
+      >
         <Typography variant="h6">Редагувати користувача</Typography>
         <br />
         <Formik

@@ -3,8 +3,6 @@ import ClearIcon from "@mui/icons-material/Clear";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useState, useEffect, useRef } from "react";
 import CustomSearchDropdown from "../CustomSearchDropdown";
-import { useAppDispatch } from "../../../store/hooks";
-import { searchUsersByName } from "../../../store/userSlice";
 
 type Props = {
   searchQuery: string;
@@ -19,7 +17,6 @@ const CustomSearchInput = ({
   handleClearSearch,
   placeholder,
 }: Props) => {
-  const dispatch = useAppDispatch();
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
@@ -86,9 +83,7 @@ const CustomSearchInput = ({
       <Box ref={dropdownRef}>
         <CustomSearchDropdown
           isDropdownOpen={isDropdownOpen}
-          onApplyFilters={(filters) => {
-            dispatch(searchUsersByName({ ...filters, searchQuery }));
-          }}
+          searchQuery={searchQuery}
         />
       </Box>
     </Box>

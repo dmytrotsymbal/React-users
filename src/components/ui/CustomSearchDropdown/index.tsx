@@ -9,6 +9,8 @@ import {
   Grid,
 } from "@mui/material";
 import { UserSearchFilters } from "../../../types/userTypes";
+import { searchUsersByName } from "../../../store/userSlice";
+import { useAppDispatch } from "../../../store/hooks";
 
 const validationSchema = Yup.object({
   minAge: Yup.number()
@@ -26,10 +28,16 @@ const validationSchema = Yup.object({
 
 type Props = {
   isDropdownOpen: boolean;
-  onApplyFilters: (filters: UserSearchFilters) => void;
+  searchQuery: string;
 };
 
-const CustomSearchDropdown = ({ isDropdownOpen, onApplyFilters }: Props) => {
+const CustomSearchDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
+  const dispatch = useAppDispatch();
+
+  const onSearchWithFilters = (filters: UserSearchFilters) => {
+    dispatch(searchUsersByName({ searchQuery, ...filters }));
+  };
+
   return (
     <Paper
       sx={{
@@ -56,7 +64,7 @@ const CustomSearchDropdown = ({ isDropdownOpen, onApplyFilters }: Props) => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          onApplyFilters({
+          onSearchWithFilters({
             minAge: values.minAge ? Number(values.minAge) : undefined,
             maxAge: values.maxAge ? Number(values.maxAge) : undefined,
             createdFrom: values.createdFrom || undefined,
@@ -93,7 +101,6 @@ const CustomSearchDropdown = ({ isDropdownOpen, onApplyFilters }: Props) => {
                 />
               </Grid>
               <Grid item xs={6}>
-                {" "}
                 <Field
                   as={TextField}
                   label="Максимальний вік"
