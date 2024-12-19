@@ -6,7 +6,11 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "./UserPaperSlider.scss";
 import { User } from "../../../types/userTypes";
-import { Skeleton } from "@mui/material";
+import { IconButton, Skeleton } from "@mui/material";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import { useState } from "react";
+import FullPhotoModal from "../../modals/FullPhotoModal";
+import { Photo } from "../../../types/photoTypes";
 
 type Props = {
   user: User;
@@ -14,6 +18,9 @@ type Props = {
 };
 
 const UserPaperSlider = ({ user, loading }: Props) => {
+  const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   return (
     <>
       {loading ? (
@@ -45,9 +52,38 @@ const UserPaperSlider = ({ user, loading }: Props) => {
                 src={photo.imageURL}
                 alt={photo.altText}
               />
+
+              <IconButton
+                onClick={() => {
+                  setSelectedPhoto(photo);
+                  setOpenModal(true);
+                }}
+                sx={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  border: "1px solid rgba(0, 0, 0, 0.12)",
+                  borderRadius: "50%",
+                  padding: "8px",
+                  transition: "all 0.3s ease-in-out",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  },
+                }}
+              >
+                <FullscreenIcon sx={{ color: "white" }} />
+              </IconButton>
             </SwiperSlide>
           ))}
         </Swiper>
+      )}
+
+      {openModal && (
+        <FullPhotoModal
+          open={openModal}
+          handleClose={() => setOpenModal(false)}
+          photo={selectedPhoto!}
+        />
       )}
     </>
   );
