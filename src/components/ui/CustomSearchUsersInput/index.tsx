@@ -2,7 +2,7 @@ import { Box, TextField, IconButton, InputAdornment } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useState, useEffect, useRef } from "react";
-import CustomSearchDropdown from "../CustomSearchDropdown";
+import CustomSearchDropdown from "../CustomSearchUsersDropdown";
 
 type Props = {
   searchQuery: string;
@@ -11,7 +11,7 @@ type Props = {
   placeholder: string;
 };
 
-const CustomSearchInput = ({
+const CustomSearchUsersInput = ({
   searchQuery,
   handleSearchInputChange,
   handleClearSearch,
@@ -90,4 +90,4 @@ const CustomSearchInput = ({
   );
 };
 
-export default CustomSearchInput;
+export default CustomSearchUsersInput;

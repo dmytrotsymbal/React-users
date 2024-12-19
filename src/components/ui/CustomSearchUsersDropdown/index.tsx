@@ -31,7 +31,7 @@ type Props = {
   searchQuery: string;
 };
 
-const CustomSearchDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
+const CustomSearchUsersDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
   const dispatch = useAppDispatch();
 
   const onSearchWithFilters = (filters: UserSearchFilters) => {
@@ -170,4 +170,4 @@ const CustomSearchDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
   );
 };
 
-export default CustomSearchDropdown;
+export default CustomSearchUsersDropdown;

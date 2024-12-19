@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CarTableSkeletonRow from "./CarTableSkeletonRow";
 import useDebounce from "../../hooks/useDebounce";
-import CustomSearchInput from "../ui/CustomSearchInput";
+import CustomSearchInput from "../ui/CustomSearchUsersInput";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import { Car } from "../../types/carTypes";

@@ -27,7 +27,7 @@ import NoProfilePicture from "../../assets/images/noProfilePicture.png";
 import ConfirmDeleteUserModal from "../modals/ConfirmDeleteUserModal";
 import { User } from "../../types/userTypes";
 import useDebounce from "../../hooks/useDebounce";
-import CustomSearchInput from "../ui/CustomSearchInput";
+import CustomSearchUsersInput from "../ui/CustomSearchUsersInput";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import CustomPagination from "../ui/CustomPagination";
@@ -154,7 +154,7 @@ const UsersTable = () => {
           Додати користувача
         </Button>
 
-        <CustomSearchInput
+        <CustomSearchUsersInput
           searchQuery={searchQuery}
           handleSearchInputChange={handleSearchInputChange}
           handleClearSearch={handleClearSearch}
