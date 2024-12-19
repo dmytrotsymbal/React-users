@@ -68,7 +68,16 @@ const UsersTable = () => {
     if (debouncedSearchQuery) {
       // Если строка поиска не пустая
       setIsTyping(false);
-      dispatch(searchUsersByName(debouncedSearchQuery)); // Поиск по имени
+      dispatch(
+        searchUsersByName({
+          searchQuery: debouncedSearchQuery,
+          minAge: undefined,
+          maxAge: undefined,
+          createdFrom: undefined,
+          createdTo: undefined,
+          onlyAdults: undefined,
+        })
+      );
     } else {
       setIsTyping(false);
       dispatch(

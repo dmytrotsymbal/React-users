@@ -1,6 +1,10 @@
 import { Box, TextField, IconButton, InputAdornment } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import { useState } from "react";
+import TuneIcon from "@mui/icons-material/Tune";
+import { useState, useEffect, useRef } from "react";
+import CustomSearchDropdown from "../CustomSearchDropdown";
+import { useAppDispatch } from "../../../store/hooks";
+import { searchUsersByName } from "../../../store/userSlice";
 
 type Props = {
   searchQuery: string;
@@ -15,15 +19,28 @@ const CustomSearchInput = ({
   handleClearSearch,
   placeholder,
 }: Props) => {
+  const dispatch = useAppDispatch();
   const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
-  const handleFocus = () => {
-    setIsFocused(true);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Закриття dropdown при кліку за межами
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(e.target as Node)
+    ) {
+      setIsDropdownOpen(false);
+    }
   };
 
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   return (
     <Box
@@ -32,6 +49,7 @@ const CustomSearchInput = ({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
+        position: "relative",
       }}
     >
       <TextField
@@ -45,19 +63,36 @@ const CustomSearchInput = ({
         variant="outlined"
         value={searchQuery}
         onChange={handleSearchInputChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
+          startAdornment: (
+            <InputAdornment position="start">
               <IconButton onClick={handleClearSearch}>
                 <ClearIcon />
               </IconButton>
             </InputAdornment>
           ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={() => setIsDropdownOpen((prev) => !prev)}>
+                <TuneIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
         }}
       />
+
+      <Box ref={dropdownRef}>
+        <CustomSearchDropdown
+          isDropdownOpen={isDropdownOpen}
+          onApplyFilters={(filters) => {
+            dispatch(searchUsersByName({ ...filters, searchQuery }));
+          }}
+        />
+      </Box>
     </Box>
   );
 };
+
 export default CustomSearchInput;

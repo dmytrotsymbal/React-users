@@ -16,3 +16,11 @@ export type UserDTO = {
   email: string;
   dateOfBirth: string;
 };
+
+export type UserSearchFilters = {
+  minAge?: number;
+  maxAge?: number;
+  createdFrom?: string;
+  createdTo?: string;
+  onlyAdults?: boolean;
+};

@@ -291,7 +291,7 @@ const EditAddressPage = () => {
                   <Field
                     as={TextField}
                     fullWidth
-                    value={values.moveOutDate || ""} // Если null, то пустая строка
+                    value={values.moveOutDate || ""}
                     label="Move Out Date"
                     name="moveOutDate"
                     type="date"

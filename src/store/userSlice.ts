@@ -74,11 +74,37 @@ export const getUserById = createAsyncThunk(
 
 export const searchUsersByName = createAsyncThunk(
   "user/searchUsersByName",
-  async (searchQuery: string, { rejectWithValue }) => {
+  async (
+    {
+      searchQuery,
+      minAge,
+      maxAge,
+      createdFrom,
+      createdTo,
+      onlyAdults,
+    }: {
+      searchQuery: string;
+      minAge?: number;
+      maxAge?: number;
+      createdFrom?: string;
+      createdTo?: string;
+      onlyAdults?: boolean;
+    },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axios.get(`/api/User/search`, {
-        params: { searchQuery },
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      const response = await axios.get("/api/User/search", {
+        params: {
+          searchQuery,
+          minAge,
+          maxAge,
+          createdFrom,
+          createdTo,
+          onlyAdults,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       return response.data;
     } catch (error) {
