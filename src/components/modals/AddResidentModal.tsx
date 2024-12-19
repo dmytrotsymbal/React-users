@@ -35,7 +35,16 @@ const AddUserToAddressModal = ({ addressID, open, onClose }: Props) => {
 
   useEffect(() => {
     if (debouncedSearchQuery) {
-      dispatch(searchUsersByName(debouncedSearchQuery));
+      dispatch(
+        searchUsersByName({
+          searchQuery: debouncedSearchQuery,
+          minAge: undefined,
+          maxAge: undefined,
+          createdFrom: undefined,
+          createdTo: undefined,
+          onlyAdults: undefined,
+        })
+      );
     }
   }, [debouncedSearchQuery, dispatch]);
 
