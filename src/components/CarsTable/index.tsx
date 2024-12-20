@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CarTableSkeletonRow from "./CarTableSkeletonRow";
 import useDebounce from "../../hooks/useDebounce";
-import CustomSearchInput from "../ui/CustomSearchUsersInput";
+import CustomSearchCarsInput from "../ui/CustomSearchCarsInput";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
 import CustomNotFoundPaper from "../ui/CustomNotFoundPaper";
 import { Car } from "../../types/carTypes";
@@ -64,7 +64,14 @@ const CarsTable = () => {
     if (debouncedSearchQuery) {
       // Если строка поиска не пустая
       setIsTyping(false);
-      dispatch(searchCars(debouncedSearchQuery));
+      dispatch(
+        searchCars({
+          searchQuery: debouncedSearchQuery,
+          minAge: undefined,
+          maxAge: undefined,
+          carColor: undefined,
+        })
+      );
     } else {
       setIsTyping(false);
       dispatch(
@@ -136,7 +143,7 @@ const CarsTable = () => {
           marginBottom: "16px",
         }}
       >
-        <CustomSearchInput
+        <CustomSearchCarsInput
           searchQuery={searchQuery}
           handleSearchInputChange={handleSearchInputChange}
           handleClearSearch={handleClearSearch}

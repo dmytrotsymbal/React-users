@@ -8,3 +8,9 @@ export type Car = {
   licensePlate: string;
   carPhotoURL: string;
 };
+
+export type CarSearchFilters = {
+  minYear?: number;
+  maxYear?: number;
+  carColor?: string;
+};

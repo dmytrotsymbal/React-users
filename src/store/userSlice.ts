@@ -93,7 +93,7 @@ export const searchUsersByName = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.get("/api/User/search", {
+      const response = await axios.get("/api/User/search-users", {
         params: {
           searchQuery,
           minAge,
