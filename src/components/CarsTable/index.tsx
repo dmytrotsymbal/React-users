@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import NoProfilePicture from "../../assets/images/noProfilePicture.png";
+import NoCarPicture from "../../assets/images/noCarPicture.png";
 import { RootState } from "../../store/store";
 import {
   deleteCar,
@@ -230,7 +230,7 @@ const CarsTable = () => {
                         src={car.carPhotoURL}
                       />
                     ) : (
-                      <Avatar alt="No profile image" src={NoProfilePicture} />
+                      <Avatar alt="No car image" src={NoCarPicture} />
                     )}
                   </TableCell>
 

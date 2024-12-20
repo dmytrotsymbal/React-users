@@ -23,4 +23,5 @@ export type UserSearchFilters = {
   createdFrom?: string;
   createdTo?: string;
   onlyAdults?: boolean;
+  onlyWithPhoto?: boolean;
 };

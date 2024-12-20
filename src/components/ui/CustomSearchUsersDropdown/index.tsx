@@ -45,7 +45,7 @@ const CustomSearchUsersDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
         flexDirection: "column",
         width: "500px",
         position: "absolute",
-        top: "195px",
+        top: "215px",
         left: "50%",
         transform: "translate(-50%, -50%)",
         zIndex: 1000,
@@ -61,6 +61,7 @@ const CustomSearchUsersDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
           createdFrom: "",
           createdTo: "",
           onlyAdults: false,
+          onlyWithPhoto: false,
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
@@ -70,6 +71,7 @@ const CustomSearchUsersDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
             createdFrom: values.createdFrom || undefined,
             createdTo: values.createdTo || undefined,
             onlyAdults: values.onlyAdults,
+            onlyWithPhoto: values.onlyWithPhoto,
           });
         }}
       >
@@ -135,6 +137,18 @@ const CustomSearchUsersDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
                 />
               }
               label="Тільки повнолітні особи"
+            />
+
+            <FormControlLabel
+              control={
+                <Field
+                  as={Checkbox}
+                  type="checkbox"
+                  name="onlyWithPhoto"
+                  checked={values.onlyWithPhoto}
+                />
+              }
+              label="Тільки особи з фото"
             />
             <br />
             <br />

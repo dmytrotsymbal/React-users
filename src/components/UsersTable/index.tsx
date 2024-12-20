@@ -76,6 +76,7 @@ const UsersTable = () => {
           createdFrom: undefined,
           createdTo: undefined,
           onlyAdults: undefined,
+          onlyWithPhoto: undefined,
         })
       );
     } else {

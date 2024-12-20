@@ -82,6 +82,7 @@ export const searchUsersByName = createAsyncThunk(
       createdFrom,
       createdTo,
       onlyAdults,
+      onlyWithPhoto,
     }: {
       searchQuery: string;
       minAge?: number;
@@ -89,6 +90,7 @@ export const searchUsersByName = createAsyncThunk(
       createdFrom?: string;
       createdTo?: string;
       onlyAdults?: boolean;
+      onlyWithPhoto?: boolean;
     },
     { rejectWithValue }
   ) => {
@@ -101,6 +103,7 @@ export const searchUsersByName = createAsyncThunk(
           createdFrom,
           createdTo,
           onlyAdults,
+          onlyWithPhoto,
         },
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

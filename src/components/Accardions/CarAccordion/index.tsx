@@ -26,6 +26,7 @@ import ConfirmDeleteCarModal from "../../modals/ConfirmDeleteCarModal";
 import CarTableSkeletonRow from "../../CarsTable/CarTableSkeletonRow";
 import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../store/store";
+import NoCarPicture from "../../../assets/images/noCarPicture.png";
 
 type Props = {
   isCarVisible: boolean;
@@ -172,7 +173,11 @@ const CarAccordion = ({ isCarVisible, showAllUsersCars }: Props) => {
                       <TableCell>{car.year}</TableCell>
                       <TableCell>{car.licensePlate}</TableCell>
                       <TableCell>
-                        <Avatar alt={car.carPhotoURL} src={car.carPhotoURL} />
+                        {car.carPhotoURL && car.carPhotoURL.length > 0 ? (
+                          <Avatar alt={car.carPhotoURL} src={car.carPhotoURL} />
+                        ) : (
+                          <Avatar alt="No car photo" src={NoCarPicture} />
+                        )}
                       </TableCell>
 
                       <TableCell>
