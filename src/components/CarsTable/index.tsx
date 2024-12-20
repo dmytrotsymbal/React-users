@@ -67,8 +67,8 @@ const CarsTable = () => {
       dispatch(
         searchCars({
           searchQuery: debouncedSearchQuery,
-          minAge: undefined,
-          maxAge: undefined,
+          minYear: undefined,
+          maxYear: undefined,
           carColor: undefined,
         })
       );
