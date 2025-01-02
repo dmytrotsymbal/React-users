@@ -45,7 +45,7 @@ const CustomSearchUsersDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
         flexDirection: "column",
         width: "500px",
         position: "absolute",
-        top: "215px",
+        top: "143px",
         left: "50%",
         transform: "translate(-50%, -50%)",
         zIndex: 1000,

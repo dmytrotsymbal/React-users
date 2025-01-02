@@ -21,12 +21,15 @@ const CustomSearchUsersInput = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
 
-  // Закриття dropdown при кліку за межами
   const handleOutsideClick = (e: MouseEvent) => {
+    // клік не всередині dropdown або інпуту
     if (
       dropdownRef.current &&
-      !dropdownRef.current.contains(e.target as Node)
+      !dropdownRef.current.contains(e.target as Node) &&
+      inputRef.current &&
+      !inputRef.current.contains(e.target as Node)
     ) {
       setIsDropdownOpen(false);
     }
@@ -50,6 +53,7 @@ const CustomSearchUsersInput = ({
       }}
     >
       <TextField
+        ref={inputRef} // прив'язка до рефу
         sx={{
           width: "400px",
           position: "relative",
@@ -80,11 +84,16 @@ const CustomSearchUsersInput = ({
         }}
       />
 
-      <Box ref={dropdownRef}>
-        <CustomSearchUsersDropdown
-          isDropdownOpen={isDropdownOpen}
-          searchQuery={searchQuery}
-        />
+      <Box
+        ref={dropdownRef} // прив'язка до рефу
+        sx={{ position: "absolute", top: "50px", zIndex: 10 }}
+      >
+        {isDropdownOpen && (
+          <CustomSearchUsersDropdown
+            isDropdownOpen={isDropdownOpen}
+            searchQuery={searchQuery}
+          />
+        )}
       </Box>
     </Box>
   );

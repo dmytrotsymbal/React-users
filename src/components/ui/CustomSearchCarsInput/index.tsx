@@ -21,12 +21,15 @@ const CustomSearchCarsInput = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
 
-  // Закриття dropdown при кліку за межами
   const handleOutsideClick = (e: MouseEvent) => {
+    // клік не всередині dropdown або інпуту
     if (
       dropdownRef.current &&
-      !dropdownRef.current.contains(e.target as Node)
+      !dropdownRef.current.contains(e.target as Node) &&
+      inputRef.current &&
+      !inputRef.current.contains(e.target as Node)
     ) {
       setIsDropdownOpen(false);
     }
@@ -50,6 +53,7 @@ const CustomSearchCarsInput = ({
       }}
     >
       <TextField
+        ref={inputRef}
         sx={{
           width: "400px",
           position: "relative",

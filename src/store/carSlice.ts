@@ -86,17 +86,19 @@ export const searchCars = createAsyncThunk(
       minYear,
       maxYear,
       carColor,
+      onlyWithPhoto,
     }: {
       searchQuery: string;
       minYear?: number;
       maxYear?: number;
       carColor?: string;
+      onlyWithPhoto?: boolean;
     },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.get(`/api/Car/search-cars`, {
-        params: { searchQuery, minYear, maxYear, carColor },
+        params: { searchQuery, minYear, maxYear, carColor, onlyWithPhoto },
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       return response.data;

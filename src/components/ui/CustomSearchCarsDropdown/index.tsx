@@ -1,6 +1,13 @@
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { TextField, Button, Paper, Grid } from "@mui/material";
+import {
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Button,
+  Paper,
+  Grid,
+} from "@mui/material";
 import { CarSearchFilters } from "../../../types/carTypes";
 import { useAppDispatch } from "../../../store/hooks";
 import { searchCars } from "../../../store/carSlice";
@@ -35,7 +42,7 @@ const CustomSearchCarsDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
         flexDirection: "column",
         width: "400px",
         position: "absolute",
-        top: "205px",
+        top: "225px",
         left: "50%",
         transform: "translate(-50%, -50%)",
         zIndex: 1000,
@@ -49,6 +56,7 @@ const CustomSearchCarsDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
           minYear: "",
           maxYear: "",
           carColor: "",
+          onlyWithPhoto: false,
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
@@ -56,10 +64,11 @@ const CustomSearchCarsDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
             minYear: values.minYear ? Number(values.minYear) : undefined,
             maxYear: values.maxYear ? Number(values.maxYear) : undefined,
             carColor: values.carColor || undefined,
+            onlyWithPhoto: values.onlyWithPhoto,
           });
         }}
       >
-        {({ errors, touched, handleReset }) => (
+        {({ values, errors, touched, handleReset }) => (
           <Form>
             <Field
               as={TextField}
@@ -92,6 +101,18 @@ const CustomSearchCarsDropdown = ({ isDropdownOpen, searchQuery }: Props) => {
               margin="dense"
               error={touched.carColor && Boolean(errors.carColor)}
               helperText={touched.carColor && errors.carColor}
+            />
+
+            <FormControlLabel
+              control={
+                <Field
+                  as={Checkbox}
+                  type="checkbox"
+                  name="onlyWithPhoto"
+                  checked={values.onlyWithPhoto}
+                />
+              }
+              label="Тільки машини з фото"
             />
 
             <br />

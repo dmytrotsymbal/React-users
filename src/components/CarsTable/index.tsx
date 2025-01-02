@@ -70,6 +70,7 @@ const CarsTable = () => {
           minYear: undefined,
           maxYear: undefined,
           carColor: undefined,
+          onlyWithPhoto: undefined,
         })
       );
     } else {

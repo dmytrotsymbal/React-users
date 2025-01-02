@@ -13,4 +13,5 @@ export type CarSearchFilters = {
   minYear?: number;
   maxYear?: number;
   carColor?: string;
+  onlyWithPhoto?: boolean;
 };
