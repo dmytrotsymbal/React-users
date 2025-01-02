@@ -1,13 +1,12 @@
 import { Staff } from "../../../types/staffTypes";
 import { Box, Chip, Grid, Typography, Menu, Button } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import HistoryIcon from "@mui/icons-material/History";
 import { useAppDispatch } from "../../../store/hooks";
 import { logout } from "../../../store/authSlice";
-import { useState } from "react";
-import ManageAccountModal from "../../modals/ManageAccountModal";
 import { formatDateTime } from "../../../utils/formatDateTime";
 import CustomTooltip from "../CustomTooltip";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   staff: Staff | null;
@@ -23,7 +22,7 @@ const HeaderPopover = ({
   onClose,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const goLogout = () => {
     dispatch(logout());
@@ -132,24 +131,21 @@ const HeaderPopover = ({
                 justifyContent: "flex-end",
               }}
             >
-              <CustomTooltip title="Редагувати" placement="bottom">
+              <CustomTooltip title="Історія пошуків" placement="bottom">
                 <Button
                   variant="contained"
                   color="inherit"
                   sx={{ width: "80px", height: "30px" }}
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => {
+                    navigate("/cabinet");
+                    onClose();
+                  }}
                 >
-                  <ManageAccountsIcon />
+                  <HistoryIcon />
                 </Button>
               </CustomTooltip>
             </Grid>
           </Grid>
-          {isModalOpen && (
-            <ManageAccountModal
-              open={isModalOpen}
-              handleClose={() => setIsModalOpen(false)}
-            />
-          )}
         </Box>
       ) : (
         <Typography>Ви не увійшли</Typography>

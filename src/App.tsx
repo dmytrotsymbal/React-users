@@ -26,6 +26,8 @@ const EditAddressPage = lazy(() => import("./pages/Addresses/EditAddressPage"));
 const AddAddressPage = lazy(() => import("./pages/Addresses/AddAddressPage"));
 const EditCrimePage = lazy(() => import("./pages/Crimes/EditCrimePage"));
 const AddCrimePage = lazy(() => import("./pages/Crimes/AddCrimePage"));
+
+const CabinetPage = lazy(() => import("./pages/Cabinet/CabinetPage"));
 const NoAccessPage = lazy(() => import("./pages/NoAccess/NoAccessPage"));
 const ErrorPage = lazy(() => import("./pages/ErrorPage"));
 
@@ -167,6 +169,17 @@ const App = () => {
                   element={
                     <PrivateRoute allowedRoles={["admin", "moderator"]}>
                       <AddCrimePage />
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route
+                  path="/cabinet"
+                  element={
+                    <PrivateRoute
+                      allowedRoles={["admin", "moderator", "visitor"]}
+                    >
+                      <CabinetPage />
                     </PrivateRoute>
                   }
                 />
