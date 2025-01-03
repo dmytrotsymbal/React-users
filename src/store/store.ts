@@ -9,6 +9,7 @@ import phoneReducer from "./phoneSlice";
 import crimeReducer from "./criminalRecordSlice";
 import authReducer from "./authSlice";
 import themeReducer from "./themeSlice";
+import historyReducer from "./historySlice";
 
 const persistConfig = {
   key: "root",
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   crime: crimeReducer,
   auth: authReducer, // будет в localStorage
   theme: themeReducer, // будет в localStorage
+  history: historyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
