@@ -11,9 +11,9 @@ const HistoryTableHead = ({ lightTheme }: Props) => {
       }}
     >
       <TableRow>
+        <StyledTableCell>Таблиця</StyledTableCell>
         <StyledTableCell>ID Запиту</StyledTableCell>
-        <StyledTableCell>ID Працівника</StyledTableCell>
-        <StyledTableCell>Тип пошуку</StyledTableCell>
+        <StyledTableCell>Працівник</StyledTableCell>
         <StyledTableCell>Запит</StyledTableCell>
         <StyledTableCell>Фільтри</StyledTableCell>
         <StyledTableCell>Дата пошуку</StyledTableCell>

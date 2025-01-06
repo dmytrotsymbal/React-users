@@ -19,7 +19,7 @@ export const getHistory = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `/api/StaffSearchHistory/get-all-staff-search-history`,
+        `/api/StaffSearchHistory/get-my-search-history`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -28,7 +28,7 @@ export const getHistory = createAsyncThunk(
     } catch (error) {
       const axiosError = error as AxiosError;
       return rejectWithValue(
-        axiosError.response?.data || "Помилка при отриманні користувачів"
+        axiosError.response?.data || "Ошибка при получении данных"
       );
     }
   }
@@ -52,7 +52,7 @@ const historySlice = createSlice({
       .addCase(getHistory.rejected, (state, action) => {
         state.loading = false;
         state.error =
-          action.error.message || "Не вдалося отримати історію пошуку";
+          action.error.message || "Не удалось загрузить историю поиска";
       });
   },
 });

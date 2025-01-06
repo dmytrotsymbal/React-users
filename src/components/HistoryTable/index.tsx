@@ -5,6 +5,8 @@ import {
   TableContainer,
   TableRow,
   Paper,
+  Box,
+  Chip,
 } from "@mui/material";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -29,7 +31,7 @@ const HistoryTable = () => {
   }, [dispatch]);
 
   return (
-    <TableContainer component={Paper} sx={{ marginTop: 4 }}>
+    <TableContainer component={Paper} sx={{ marginTop: 4, marginBottom: 2 }}>
       <Table>
         <HistoryTableHead lightTheme={lightTheme} />
 
@@ -50,23 +52,42 @@ const HistoryTable = () => {
                 key={index}
                 sx={{
                   backgroundColor:
-                    item.searchType === "cars"
-                      ? { backgroundColor: "lightblue" }
-                      : { backgroundColor: "lightpink" },
+                    item.searchType === "cars" ? "#FEF3E2" : "#C9DABF",
                 }}
               >
-                <TableCell>{item.searchID}</TableCell>
-                <TableCell>{item.staffID}</TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                    color: item.searchType === "cars" ? "blue" : "green",
-                  }}
-                >
-                  {item.searchType.toUpperCase()}
+                <TableCell>
+                  <b>{item.searchType}</b>
                 </TableCell>
+                <TableCell>{item.searchID}</TableCell>
+                <TableCell>
+                  <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    <b>{item.nickname}</b>
+                    <p>{item.email}</p>
+                    <Chip
+                      size="small"
+                      sx={{ maxWidth: 100, mt: 2 }}
+                      label={item?.role}
+                      color={
+                        item?.role === "admin"
+                          ? "error"
+                          : item?.role === "moderator"
+                          ? "warning"
+                          : "success"
+                      }
+                    />
+                  </Box>
+                </TableCell>
+
                 <TableCell>{item.searchQuery}</TableCell>
-                <TableCell>{item.searchFilters || "{}"}</TableCell>
+                <TableCell>
+                  <pre>
+                    {JSON.stringify(
+                      JSON.parse(item.searchFilters || "{}"),
+                      null,
+                      2
+                    )}
+                  </pre>
+                </TableCell>
                 <TableCell>{formatDateTime(item.searchDate)}</TableCell>
               </TableRow>
             ))

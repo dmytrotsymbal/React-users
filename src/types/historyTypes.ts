@@ -1,6 +1,8 @@
 export type History = {
   searchID: number;
-  staffID: number;
+  nickname: string;
+  email: string;
+  role: string;
   searchQuery: string;
   searchFilters?: string;
   searchType: SearchType;
