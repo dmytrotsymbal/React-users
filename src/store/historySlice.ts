@@ -19,7 +19,9 @@ export const getHistory = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `/api/StaffSearchHistory/get-my-search-history`,
+        `/api/StaffSearchHistory/get-my-search-history/${localStorage.getItem(
+          "staffID"
+        )}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

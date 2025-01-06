@@ -31,70 +31,78 @@ const HistoryTable = () => {
   }, [dispatch]);
 
   return (
-    <TableContainer component={Paper} sx={{ marginTop: 4, marginBottom: 2 }}>
-      <Table>
-        <HistoryTableHead lightTheme={lightTheme} />
+    <>
+      <br />
 
-        <TableBody>
-          {loading ? (
-            Array.from({ length: 10 }).map((_, i) => (
-              <HistoryTableSkeletonRow key={`skeleton-${i}`} />
-            ))
-          ) : error ? (
-            <TableRow>
-              <TableCell colSpan={8}>
-                <CustomErrorBlock />
-              </TableCell>
-            </TableRow>
-          ) : (
-            history.map((item, index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  backgroundColor:
-                    item.searchType === "cars" ? "#FEF3E2" : "#C9DABF",
-                }}
-              >
-                <TableCell>
-                  <b>{item.searchType}</b>
-                </TableCell>
-                <TableCell>{item.searchID}</TableCell>
-                <TableCell>
-                  <Box sx={{ display: "flex", flexDirection: "column" }}>
-                    <b>{item.nickname}</b>
-                    <p>{item.email}</p>
-                    <Chip
-                      size="small"
-                      sx={{ maxWidth: 100, mt: 2 }}
-                      label={item?.role}
-                      color={
-                        item?.role === "admin"
-                          ? "error"
-                          : item?.role === "moderator"
-                          ? "warning"
-                          : "success"
-                      }
-                    />
-                  </Box>
-                </TableCell>
+      <TableContainer component={Paper} sx={{ mb: 2 }}>
+        <Table>
+          <HistoryTableHead lightTheme={lightTheme} />
 
-                <TableCell>{item.searchQuery}</TableCell>
-                <TableCell>
-                  <pre>
-                    {JSON.stringify(
-                      JSON.parse(item.searchFilters || "{}"),
-                      null,
-                      2
-                    )}
-                  </pre>
+          <TableBody>
+            {loading ? (
+              Array.from({ length: 10 }).map((_, i) => (
+                <HistoryTableSkeletonRow key={`skeleton-${i}`} />
+              ))
+            ) : error ? (
+              <TableRow>
+                <TableCell colSpan={8}>
+                  <CustomErrorBlock />
                 </TableCell>
-                <TableCell>{formatDateTime(item.searchDate)}</TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            ) : (
+              history.map((item, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    borderBottom: "1.8px solid rgb(149, 148, 148)",
+                    "&:last-child td, &:last-child th": {
+                      border: "none",
+                    },
+                    backgroundColor:
+                      item.searchType === "cars" ? "#E4E0E1" : "white",
+                  }}
+                >
+                  <TableCell>
+                    <b>{item.searchType}</b>
+                  </TableCell>
+                  <TableCell>{item.searchID}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <b>{item.nickname}</b>
+                      <p>{item.email}</p>
+                      <Chip
+                        size="small"
+                        sx={{ maxWidth: 100, mt: 2 }}
+                        label={item?.role}
+                        color={
+                          item?.role === "admin"
+                            ? "error"
+                            : item?.role === "moderator"
+                            ? "warning"
+                            : "success"
+                        }
+                      />
+                    </Box>
+                  </TableCell>
+
+                  <TableCell>{item.searchQuery}</TableCell>
+                  <TableCell>
+                    <pre>
+                      {JSON.stringify(
+                        JSON.parse(item.searchFilters || "Пошук без фільтрів"),
+                        null,
+                        2
+                      )}
+                    </pre>
+                  </TableCell>
+                  <TableCell>{formatDateTime(item.searchDate)}</TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 
