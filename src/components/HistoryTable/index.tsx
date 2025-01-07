@@ -12,10 +12,11 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
 import { getHistory } from "../../store/historySlice";
+import { formatDateTime } from "../../utils/formatDateTime";
+import { formatFiltersColumns } from "../../utils/formatFilters";
 import HistoryTableHead from "./HistoryTableHead";
 import HistoryTableSkeletonRow from "./HistoryTableSkeletonRow";
 import CustomErrorBlock from "../ui/CustomErrorBlock";
-import { formatDateTime } from "../../utils/formatDateTime";
 
 const HistoryTable = () => {
   const dispatch = useAppDispatch();
@@ -30,34 +31,34 @@ const HistoryTable = () => {
     dispatch(getHistory());
   }, [dispatch]);
 
+  console.log("history", history);
+
   return (
-    <>
-      <br />
+    <TableContainer component={Paper} sx={{ marginTop: 4, marginBottom: 2 }}>
+      <Table>
+        <HistoryTableHead lightTheme={lightTheme} />
+        <TableBody>
+          {loading ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <HistoryTableSkeletonRow key={`skeleton-${i}`} />
+            ))
+          ) : error ? (
+            <TableRow>
+              <TableCell colSpan={8}>
+                <CustomErrorBlock />
+              </TableCell>
+            </TableRow>
+          ) : (
+            history.map((item, index) => {
+              const filters = formatFiltersColumns(
+                item.searchFilters as string,
+                item.searchType
+              );
 
-      <TableContainer component={Paper} sx={{ mb: 2 }}>
-        <Table>
-          <HistoryTableHead lightTheme={lightTheme} />
-
-          <TableBody>
-            {loading ? (
-              Array.from({ length: 10 }).map((_, i) => (
-                <HistoryTableSkeletonRow key={`skeleton-${i}`} />
-              ))
-            ) : error ? (
-              <TableRow>
-                <TableCell colSpan={8}>
-                  <CustomErrorBlock />
-                </TableCell>
-              </TableRow>
-            ) : (
-              history.map((item, index) => (
+              return (
                 <TableRow
                   key={index}
                   sx={{
-                    borderBottom: "1.8px solid rgb(149, 148, 148)",
-                    "&:last-child td, &:last-child th": {
-                      border: "none",
-                    },
                     backgroundColor:
                       item.searchType === "cars" ? "#E4E0E1" : "white",
                   }}
@@ -84,25 +85,32 @@ const HistoryTable = () => {
                       />
                     </Box>
                   </TableCell>
-
                   <TableCell>{item.searchQuery}</TableCell>
+
                   <TableCell>
-                    <pre>
-                      {JSON.stringify(
-                        JSON.parse(item.searchFilters || "Пошук без фільтрів"),
-                        null,
-                        2
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      {typeof filters === "string" ? (
+                        <Box sx={{ fontStyle: "italic", color: "gray" }}>
+                          {filters}
+                        </Box>
+                      ) : (
+                        filters.map((filter, i) => (
+                          <Box key={i} sx={{ display: "flex", mb: 0.5 }}>
+                            <b>{filter.label}:</b>&nbsp;{filter.value}
+                          </Box>
+                        ))
                       )}
-                    </pre>
+                    </Box>
                   </TableCell>
+
                   <TableCell>{formatDateTime(item.searchDate)}</TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
+              );
+            })
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
