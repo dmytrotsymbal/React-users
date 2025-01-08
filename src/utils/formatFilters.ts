@@ -1,26 +1,10 @@
-type UsersTableFilters = {
-  minAge?: number;
-  maxAge?: number;
-  createdFrom?: string;
-  createdTo?: string;
-  onlyAdults?: boolean;
-  onlyWithPhoto?: boolean;
-};
+import { CarsTableFilters, UsersTableFilters } from "../types/filtersTypes";
 
-type CarsTableFilters = {
-  minYear?: number;
-  maxYear?: number;
-  carColor?: string;
-  onlyWithPhoto?: boolean;
-};
-
-// Функція для форматування фільтрів у вигляді стовпчиків або тексту
 export const formatFiltersColumns = (
   filters: string,
   searchType: string
 ): { label: string; value: string }[] | string => {
   try {
-    // Обробка фільтрів для users
     if (searchType === "users") {
       const parsedUsersFilters: UsersTableFilters = JSON.parse(filters);
 
@@ -33,10 +17,9 @@ export const formatFiltersColumns = (
         onlyWithPhoto = false,
       } = parsedUsersFilters;
 
-      // Перевірка на значення за замовчуванням
       const isDefaultFilters =
-        minAge === 0 &&
-        maxAge === 120 &&
+        (minAge === 0 || !minAge) &&
+        (maxAge === 120 || !maxAge) &&
         createdFrom === "0001-01-01T00:00:00" &&
         createdTo === "9999-12-31T23:59:59.9999999" &&
         !onlyAdults &&
@@ -66,27 +49,29 @@ export const formatFiltersColumns = (
       ];
     }
 
-    // Обробка фільтрів для cars
+    // ======== CARS ========
     if (searchType === "cars") {
       const parsedCarsFilters: CarsTableFilters = JSON.parse(filters);
 
       const {
         minYear = 0,
         maxYear = 9999,
-        carColor = "", // Виправлено значення за замовчуванням на пустий рядок
+        carColor = "",
         onlyWithPhoto = false,
       } = parsedCarsFilters;
 
-      // Перевірка на значення за замовчуванням
       const isDefaultFilters =
-        minYear === 0 && maxYear === 9999 && !carColor && !onlyWithPhoto;
+        (minYear === 0 || !minYear) &&
+        (maxYear === 9999 || !maxYear) &&
+        (!carColor || carColor === "Не задано") &&
+        !onlyWithPhoto;
 
       if (isDefaultFilters) return "Пошук без фільтрів";
 
       return [
         { label: "Рік випуску від", value: `${minYear}` },
         { label: "Рік випуску до", value: `${maxYear}` },
-        { label: "Колір", value: `${carColor} ` },
+        { label: "Колір", value: carColor || "Не задано" },
         { label: "З фото", value: onlyWithPhoto ? "Так" : "Ні" },
       ];
     }
