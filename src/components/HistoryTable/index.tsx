@@ -34,7 +34,7 @@ const HistoryTable = () => {
   console.log("history", history);
 
   return (
-    <TableContainer component={Paper} sx={{ marginTop: 4, marginBottom: 2 }}>
+    <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
       <Table>
         <HistoryTableHead lightTheme={lightTheme} />
         <TableBody>
