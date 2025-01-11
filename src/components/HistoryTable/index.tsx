@@ -11,7 +11,7 @@ import {
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
-import { getHistory } from "../../store/historySlice";
+import { getHistoryOfUser } from "../../store/historySlice";
 import { formatDateTime } from "../../utils/formatDateTime";
 import { formatFiltersColumns } from "../../utils/formatFilters";
 import HistoryTableHead from "./HistoryTableHead";
@@ -28,10 +28,8 @@ const HistoryTable = () => {
   );
 
   useEffect(() => {
-    dispatch(getHistory());
+    dispatch(getHistoryOfUser());
   }, [dispatch]);
-
-  console.log("history", history);
 
   return (
     <TableContainer component={Paper} sx={{ marginBottom: 2 }}>

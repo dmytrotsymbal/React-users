@@ -14,7 +14,27 @@ const initialState: HistoryState = {
   error: null,
 };
 
-export const getHistory = createAsyncThunk(
+export const getAllHistory = createAsyncThunk(
+  "history/getAllHistory",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        "/api/StaffSearchHistory/get-all-history-search",
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Ошибка при получении данных"
+      );
+    }
+  }
+);
+
+export const getHistoryOfUser = createAsyncThunk(
   "user/getHistory",
   async (_, { rejectWithValue }) => {
     try {
@@ -42,16 +62,30 @@ const historySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getHistory.pending, (state) => {
+      .addCase(getAllHistory.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getHistory.fulfilled, (state, action) => {
+      .addCase(getAllHistory.fulfilled, (state, action) => {
         state.history = action.payload;
         state.loading = false;
         state.error = null;
       })
-      .addCase(getHistory.rejected, (state, action) => {
+      .addCase(getAllHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message || "Не удалось загрузить историю поиска";
+      })
+      .addCase(getHistoryOfUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getHistoryOfUser.fulfilled, (state, action) => {
+        state.history = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getHistoryOfUser.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.error.message || "Не удалось загрузить историю поиска";

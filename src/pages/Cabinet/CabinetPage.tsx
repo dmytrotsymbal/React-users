@@ -5,6 +5,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import HistoryTable from "../../components/HistoryTable";
 import { useState } from "react";
 import { useAppSelector } from "../../store/hooks";
+import AllHistoryTable from "../../components/AllHistoryTable";
 
 const CabinetPage = () => {
   const lightTheme = useAppSelector((state) => state.theme.lightTheme);
@@ -14,6 +15,7 @@ const CabinetPage = () => {
     event.preventDefault();
     setValue(newValue);
   };
+
   return (
     <>
       <br />
@@ -82,7 +84,9 @@ const CabinetPage = () => {
           <TabPanel value="1">
             <HistoryTable />
           </TabPanel>
-          <TabPanel value="2">Item Two</TabPanel>
+          <TabPanel value="2">
+            <AllHistoryTable />
+          </TabPanel>
         </TabContext>
       </Box>
     </>
