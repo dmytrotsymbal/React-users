@@ -6,20 +6,27 @@ export type HistoryState = {
   history: History[];
   loading: boolean;
   error: string | null;
+
+  historyQuantity?: number;
 };
 
 const initialState: HistoryState = {
   history: [],
   loading: true,
   error: null,
+
+  historyQuantity: 0,
 };
 
 export const getAllHistory = createAsyncThunk(
   "history/getAllHistory",
-  async (_, { rejectWithValue }) => {
+  async (
+    { pageNumber, pageSize }: { pageNumber: number; pageSize: number },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.get(
-        "/api/StaffSearchHistory/get-all-history-search",
+        `/api/StaffSearchHistory/get-all-history-search?pageNumber=${pageNumber}&pageSize=${pageSize}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -46,6 +53,25 @@ export const getHistoryOfUser = createAsyncThunk(
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Ошибка при получении данных"
+      );
+    }
+  }
+);
+
+// HALPERS
+
+export const getAllHistoryQuantity = createAsyncThunk(
+  "history/getAllHistoryQuantity",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/api/StaffSearchHistory/quantity", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -86,6 +112,22 @@ const historySlice = createSlice({
         state.error = null;
       })
       .addCase(getHistoryOfUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message || "Не удалось загрузить историю поиска";
+      })
+
+      //HALPERS
+      .addCase(getAllHistoryQuantity.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllHistoryQuantity.fulfilled, (state, action) => {
+        state.historyQuantity = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getAllHistoryQuantity.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.error.message || "Не удалось загрузить историю поиска";
