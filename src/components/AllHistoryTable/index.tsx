@@ -8,19 +8,27 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
-  Typography,
   Paper,
+  Chip,
 } from "@mui/material";
+import HistoryTableHead from "../HistoryTable/HistoryTableHead";
+import HistoryTableSkeletonRow from "../HistoryTable/HistoryTableSkeletonRow";
+import CustomErrorBlock from "../ui/CustomErrorBlock";
+import { formatFiltersColumns } from "../../utils/formatFilters";
+import { formatDateTime } from "../../utils/formatDateTime";
+import CustomNoAccessBlock from "../ui/CustomNoAccessBlock";
 
 const AllHistoryTable = () => {
   const dispatch = useAppDispatch();
 
+  const { role } = useAppSelector((state: RootState) => state.auth);
+  const lightTheme = useAppSelector(
+    (state: RootState) => state.theme.lightTheme
+  );
   const { history, loading, error } = useAppSelector(
     (state: RootState) => state.history
   );
-  const { role } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (role === "admin") {
@@ -28,66 +36,85 @@ const AllHistoryTable = () => {
     }
   }, [dispatch, role]);
 
-  if (role !== "admin") {
-    return (
-      <Box textAlign="center" mt={4}>
-        <Typography variant="h6" color="error">
-          У вас немає доступу до цієї інформації.
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (loading) {
-    return (
-      <Box textAlign="center" mt={4}>
-        <Typography variant="h6">Завантаження...</Typography>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box textAlign="center" mt={4}>
-        <Typography variant="h6" color="error">
-          Помилка: {error}
-        </Typography>
-      </Box>
-    );
-  }
-
   return (
-    <TableContainer component={Paper} sx={{ marginTop: 4 }}>
+    <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
       <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Таблиця</TableCell>
-            <TableCell>ID Запиту</TableCell>
-            <TableCell>Користувач</TableCell>
-            <TableCell>Запит</TableCell>
-            <TableCell>Фільтри</TableCell>
-            <TableCell>Дата пошуку</TableCell>
-          </TableRow>
-        </TableHead>
+        <HistoryTableHead lightTheme={lightTheme} />
         <TableBody>
-          {history.map((item, index) => (
-            <TableRow key={index}>
-              <TableCell>{item.searchType}</TableCell>
-              <TableCell>{item.searchID}</TableCell>
-              <TableCell>
-                <Typography variant="body2">
-                  <strong>{item.nickname}</strong>
-                  <br />
-                  {item.email}
-                </Typography>
-              </TableCell>
-              <TableCell>{item.searchQuery}</TableCell>
-              <TableCell>{item.searchFilters || "Без фільтрів"}</TableCell>
-              <TableCell>
-                {new Date(item.searchDate).toLocaleString()}
+          {loading ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <HistoryTableSkeletonRow key={`skeleton-${i}`} />
+            ))
+          ) : error ? (
+            <TableRow>
+              <TableCell colSpan={8}>
+                <CustomErrorBlock />
               </TableCell>
             </TableRow>
-          ))}
+          ) : role !== "admin" ? (
+            <TableCell colSpan={8}>
+              <CustomNoAccessBlock />
+            </TableCell>
+          ) : (
+            history.map((item, index) => {
+              const filters = formatFiltersColumns(
+                item.searchFilters as string,
+                item.searchType
+              );
+
+              return (
+                <TableRow
+                  key={index}
+                  sx={{
+                    backgroundColor:
+                      item.searchType === "cars" ? "#E4E0E1" : "white",
+                  }}
+                >
+                  <TableCell>
+                    <b>{item.searchType}</b>
+                  </TableCell>
+                  <TableCell>{item.searchID}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      <b>{item.nickname}</b>
+                      <p>{item.email}</p>
+                      <Chip
+                        size="small"
+                        sx={{ maxWidth: 100, mt: 2 }}
+                        label={item?.role}
+                        color={
+                          item?.role === "admin"
+                            ? "error"
+                            : item?.role === "moderator"
+                            ? "warning"
+                            : "success"
+                        }
+                      />
+                    </Box>
+                  </TableCell>
+                  <TableCell>{item.searchQuery}</TableCell>
+
+                  <TableCell>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                      {typeof filters === "string" ? (
+                        <Box sx={{ fontStyle: "italic", color: "gray" }}>
+                          {filters}
+                        </Box>
+                      ) : (
+                        filters.map((filter, i) => (
+                          <Box key={i} sx={{ display: "flex", mb: 0.5 }}>
+                            <b>{filter.label}:</b>&nbsp;{filter.value}
+                          </Box>
+                        ))
+                      )}
+                    </Box>
+                  </TableCell>
+
+                  <TableCell>{formatDateTime(item.searchDate)}</TableCell>
+                </TableRow>
+              );
+            })
+          )}
         </TableBody>
       </Table>
     </TableContainer>
