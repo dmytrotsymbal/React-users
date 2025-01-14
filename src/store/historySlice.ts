@@ -18,15 +18,15 @@ const initialState: HistoryState = {
   historyQuantity: 0,
 };
 
-export const getAllHistory = createAsyncThunk(
-  "history/getAllHistory",
+export const GetAllSearchHistory = createAsyncThunk(
+  "history/GetAllSearchHistory",
   async (
     { pageNumber, pageSize }: { pageNumber: number; pageSize: number },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.get(
-        `/api/StaffSearchHistory/get-all-history-search?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `/api/StaffSearchHistory/get-all-search-history?pageNumber=${pageNumber}&pageSize=${pageSize}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -41,14 +41,17 @@ export const getAllHistory = createAsyncThunk(
   }
 );
 
-export const getHistoryOfUser = createAsyncThunk(
-  "user/getHistory",
-  async (_, { rejectWithValue }) => {
+export const getCurrentStaffSearchHistory = createAsyncThunk(
+  "user/getCurrentStaffSearchHistory",
+  async (
+    { pageNumber, pageSize }: { pageNumber: number; pageSize: number },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await axios.get(
-        `/api/StaffSearchHistory/get-my-search-history/${localStorage.getItem(
+        `/api/StaffSearchHistory/get-current-staff-search-history/${localStorage.getItem(
           "staffID"
-        )}`,
+        )}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -69,9 +72,34 @@ export const getAllHistoryQuantity = createAsyncThunk(
   "history/getAllHistoryQuantity",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/StaffSearchHistory/quantity", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(
+        "/api/StaffSearchHistory/all-search-history-quantity",
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return rejectWithValue(
+        axiosError.response?.data || "Ошибка при получении данных"
+      );
+    }
+  }
+);
+
+export const getCurrentStaffSearchHistoryQantity = createAsyncThunk(
+  "history/getCurrentStaffSearchHistoryQantity",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/api/StaffSearchHistory/current-staff-search-history-quantity/${localStorage.getItem(
+          "staffID"
+        )}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -88,36 +116,39 @@ const historySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllHistory.pending, (state) => {
+      .addCase(GetAllSearchHistory.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllHistory.fulfilled, (state, action) => {
+      .addCase(GetAllSearchHistory.fulfilled, (state, action) => {
         state.history = action.payload;
         state.loading = false;
         state.error = null;
       })
-      .addCase(getAllHistory.rejected, (state, action) => {
-        state.loading = false;
-        state.error =
-          action.error.message || "Не удалось загрузить историю поиска";
-      })
-      .addCase(getHistoryOfUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(getHistoryOfUser.fulfilled, (state, action) => {
-        state.history = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(getHistoryOfUser.rejected, (state, action) => {
+      .addCase(GetAllSearchHistory.rejected, (state, action) => {
         state.loading = false;
         state.error =
           action.error.message || "Не удалось загрузить историю поиска";
       })
 
-      //HALPERS
+      //================================================================================
+      .addCase(getCurrentStaffSearchHistory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCurrentStaffSearchHistory.fulfilled, (state, action) => {
+        state.history = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getCurrentStaffSearchHistory.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.error.message || "Не удалось загрузить историю поиска";
+      })
+
+      //HALPERS================================================================================
+
       .addCase(getAllHistoryQuantity.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -131,7 +162,30 @@ const historySlice = createSlice({
         state.loading = false;
         state.error =
           action.error.message || "Не удалось загрузить историю поиска";
-      });
+      })
+
+      //================================================================================
+
+      .addCase(getCurrentStaffSearchHistoryQantity.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getCurrentStaffSearchHistoryQantity.fulfilled,
+        (state, action) => {
+          state.historyQuantity = action.payload;
+          state.loading = false;
+          state.error = null;
+        }
+      )
+      .addCase(
+        getCurrentStaffSearchHistoryQantity.rejected,
+        (state, action) => {
+          state.loading = false;
+          state.error =
+            action.error.message || "Не удалось загрузить историю поиска";
+        }
+      );
   },
 });
 

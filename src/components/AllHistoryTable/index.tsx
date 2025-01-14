@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { RootState } from "../../store/store";
-import { getAllHistory, getAllHistoryQuantity } from "../../store/historySlice";
+import {
+  GetAllSearchHistory,
+  getAllHistoryQuantity,
+} from "../../store/historySlice";
 import {
   Box,
   Table,
@@ -41,7 +44,7 @@ const AllHistoryTable = () => {
 
   useEffect(() => {
     if (role === "admin") {
-      dispatch(getAllHistory({ pageNumber: currentPage, pageSize }));
+      dispatch(GetAllSearchHistory({ pageNumber: currentPage, pageSize }));
     }
   }, [dispatch, role, currentPage]);
 
