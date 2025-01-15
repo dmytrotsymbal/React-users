@@ -13,6 +13,13 @@ export type Staff = {
   createdAt?: string;
 };
 
+export type TopSearcher = {
+  staffID: number;
+  nickname: string;
+  searchCount: number;
+  role: RoleEnum;
+};
+
 export type LoginDTO = {
   email: string;
   password: string;

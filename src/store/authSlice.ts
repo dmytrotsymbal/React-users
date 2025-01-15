@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-import { LoginDTO, Staff } from "../types/staffTypes";
+import { LoginDTO, Staff, TopSearcher } from "../types/staffTypes";
 
 export type AuthState = {
   staff: Staff | null;
@@ -9,6 +9,8 @@ export type AuthState = {
   error: string | null;
   isLoggedIn: boolean; // поле для отслеживания состояния входа
   token: string | null; // поле для токена
+
+  topSearchers: TopSearcher[];
 };
 
 const initialState: AuthState = {
@@ -18,6 +20,8 @@ const initialState: AuthState = {
   error: null,
   isLoggedIn: false,
   token: localStorage.getItem("token"), // попытка загрузить токен из localStorage при инициализации
+
+  topSearchers: [],
 };
 
 export const login = createAsyncThunk(
@@ -29,6 +33,21 @@ export const login = createAsyncThunk(
       const token = response.data.token; // Отримання токена з відповіді
       localStorage.setItem("token", token); // Збереження токена в localStorage
 
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response?.data || axiosError.message);
+    }
+  }
+);
+
+export const getTopSearchers = createAsyncThunk(
+  "auth/getTopSearchers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/api/Staff/get-top-searchers", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       return response.data;
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -70,6 +89,22 @@ const authSlice = createSlice({
         state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // ==========================================================
+
+      .addCase(getTopSearchers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getTopSearchers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.topSearchers = action.payload;
+        state.error = null;
+      })
+      .addCase(getTopSearchers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
