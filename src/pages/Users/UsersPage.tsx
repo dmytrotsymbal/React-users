@@ -7,18 +7,12 @@ const UsersPage = () => {
     <>
       <UsersTable />
 
-      <br />
-
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ height: "300px", mb: 2 }}>
         <Grid item xs={6}>
           <TopSearchersTable />
         </Grid>
 
-        <Grid item xs={6}>
-          <div
-            style={{ height: "100%", width: "100%", backgroundColor: "red" }}
-          ></div>
-        </Grid>
+        <Grid item xs={6}></Grid>
       </Grid>
     </>
   );
